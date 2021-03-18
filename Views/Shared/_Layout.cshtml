@@ -6,27 +6,6 @@
     <title>樂社團GO</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
-    <style>
-        .profile {
-            width: 30px;
-        }
-        .indicator {
-            background: #3b7ddd;
-            box-shadow: 0 .1rem .2rem rgba(0,0,0,.05);
-            border-radius: 50%;
-            display: block;
-            height: 18px;
-            width: 18px;
-            padding: 1px;
-            position: absolute;
-            top: 0;
-            right: -8px;
-            text-align: center;
-            transition: top .1s ease-out;
-            font-size: .675rem;
-            color: #fff
-        }
-    </style>
 </head>
 <body>
     <header>
@@ -57,20 +36,21 @@
                     <button class="border-0 bg-transparent" type="button" id="alertDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <div class="position-relative">
                             <img class="align-middle" src="~/images/bell.svg" />
-                            <span class="indicator">12</span>
+                            <span class="indicator">3</span>
                         </div>
                     </button>
                     <div class="dropdown-menu" aria-labelledby="alertsDropdown">
                         <div class="dropdown-menu-header">
-                            12 New Notifications
+                            3 則新通知
                         </div>
                         <div class="list-group">
-                            <a class="dropdown-item" href="#">我的帳戶</a>
-                            <a class="dropdown-item" href="#">設定</a>
-                            <a class="dropdown-item" href="#">登出</a>
+                            <a class="dropdown-item" href="#">通知1</a>
+                            <a class="dropdown-item" href="#">通知2</a>
+                            <a class="dropdown-item" href="#">通知3</a>
                         </div>
+                        <div class="dropdown-divider"></div>
                         <div class="dropdown-menu-footer">
-                            <a href="#" class="text-muted">Show all notifications</a>
+                            <a href="#" class="text-muted">查看所有通知</a>
                         </div>
                     </div>
                 </div>

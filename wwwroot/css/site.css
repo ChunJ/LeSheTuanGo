@@ -69,3 +69,53 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+
+.profile {
+    width: 30px;
+}
+
+.indicator {
+    background: #3b7ddd;
+    box-shadow: 0 .1rem .2rem rgba(0,0,0,.05);
+    border-radius: 50%;
+    display: block;
+    height: 18px;
+    width: 18px;
+    padding: 1px;
+    position: absolute;
+    top: 0;
+    right: -8px;
+    text-align: center;
+    transition: top .1s ease-out;
+    font-size: .675rem;
+    color: #fff
+}
+
+.dropdown-menu-header {
+    padding: .75rem;
+    text-align: center;
+    font-weight: 600;
+    border-bottom: 1px solid #dee2e6
+}
+
+.dropdown-menu-footer {
+    padding: .5rem;
+    text-align: center;
+    display: block;
+    font-size: .75rem
+}
+
+.navi-half {
+    width: 50%;
+    height: 100%;
+    display: inline;
+}
+.bg1{
+    background-color: #ffbfa6;
+}
+.bg2 {
+    background-color: #3faa7c;
+}
+.pheader {
+    max-width: 700px;
+}
