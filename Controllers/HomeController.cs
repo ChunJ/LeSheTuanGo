@@ -27,6 +27,7 @@ namespace LeSheTuanGo.Controllers {
 
         public IActionResult Privacy() {
             return View();
+            //A
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
