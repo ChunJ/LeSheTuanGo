@@ -105,17 +105,3 @@ body {
     font-size: .75rem
 }
 
-.navi-half {
-    width: 50%;
-    height: 100%;
-    display: inline;
-}
-.bg1{
-    background-color: #ffbfa6;
-}
-.bg2 {
-    background-color: #3faa7c;
-}
-.pheader {
-    max-width: 700px;
-}
