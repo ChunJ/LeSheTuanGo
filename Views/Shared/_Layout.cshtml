@@ -3,15 +3,36 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - LeSheTuanGo</title>
+    <title>樂社團GO</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+        .profile {
+            width: 30px;
+        }
+        .indicator {
+            background: #3b7ddd;
+            box-shadow: 0 .1rem .2rem rgba(0,0,0,.05);
+            border-radius: 50%;
+            display: block;
+            height: 18px;
+            width: 18px;
+            padding: 1px;
+            position: absolute;
+            top: 0;
+            right: -8px;
+            text-align: center;
+            transition: top .1s ease-out;
+            font-size: .675rem;
+            color: #fff
+        }
+    </style>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">LeSheTuanGo</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">樂社團GO</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -19,12 +40,50 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">垃圾地圖</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="OrderNavi">團購</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="ServiceNavi">倒垃圾</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">關於</a>
                         </li>
                     </ul>
+                </div>
+                <div class="nav-item dropdown float-right">
+                    <button class="border-0 bg-transparent" type="button" id="alertDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <div class="position-relative">
+                            <img class="align-middle" src="~/images/bell.svg" />
+                            <span class="indicator">12</span>
+                        </div>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="alertsDropdown">
+                        <div class="dropdown-menu-header">
+                            12 New Notifications
+                        </div>
+                        <div class="list-group">
+                            <a class="dropdown-item" href="#">我的帳戶</a>
+                            <a class="dropdown-item" href="#">設定</a>
+                            <a class="dropdown-item" href="#">登出</a>
+                        </div>
+                        <div class="dropdown-menu-footer">
+                            <a href="#" class="text-muted">Show all notifications</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="dropdown float-right">
+                    <button class="border-0 bg-transparent" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img class="rounded-circle profile" src="~/images/profilePic.jpg" />
+                        Alma Tseng
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="#">我的帳戶</a>
+                        <a class="dropdown-item" href="#">設定</a>
+                        <a class="dropdown-item" href="#">登出</a>
+                    </div>
                 </div>
             </div>
         </nav>
@@ -34,12 +93,6 @@
             @RenderBody()
         </main>
     </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2021 - LeSheTuanGo - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

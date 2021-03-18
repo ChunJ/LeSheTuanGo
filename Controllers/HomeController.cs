@@ -18,6 +18,12 @@ namespace LeSheTuanGo.Controllers {
         public IActionResult Index() {
             return View();
         }
+        public IActionResult OrderNavi() {
+            return View();
+        }
+        public IActionResult ServiceNavi() {
+            return View();
+        }
 
         public IActionResult Privacy() {
             return View();
