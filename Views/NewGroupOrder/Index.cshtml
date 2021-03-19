@@ -1,0 +1,99 @@
+﻿@model LeSheTuanGo.Models.Order
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<h4>Order</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Index">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ProductId" class="control-label"></label>
+                <select asp-for="ProductId" class ="form-control" asp-items="ViewBag.ProductId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="HostMemberId" class="control-label"></label>
+                <select asp-for="HostMemberId" class ="form-control" asp-items="ViewBag.HostMemberId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="DistrictId" class="control-label"></label>
+                <select asp-for="DistrictId" class ="form-control" asp-items="ViewBag.DistrictId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Address" class="control-label"></label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Latitude" class="control-label"></label>
+                <input asp-for="Latitude" class="form-control" />
+                <span asp-validation-for="Latitude" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Longitude" class="control-label"></label>
+                <input asp-for="Longitude" class="form-control" />
+                <span asp-validation-for="Longitude" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MaxCount" class="control-label"></label>
+                <input asp-for="MaxCount" class="form-control" />
+                <span asp-validation-for="MaxCount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StartTime" class="control-label"></label>
+                <input asp-for="StartTime" class="form-control" />
+                <span asp-validation-for="StartTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EndTime" class="control-label"></label>
+                <input asp-for="EndTime" class="form-control" />
+                <span asp-validation-for="EndTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OrderDescription" class="control-label"></label>
+                <input asp-for="OrderDescription" class="form-control" />
+                <span asp-validation-for="OrderDescription" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsFull" /> @Html.DisplayNameFor(model => model.IsFull)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="UnitPrice" class="control-label"></label>
+                <input asp-for="UnitPrice" class="form-control" />
+                <span asp-validation-for="UnitPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="CanGo" /> @Html.DisplayNameFor(model => model.CanGo)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="GoRangeId" class="control-label"></label>
+                <select asp-for="GoRangeId" class ="form-control" asp-items="ViewBag.GoRangeId"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
