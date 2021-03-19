@@ -1,0 +1,67 @@
+﻿@model LeSheTuanGo.ViewModels.MemberViewModel
+
+@{
+    ViewData["Title"] = "Signin";
+}
+<div style="border:solid 5px #5B5B5B;border-radius:10px 15px;padding:30px 20px;margin:20px auto;width:auto">
+
+
+    <h1>申請帳號</h1>
+
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Signin">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="FirstName" class="control-label" id="labelFirstName"></label>
+                    <input asp-for="FirstName" class="form-control" id="txtFirstName"/>
+                    <span asp-validation-for="FirstName" class="text-danger" id="spanFirstName"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="LastName" class="control-label"></label>
+                    <input asp-for="LastName" class="form-control" id="txtLastName"/>
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email" class="control-label"></label>
+                    <input asp-for="Email" class="form-control" id="txtEmail"/>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password" class="control-label"></label>
+                    <input asp-for="Password" class="form-control" id="txtPassword"/>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+
+                    <label class="control-label">確認密碼</label>
+                    <input type="text" class="form-control" id="txtPasswordCheck"/>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Address" class="control-label"></label>
+                    <input asp-for="Address" class="form-control" id="txtAddress"/>
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="送出" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div>
+    <a asp-action="Index" asp-controller="Home">回到首頁</a>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script>
+    //var txtName = $("txtName").val();
+    document.getElementById("txtFirstName").onblur = checkName;
+    function checkName() {
+        if (document.getElementById("txtFirstName").value == "") {
+            document.getElementById("labelFirstName").innerHTML = "請輸入字串"
+            document.getElementById("labelFirstName").style.color = "red";
+        }
+    }
+</script>
