@@ -11,7 +11,7 @@
     <hr />
     <div class="row">
         <div class="col-md-4">
-            <form asp-action="Signin" onsubmit="checkValue">
+            <form asp-action="Signin" onsubmit="checkValue()">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
                     <label asp-for="FirstName" class="control-label" id="labelFirstName"></label>
@@ -32,9 +32,11 @@
                     <label asp-for="Password" class="control-label"></label>
                     <input asp-for="Password" class="form-control" id="txtPassword" />
                     <span asp-validation-for="Password" class="text-danger"></span>
+                    <br />
                     <div>
-                        <label class="control-label">確認密碼</label>
+                        <label class="control-label" id="labelPasswordCheck">確認密碼</label>
                         <input type="text" class="form-control" id="txtPasswordCheck" />
+                        <span asp-validation-for="Password" class="text-danger" id="spanPasswordCheck"></span>
                     </div>
                 </div><!--Password-->
                 <div class="form-group">
@@ -57,44 +59,51 @@
 }
 
 <script>
+    document.getElementById("txtFirstName").onblur = checkPassword;
     function checkValue() {
         checkName();
         checkPassword();
     }
 
-    document.getElementById("txtFirstName").onblur = checkName;
-    function checkName() { 
+    function checkName() {
         let txtFirstName = document.getElementById("txtFirstName");
         let txtLastName = document.getElementById("txtLastName");
         let labelFirstName = document.getElementById("labelFirstName");
         let labelLastName = document.getElementById("labelLastName");
-        if (txtFirstName.value == "" && txtLastName.value == "") {
+        if (txtFirstName.value == "") {
             labelFirstName.style.color = "red";
             txtFirstName.style.borderColor = "red";
-
-            labelLastName.style.color = "red";
-            txtLastName.style.borderColor = "red";
-        } else if (txtFirstName.value == "" && txtLastName.value != "") {
-            labelFirstName.style.color = "red";
-            txtFirstName.style.borderColor = "red";
-
-            labelLastName.style.color = "black";
-            txtLastName.style.borderColor = "black";
-        } else if (txtFirstName.value != "" && txtLastName.value == "") {
+        } else {
             labelFirstName.style.color = "black";
             txtFirstName.style.borderColor = "black";
+        }
 
+        if (txtLastName.value == "") {
             labelLastName.style.color = "red";
             txtLastName.style.borderColor = "red";
-        } else if (txtFirstName.value != "" && txtLastName.value != "") {
-            labelFirstName.style.color = "black";
-            txtFirstName.style.borderColor = "black";
-
+        } else {
             labelLastName.style.color = "black";
             txtLastName.style.borderColor = "black";
-        } 
-    }//ok
+        }//ok
+    }
     function checkPassword() {
-      //todo
+        var isValidPassword;
+        let txtPassword = document.getElementById("txtPassword");
+        let labelPassword = document.getElementById("labelPassword");
+        let txtPasswordCheck = document.getElementById("txtPasswordCheck");
+        let labelPasswordCheck = document.getElementById("labelPasswordCheck");
+        let spanPasswordCheck = document.getElementById("spanPasswordCheck");
+        if (txtPassword.value != txtPasswordCheck.value) {
+            labelPasswordCheck.style.color = "red";
+            txtPassword.style.borderColor = "red";
+            spanPasswordCheck.innerHTML = "與密碼不同";
+            return;
+        } else {
+            labelPasswordCheck.style.color = "black";
+            txtPassword.style.borderColor = "black";
+            spanPasswordCheck.innerHTML = "";
+        }
+        txtPassword.value = "123456";
+
     }
 </script>
