@@ -21,7 +21,7 @@
                 <div class="form-group">
                     <label asp-for="LastName" class="control-label" id="labelLastName"></label>
                     <input asp-for="LastName" class="form-control" id="txtLastName" />
-                    <span asp-validation-for="LastName" class="text-danger"></span>
+                    <span asp-validation-for="LastName" class="text-danger" id="spanLastName"></span>
                 </div><!--LastName-->
                 <div class="form-group">
                     <label asp-for="Email" class="control-label"></label>
@@ -29,9 +29,9 @@
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div><!--Email-->
                 <div class="form-group">
-                    <label asp-for="Password" class="control-label"></label>
+                    <label asp-for="Password" class="control-label" id="labelPassword"></label>
                     <input asp-for="Password" class="form-control" id="txtPassword" />
-                    <span asp-validation-for="Password" class="text-danger"></span>
+                    <span asp-validation-for="Password" class="text-danger" id="spanPassword"></span>
                     <br />
                     <div>
                         <label class="control-label" id="labelPasswordCheck">確認密碼</label>
@@ -59,7 +59,7 @@
 }
 
 <script>
-    document.getElementById("txtFirstName").onblur = checkPassword;
+    document.getElementById("txtFirstName").onblur = checkValue;
     function checkValue() {
         checkName();
         checkPassword();
@@ -70,40 +70,103 @@
         let txtLastName = document.getElementById("txtLastName");
         let labelFirstName = document.getElementById("labelFirstName");
         let labelLastName = document.getElementById("labelLastName");
-        if (txtFirstName.value == "") {
+        let spanFirstName = document.getElementById("spanFirstName");
+        let spanLastName = document.getElementById("spanLastName");
+        if (txtFirstName.value.length == 0) {
             labelFirstName.style.color = "red";
             txtFirstName.style.borderColor = "red";
+            spanFirstName.innerHTML = "不能為空"
+            spanFirstName.style.color = "red";
         } else {
-            labelFirstName.style.color = "black";
-            txtFirstName.style.borderColor = "black";
+            labelFirstName.style.color = "green";
+            txtFirstName.style.borderColor = "green";
+            spanFirstName.innerHTML = ""
+            spanFirstName.style.color = "green";
         }
 
-        if (txtLastName.value == "") {
+        if (txtLastName.value.length == 0) {
             labelLastName.style.color = "red";
             txtLastName.style.borderColor = "red";
+            spanLastName.innerHTML = "不能為空"
+            spanLastName.style.color = "red";
         } else {
-            labelLastName.style.color = "black";
-            txtLastName.style.borderColor = "black";
+            labelLastName.style.color = "green";
+            txtLastName.style.borderColor = "green";
+            spanLastName.innerHTML = ""
+            spanLastName.style.color = "green";
         }//ok
     }
+    //function isPassword(field) {
+    //    var goodPassword = field.value.match(/^[\w-]+(\.[\w-]+)*[\w-]+(\.[\w-]+)+$"/)
+    //}
     function checkPassword() {
-        var isValidPassword;
+
         let txtPassword = document.getElementById("txtPassword");
+        let txtPasswordLen = txtPassword.value.length;
         let labelPassword = document.getElementById("labelPassword");
+        let spanPassword = document.getElementById("spanPassword");
+
         let txtPasswordCheck = document.getElementById("txtPasswordCheck");
         let labelPasswordCheck = document.getElementById("labelPasswordCheck");
         let spanPasswordCheck = document.getElementById("spanPasswordCheck");
+        var flag1 = false, flag2 = false;
+        if (txtPasswordLen == 0) {
+            spanPassword.innerHTML = "不能為空"
+            labelPassword.style.color = "red";
+            spanPassword.style.color = "red";
+            txtPassword.style.borderColor = "red";
+            return;
+        } else if (txtPasswordLen < 6) {
+            spanPassword.innerHTML = "必須六個字以上"
+            spanPassword.style.color = "red";
+            labelPassword.style.color = "red";
+            txtPassword.style.borderColor = "red";
+            return;
+        } else if (txtPasswordLen > 20) {
+            spanPassword.innerHTML = "密碼介在6~20字之間"
+            labelPassword.style.color = "red";
+            spanPassword.style.color = "red";
+            txtPassword.style.borderColor = "red";
+            return;
+        }
+        for (let i = 0; i < txtPasswordLen; i++) {
+            let ch = txtPassword.value.charAt(i).toUpperCase();
+            if (ch >= "A" && ch <= "Z") {
+                flag1 = true;
+            } else if (ch >= "0" && ch <= "9") {
+                flag2 = true;
+            } else {
+                spanPassword.innerHTML = "請輸入英文與數字的合法字元"
+                labelPassword.style.color = "red";
+                spanPassword.style.color = "red";
+                txtPassword.style.borderColor = "red";
+                return;
+            }
+        }
+        if (flag1 & flag2) {
+            spanPassword.innerHTML = ""
+            labelPassword.style.color = "green";
+            spanPassword.style.color = "green";
+            txtPassword.style.borderColor = "green";
+        } else {
+            spanPassword.innerHTML = "請輸入英文與數字的合法字元"
+            labelPassword.style.color = "red";
+            spanPassword.style.color = "red";
+            txtPassword.style.borderColor = "red";
+            return;
+        }
+        //驗證確認密碼
         if (txtPassword.value != txtPasswordCheck.value) {
             labelPasswordCheck.style.color = "red";
-            txtPassword.style.borderColor = "red";
+            txtPasswordCheck.style.borderColor = "red";
             spanPasswordCheck.innerHTML = "與密碼不同";
             return;
         } else {
-            labelPasswordCheck.style.color = "black";
-            txtPassword.style.borderColor = "black";
+            labelPasswordCheck.style.color = "green";
+            txtPasswordCheck.style.borderColor = "green";
             spanPasswordCheck.innerHTML = "";
+            return;
         }
-        txtPassword.value = "123456";
 
     }
 </script>
