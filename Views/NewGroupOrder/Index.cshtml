@@ -13,15 +13,18 @@
         <form asp-action="Index">
             <div class="form-group">
                 <label>產品類別</label>
-                <select name="CategoryID" id="CategoryID" class="form-control" asp-items="ViewBag.ProductId"></select>
+                <select id="Category" class="form-control" asp-items="ViewBag.Category"></select>
             </div>
             <div class="form-group">
                 <label>產品名稱</label>
                 <select asp-for="ProductId" class="form-control" asp-items="ViewBag.ProductId"></select>
+                <select class="form-control" data-val="true" data-val-required="The DistrictId field is required." id="DistrictId" name="DistrictId">
+                    <option value="1">&#x4E2D;&#x6B63;&#x5340;</option>
+                </select>
             </div>
             <div class="form-group">
                 <label>城市</label>
-                <select name="CityID" id="CityID" class="form-control" asp-items="ViewBag.DistrictId"></select>
+                <select id="CityID" class="form-control" asp-items="ViewBag.City"></select>
             </div>
             <div class="form-group">
                 <label asp-for="DistrictId"></label>
@@ -71,6 +74,6 @@
 @section Scripts {
     @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
     <script>
-
+        document.getElementById(CityId).onclick
     </script>
 }
