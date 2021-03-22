@@ -77,14 +77,15 @@
             labelFirstName.style.color = "black";
             txtFirstName.style.borderColor = "black";
         }
+
         if (txtLastName.value == "") {
             labelLastName.style.color = "red";
             txtLastName.style.borderColor = "red";
         } else {
             labelLastName.style.color = "black";
             txtLastName.style.borderColor = "black";
-        }
-    }//ok
+        }//ok
+    }
     function checkPassword() {
         var isValidPassword;
         let txtPassword = document.getElementById("txtPassword");
@@ -102,12 +103,7 @@
             txtPassword.style.borderColor = "black";
             spanPasswordCheck.innerHTML = "";
         }
- //Password驗證 if (Regex.IsMatch(Password, "^.*(?=.{4,20})(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?!.*[^\x21-\x7e]).*$"))
-
-    }
-
-    function checkEmail() {
- //Email驗證 if(Regex.IsMatch(Email, "^[\w-]+(\.[\w-]+)[\w-]+(\.[\w-]+)+$"))
+        txtPassword.value = "123456";
 
     }
 </script>
