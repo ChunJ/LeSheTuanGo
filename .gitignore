@@ -1,4 +1,8 @@
-/bin/Debug/
-/bin/Release/
-/obj/Debug/
-/obj/Release/
+bin/Debug/
+bin/Release/
+obj/Debug/
+obj/Release/
+
+obj/LeSheTuanGo.csproj.nuget.dgspec.json
+obj/project.assets.json
+obj/project.nuget.cache

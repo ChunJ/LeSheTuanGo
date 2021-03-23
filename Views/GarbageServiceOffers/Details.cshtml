@@ -1,0 +1,126 @@
+﻿@model LeSheTuanGo.ViewModels.GarbageServiceOffersViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>GarbageServiceOffer</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Address)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Address)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.StartTime)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.StartTime)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.EndTime)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.EndTime)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.IsActive)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.IsActive)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Latitude)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Latitude)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Longitude)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Longitude)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CanGo)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CanGo)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.L3maxCount)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.L3maxCount)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.L5maxCount)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.L5maxCount)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.L14maxCount)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.L14maxCount)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.L25maxCount)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.L25maxCount)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.L33maxCount)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.L33maxCount)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.L75maxCount)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.L75maxCount)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.L120maxCount)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.L120maxCount)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.District)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.District.DistrictName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.GoRange)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.GoRange.RangeId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.HostMember)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.HostMember.Address)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ServiceType)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ServiceType.ServiceName)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.GarbageServiceId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
