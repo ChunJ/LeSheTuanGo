@@ -8583,11 +8583,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\User\\Desktop\\LeSheTuanGo\\LeSheTuanGo\\LeSheTuanGo.csproj",
+      "projectUniqueName": "C:\\Users\\User\\Desktop\\LeSheTuanGo\\LeSheTuanGo.csproj",
       "projectName": "LeSheTuanGo",
-      "projectPath": "C:\\Users\\User\\Desktop\\LeSheTuanGo\\LeSheTuanGo\\LeSheTuanGo.csproj",
+      "projectPath": "C:\\Users\\User\\Desktop\\LeSheTuanGo\\LeSheTuanGo.csproj",
       "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\User\\Desktop\\LeSheTuanGo\\LeSheTuanGo\\obj\\",
+      "outputPath": "C:\\Users\\User\\Desktop\\LeSheTuanGo\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\",
