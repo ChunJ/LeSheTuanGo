@@ -8576,20 +8576,27 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\jeste\\.nuget\\packages\\": {}
+    "C:\\Users\\User\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\jeste\\Desktop\\LeSheTuanGo\\LeSheTuanGo\\LeSheTuanGo.csproj",
+      "projectUniqueName": "C:\\Users\\User\\Desktop\\LeSheTuanGo\\LeSheTuanGo\\LeSheTuanGo.csproj",
       "projectName": "LeSheTuanGo",
-      "projectPath": "C:\\Users\\jeste\\Desktop\\LeSheTuanGo\\LeSheTuanGo\\LeSheTuanGo.csproj",
-      "packagesPath": "C:\\Users\\jeste\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\jeste\\Desktop\\LeSheTuanGo\\LeSheTuanGo\\obj\\",
+      "projectPath": "C:\\Users\\User\\Desktop\\LeSheTuanGo\\LeSheTuanGo\\LeSheTuanGo.csproj",
+      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\User\\Desktop\\LeSheTuanGo\\LeSheTuanGo\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\",
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+      ],
       "configFilePaths": [
-        "C:\\Users\\jeste\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp3.1"
@@ -8651,7 +8658,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.200\\RuntimeIdentifierGraph.json"
       }
     }
   }

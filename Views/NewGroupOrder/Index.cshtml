@@ -74,6 +74,10 @@
 @section Scripts {
     @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
     <script>
-        document.getElementById(CityId).onclick
+        let byId = document.getElementById;
+        let citySl = byId(CityId);
+        citySl.onclick = function () {
+
+        }
     </script>
 }
