@@ -13,7 +13,7 @@
         <form asp-action="Index">
             <div class="form-group">
                 <label>產品類別</label>
-                <select id="Category" class="form-control" asp-items="ViewBag.Category"></select>
+                <select id="Category" class="form-control" onchange="getProduct('#ProductId')" asp-items="ViewBag.Category"></select>
             </div>
             <div class="form-group">
                 <label>產品名稱</label>

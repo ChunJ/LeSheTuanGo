@@ -18,7 +18,5 @@ namespace LeSheTuanGo.Controllers {
             ViewData["City"] = new SelectList(db.CityRefs, "CityId", "CityName");
             return View();
         }
-        //non view
-        
     }
 }
