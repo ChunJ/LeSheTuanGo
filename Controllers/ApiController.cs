@@ -21,7 +21,9 @@ namespace LeSheTuanGo.Controllers {
                 sb.Append(dis.DistrictId + ",");
                 sb.Append(dis.DistrictName + ",");
             }
-            sb.Remove(sb.Length - 1, 1);
+            if (sb.Length != 0) {
+                sb.Remove(sb.Length - 1, 1);
+            }
             return sb.ToString();
         }
         //non view
