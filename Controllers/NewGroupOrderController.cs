@@ -19,8 +19,6 @@ namespace LeSheTuanGo.Controllers {
             return View();
         }
         //non view
-        public string getDistrictByCity() {
-            return "";
-        }
+        
     }
 }
