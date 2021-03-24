@@ -64,6 +64,7 @@ namespace LeSheTuanGo.Controllers
             ViewData["GoRangeId"] = new SelectList(_context.RangeRefs, "RangeId", "RangeInMeters");
             //ViewData["HostMemberId"] = new SelectList(_context.Members, "MemberId", "MemberID");
             //ViewData["HostMemberId"] = memberID;
+            ViewData["CityId"] = new SelectList(_context.CityRefs, "CityId", "CityName");
             ViewData["ServiceTypeId"] = new SelectList(_context.ServiceTypeRefs, "ServiceTypeId", "ServiceName");
             return View();
         }
@@ -87,26 +88,22 @@ namespace LeSheTuanGo.Controllers
             ViewData["DistrictId"] = new SelectList(_context.DistrictRefs, "DistrictId", "DistrictName", g.DistrictId);
             ViewData["GoRangeId"] = new SelectList(_context.RangeRefs, "RangeId", "RangeInMeaters", g.GoRangeId);
             //ViewData["HostMemberId"] = 1;
+            ViewData["CityId"] = new SelectList(_context.CityRefs, "CityId", "CityName", g.District);
             ViewData["ServiceTypeId"] = new SelectList(_context.ServiceTypeRefs, "ServiceTypeId", "ServiceName", g.ServiceTypeId);
             //GarbageServiceOffersViewModel gsovm = new GarbageServiceOffersViewModel(g);
             return View(g);
         }
-        public string j()
+        public string getDistrict(string cityId)
         {
-            var midtermContext = _context.GarbageServiceOffers.Include(g => g.District).Include(g => g.GoRange).Include(g => g.HostMember).Include(g => g.ServiceType).ToList();
-            //var midtermContext = await _context.GarbageServiceOffers.Select(n => n).ToListAsync();
-
-            //List<GarbageServiceOffersViewModel> ls = new List<GarbageServiceOffersViewModel>();
-
-            //string s = "";
-            //foreach (var i in midtermContext)
-            //{
-            //    GarbageServiceOffersViewModel g = new GarbageServiceOffersViewModel(i);
-            //    ls.Add(g);
-            //    s += JsonConvert.SerializeObject(i);
-            //}
-            string s = JsonConvert.SerializeObject(midtermContext);
+            //var midtermContext = _context.GarbageServiceOffers.Include(g => g.District).Include(g => g.GoRange).Include(g => g.HostMember).Include(g => g.ServiceType).ToList();
+            //string s = JsonConvert.SerializeObject(midtermContext);
+            //ViewData["CityId"] = new SelectList(_context.CityRefs.Where(n=>n.CityId==int.Parse(cityId)), "CityId", "CityName");
+            var cityref = _context.DistrictRefs.Where(n => n.CityId == int.Parse(cityId)).Select(n=>new { n.DistrictId,n.DistrictName}).ToList();
+            var s = JsonConvert.SerializeObject(cityref);
             return s;
+
+
+            //return s;
         }
         // GET: GarbageServiceOffers/Edit/5
         public async Task<IActionResult> Edit(int? id)

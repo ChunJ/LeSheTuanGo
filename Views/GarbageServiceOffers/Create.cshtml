@@ -14,16 +14,20 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="ServiceTypeId" class="control-label"></label>
-                <select asp-for="ServiceTypeId" class ="form-control" asp-items="ViewBag.ServiceTypeId"></select>
+                <select asp-for="ServiceTypeId" class="form-control" asp-items="ViewBag.ServiceTypeId"></select>
             </div>
             <div>
                 @*<label asp-for="HostMemberId" class="control-label"></label>*@
                 @*<select asp-for="HostMemberId" class ="form-control" asp-items="ViewBag.HostMemberId"></select>*@
-                <input type="hidden" asp-for="HostMemberId" class="form-control" asp-items="ViewBag.HostMemberId"/>
+                <input type="hidden" asp-for="HostMemberId" class="form-control" asp-items="ViewBag.HostMemberId" />
+            </div>
+            <div class="form-group">
+                <label asp-for="District.City.CityId" class="control-label"></label>
+                <select asp-for="District.City.CityId" class="form-control" asp-items="ViewBag.CityId" id="cityId" name="cityId"  onchange="getDistrict()"></select>
             </div>
             <div class="form-group">
                 <label asp-for="DistrictId" class="control-label"></label>
-                <select asp-for="DistrictId" class ="form-control" asp-items="ViewBag.DistrictId"></select>
+                <select asp-for="DistrictId" class="form-control" asp-items="ViewBag.DistrictId" id="DistrictId" name="DistrictId"></select>
             </div>
             <div class="form-group">
                 <label asp-for="Address" class="control-label"></label>
@@ -31,10 +35,10 @@
                 <span asp-validation-for="Address" class="text-danger"></span>
             </div>
             @*<div class="form-group">
-                <label asp-for="StartTime" class="control-label"></label>
-                <input asp-for="StartTime" class="form-control" />
-                <span asp-validation-for="StartTime" class="text-danger"></span>
-            </div>*@
+            <label asp-for="StartTime" class="control-label"></label>
+            <input asp-for="StartTime" class="form-control" />
+            <span asp-validation-for="StartTime" class="text-danger"></span>
+        </div>*@
             <div class="form-group">
                 <label asp-for="EndTime" class="control-label"></label>
                 <input asp-for="EndTime" class="form-control" />
@@ -47,7 +51,7 @@
             </div>
             <div class="form-group">
                 @*<label asp-for="Latitude" class="control-label"></label>*@
-                <input type="hidden"  value="0" asp-for="Latitude" class="form-control" />
+                <input type="hidden" value="0" asp-for="Latitude" class="form-control" />
                 @*<span asp-validation-for="Latitude" class="text-danger"></span>*@
             </div>
             <div class="form-group">
@@ -62,7 +66,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="GoRangeId" class="control-label"></label>
-                <select asp-for="GoRangeId" class ="form-control" asp-items="ViewBag.GoRangeId"></select>
+                <select asp-for="GoRangeId" class="form-control" asp-items="ViewBag.GoRangeId"></select>
             </div>
             <div class="form-group">
                 <label asp-for="L3maxCount" class="control-label"></label>
@@ -109,6 +113,26 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+<script>
+    function getDistrict() {
+        var e = document.getElementById("cityId")
+        var s = e.options[e.selectedIndex].value
+        var url = "/GarbageServiceOffers/getDistrict?cityId=" + s;
+        $.ajax({
+            url: url,
+            type: "GET",
+            success: function (data) {
+                var s = JSON.parse(data);
+                console.log(s);
+                var txt = "";
+                for (let i = 0; i < s.length; i++) {
+                    txt += "<option value='"+s[i].DistrictId+"'>"+s[i].DistrictName+"</option>"
+                }
+                $("#DistrictId").html(txt);
+            },
+        })
+    }
+</script>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
