@@ -11,6 +11,7 @@
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Index">
+            <input asp-for="HostMemberId" value="" hidden/>
             <div class="form-group">
                 <label>產品類別</label>
                 <select id="Category" class="form-control" oninput="getProduct('#ProductId')" asp-items="ViewBag.Category"></select>
@@ -19,7 +20,7 @@
                 <label>產品名稱</label>
                 <select asp-for="ProductId" class="form-control" asp-items="ViewBag.ProductId"></select>
                 <select class="form-control" data-val="true" data-val-required="The DistrictId field is required.">
-                    
+
                 </select>
             </div>
             <div class="form-group">
@@ -78,9 +79,9 @@
     let cityS = document.querySelector("#CityId");
     let distS = document.querySelector("#DistrictId");
     window.onload = function () {
-        cityS.value = 1;
-        fillDistrict(1, "#DistrictId", function () {
-            distS.value = 5;
+        cityS.value = @ViewData["CityId"];
+        fillDistrict(@ViewData["CityId"], "#DistrictId", function () {
+            distS.value = @ViewData["DistrictId"];
         });
     }
     function test() {

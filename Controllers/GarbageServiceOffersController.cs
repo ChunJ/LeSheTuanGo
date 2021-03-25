@@ -95,15 +95,9 @@ namespace LeSheTuanGo.Controllers
         }
         public string getDistrict(string cityId)
         {
-            //var midtermContext = _context.GarbageServiceOffers.Include(g => g.District).Include(g => g.GoRange).Include(g => g.HostMember).Include(g => g.ServiceType).ToList();
-            //string s = JsonConvert.SerializeObject(midtermContext);
-            //ViewData["CityId"] = new SelectList(_context.CityRefs.Where(n=>n.CityId==int.Parse(cityId)), "CityId", "CityName");
             var cityref = _context.DistrictRefs.Where(n => n.CityId == int.Parse(cityId)).Select(n=>new { n.DistrictId,n.DistrictName}).ToList();
             var s = JsonConvert.SerializeObject(cityref);
             return s;
-
-
-            //return s;
         }
         // GET: GarbageServiceOffers/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -120,6 +114,7 @@ namespace LeSheTuanGo.Controllers
             }
             ViewData["DistrictId"] = new SelectList(_context.DistrictRefs, "DistrictId", "DistrictName", garbageServiceOffer.DistrictId);
             ViewData["GoRangeId"] = new SelectList(_context.RangeRefs, "RangeId", "RangeInMeters", garbageServiceOffer.GoRangeId);
+            ViewData["CityId"] = new SelectList(_context.CityRefs, "CityId", "CityName", garbageServiceOffer.District);
             //ViewData["HostMemberId"] = memberID;
             ViewData["ServiceTypeId"] = new SelectList(_context.ServiceTypeRefs, "ServiceTypeId", "ServiceName", garbageServiceOffer.ServiceTypeId);
 
@@ -161,6 +156,7 @@ namespace LeSheTuanGo.Controllers
             }
             ViewData["DistrictId"] = new SelectList(_context.DistrictRefs, "DistrictId", "DistrictName", garbageServiceOffer.DistrictId);
             ViewData["GoRangeId"] = new SelectList(_context.RangeRefs, "RangeId", "RangeId", garbageServiceOffer.GoRangeId);
+            ViewData["CityId"] = new SelectList(_context.CityRefs, "CityId", "CityName", garbageServiceOffer.District);
             //ViewData["HostMemberId"] = new SelectList(_context.Members, "MemberId", "Address", garbageServiceOffer.HostMemberId);
             //ViewData["HostMemberId"] = memberID;
             ViewData["ServiceTypeId"] = new SelectList(_context.ServiceTypeRefs, "ServiceTypeId", "ServiceName", garbageServiceOffer.ServiceTypeId);

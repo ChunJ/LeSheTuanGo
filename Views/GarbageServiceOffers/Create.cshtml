@@ -23,7 +23,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="District.City.CityId" class="control-label"></label>
-                <select asp-for="District.City.CityId" class="form-control" asp-items="ViewBag.CityId" id="cityId" name="cityId"  onchange="getDistrict()"></select>
+                <select asp-for="District.City.CityId" class="form-control" asp-items="ViewBag.CityId" id="cityId" name="cityId"  onchange="getDistrict('#DistrictId')"></select>
             </div>
             <div class="form-group">
                 <label asp-for="DistrictId" class="control-label"></label>
@@ -31,7 +31,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Address" class="control-label"></label>
-                <input asp-for="Address" class="form-control" />
+                <input asp-for="Address" class="form-control" id="Address" name="Address"/>
                 <span asp-validation-for="Address" class="text-danger"></span>
             </div>
             @*<div class="form-group">
@@ -41,7 +41,7 @@
         </div>*@
             <div class="form-group">
                 <label asp-for="EndTime" class="control-label"></label>
-                <input asp-for="EndTime" class="form-control" />
+                <input asp-for="EndTime" class="form-control" id="EndTime" name="EndTime"/>
                 <span asp-validation-for="EndTime" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
@@ -70,41 +70,42 @@
             </div>
             <div class="form-group">
                 <label asp-for="L3maxCount" class="control-label"></label>
-                <input asp-for="L3maxCount" class="form-control" />
+                <input asp-for="L3maxCount" class="form-control"  id="L3maxCount" name="L3maxCount"/>
                 <span asp-validation-for="L3maxCount" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="L5maxCount" class="control-label"></label>
-                <input asp-for="L5maxCount" class="form-control" />
+                <input asp-for="L5maxCount" class="form-control" id="L5maxCount" name="L5maxCount"/>
                 <span asp-validation-for="L5maxCount" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="L14maxCount" class="control-label"></label>
-                <input asp-for="L14maxCount" class="form-control" />
+                <input asp-for="L14maxCount" class="form-control" id="L14maxCount" name="L14maxCount"/>
                 <span asp-validation-for="L14maxCount" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="L25maxCount" class="control-label"></label>
-                <input asp-for="L25maxCount" class="form-control" />
+                <input asp-for="L25maxCount" class="form-control" id="L25maxCount" name="L25maxCount"/>
                 <span asp-validation-for="L25maxCount" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="L33maxCount" class="control-label"></label>
-                <input asp-for="L33maxCount" class="form-control" />
+                <input asp-for="L33maxCount" class="form-control" id="L33maxCount" name="L33maxCount"/>
                 <span asp-validation-for="L33maxCount" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="L75maxCount" class="control-label"></label>
-                <input asp-for="L75maxCount" class="form-control" />
+                <input asp-for="L75maxCount" class="form-control" id="L75maxCount" name="L75maxCount"/>
                 <span asp-validation-for="L75maxCount" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="L120maxCount" class="control-label"></label>
-                <input asp-for="L120maxCount" class="form-control" />
+                <input asp-for="L120maxCount" class="form-control" id="L120maxCount" name="L120maxCount"/>
                 <span asp-validation-for="L120maxCount" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Create" class="btn btn-primary"/>
+                <input type="button" value="Demo" class="btn btn-primary" onclick="CreateDemo()" />
             </div>
         </form>
     </div>
@@ -114,7 +115,23 @@
     <a asp-action="Index">Back to List</a>
 </div>
 <script>
-    function getDistrict() {
+    function CreateDemo() {
+        $("#Address").val('demo');
+        var t = new Date();
+        t.setSeconds(0, 0);
+        var month = (""+(t.getMonth() + 1)).length == 2 ? "" + (t.getMonth() + 1) : "0" + (t.getMonth() + 1);
+        var date = (""+(t.getDate() + 1)).length == 2 ? "" + (t.getDate() + 1) : "0" + (t.getDate() + 1);
+        $("#EndTime").val(t.getFullYear() + "-" + month + "-" + date + "T" + t.getHours() + ":" + t.getMinutes());
+        $("#L3maxCount").val(0);
+        $("#L5maxCount").val(0);
+        $("#L14maxCount").val(0);
+        $("#L25maxCount").val(0);
+        $("#L33maxCount").val(0);
+        $("#L75maxCount").val(0);
+        $("#L120maxCount").val(0);
+    }
+
+    function getDistrictc() {
         var e = document.getElementById("cityId")
         var s = e.options[e.selectedIndex].value
         var url = "/GarbageServiceOffers/getDistrict?cityId=" + s;
@@ -123,7 +140,6 @@
             type: "GET",
             success: function (data) {
                 var s = JSON.parse(data);
-                console.log(s);
                 var txt = "";
                 for (let i = 0; i < s.length; i++) {
                     txt += "<option value='"+s[i].DistrictId+"'>"+s[i].DistrictName+"</option>"
