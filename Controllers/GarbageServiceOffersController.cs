@@ -19,7 +19,10 @@ namespace LeSheTuanGo.Controllers
         {
             _context = context;
         }
+
         int memberID = 3;
+
+        //總覽
         // GET: GarbageServiceOffers
         public async Task<IActionResult> Index()
         {
@@ -32,30 +35,6 @@ namespace LeSheTuanGo.Controllers
             }
             return View(ls);
         }
-
-        // GET: GarbageServiceOffers/Details/5
-        //public async Task<IActionResult> Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var garbageServiceOffer = await _context.GarbageServiceOffers
-        //        .Include(g => g.District)
-        //        .Include(g => g.GoRange)
-        //        .Include(g => g.HostMember)
-        //        .Include(g => g.ServiceType)
-        //        .FirstOrDefaultAsync(m => m.GarbageServiceId == id);
-        //    if (garbageServiceOffer == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    GarbageServiceOffersViewModel gsovm = new GarbageServiceOffersViewModel(garbageServiceOffer);
-          
-        //    return View(gsovm);
-            
-        //}
 
         // GET: GarbageServiceOffers/Create
         public IActionResult Create()
