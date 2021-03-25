@@ -78,13 +78,13 @@
     let cityS = document.querySelector("#CityId");
     let distS = document.querySelector("#DistrictId");
     window.onload = function () {
-        cityS.value = 1;
-        fillDistrict(1, "#DistrictId", function () {
-            distS.value = 5;
+        cityS.value = @ViewData["CityId"];
+        fillDistrict(@ViewData["CityId"], "#DistrictId", function () {
+            distS.value = @ViewData["DistrictId"];
         });
     }
     function test() {
-        
+
     }
 </script>
 }
