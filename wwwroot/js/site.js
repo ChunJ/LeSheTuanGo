@@ -43,3 +43,16 @@ function fillProduct(cateId, prodTagId, callBack) {
         }
     )
 }
+//function getLatLng(addressInput, callBack) {
+//    $.getJSON(
+//        "https://maps.googleapis.com/maps/api/geocode/json?",
+//        {
+//            address: addressInput,
+//            key: "AIzaSyBircB99P_RvzxWdQT-hk40-h3Ofzlb_vQ"
+//        },
+//        function (result) {
+//            let coor = result["results"][0]["geometry"]["location"];
+//            return(coor["lat"] + "," + coor["lng"]);
+//        }
+//    )
+//}

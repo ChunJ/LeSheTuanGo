@@ -17,23 +17,26 @@ namespace LeSheTuanGo.Controllers {
             db = context;
         }
         public IActionResult Index() {
-            HttpContext.Session.SetInt32(cDictionary.Current_User_Id, 1);
+            //暫時造假用，設定session裡的 user id
+            HttpContext.Session.SetInt32(cUtility.Current_User_Id, 1);
+
             int userId;
-            if (HttpContext.Session.GetInt32(cDictionary.Current_User_Id) != null) {
-                userId = HttpContext.Session.GetInt32(cDictionary.Current_User_Id).Value;
+            //若有登入則使用使用者資訊，否則手動給預設值。
+            if (HttpContext.Session.GetInt32(cUtility.Current_User_Id) != null) {
+                userId = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
                 Member user = db.Members.Where(m => m.MemberId == userId).First();
                 ViewData["Address"] = user.Address;
                 ViewData["DistrictId"] = user.DistrictId;
-                Debug.WriteLine(user.District);
                 //ViewData["CityId"] = user.District.CityId;
+                ViewData["CityId"] = db.DistrictRefs.Where(d => d.DistrictId == user.DistrictId).First().CityId;
             } else {
                 ViewData["Address"] = "";
                 ViewData["DistrictId"] = 1;
                 ViewData["CityId"] = 1;
             }
-            //Console.WriteLine(user.District.CityId.ToString());
             ViewData["Category"] = new SelectList(db.CategoryRefs, "CategoryId", "CategoryName");
             ViewData["City"] = new SelectList(db.CityRefs, "CityId", "CityName");
+            ViewData["GoRangeId"] = new SelectList(db.RangeRefs, "RangeId", "RangeInMeters");
             return View();
         }
     }
