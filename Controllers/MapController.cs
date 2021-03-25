@@ -26,7 +26,7 @@ namespace LeSheTuanGo.Controllers
             List<decimal> coordinate = new List<decimal>(2);
 
             //google api key=AIzaSyBircB99P_RvzxWdQT-hk40-h3Ofzlb_vQ
-            //目前固定放，之後可加備援的額外key，try/catch
+            //目前固定放，之後可加字典檔、備援的額外key，try/catch
             WebRequest request = WebRequest.Create($"https://maps.googleapis.com/maps/api/geocode/json?address={address}&key=AIzaSyBircB99P_RvzxWdQT-hk40-h3Ofzlb_vQ");
             request.Method = "GET";
             using (var httpResponse = (HttpWebResponse)request.GetResponse())
