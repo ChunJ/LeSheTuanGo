@@ -15,28 +15,28 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
                     <label asp-for="FirstName" class="control-label" id="labelFirstName"></label>
-                    <input asp-for="FirstName" class="form-control" id="txtFirstName" />
+                    <input asp-for="FirstName" class="form-control" id="txtFirstName"/>
                     <span asp-validation-for="FirstName" style="color:red" id="spanFirstName"></span>
                 </div><!--FirstName-->
                 <div class="form-group">
                     <label asp-for="LastName" class="control-label" id="labelLastName"></label>
                     <input asp-for="LastName" class="form-control" id="txtLastName" onblur="checkName()"/>
-                    <span asp-validation-for="LastName" style="color:red" id="spanLastName" ></span>
+                    <span asp-validation-for="LastName" style="color:red" id="spanLastName"></span>
                 </div><!--LastName-->
                 <div class="form-group">
                     <label asp-for="Email" class="control-label" id="labelEmail"></label>
-                    <input asp-for="Email" class="form-control" id="txtEmail" onblur="chenkEmail()"/>
-                    <span asp-validation-for="Email" style="color:red" id="spanEmail" ></span>
+                    <input asp-for="Email" class="form-control" id="txtEmail" onblur="checkEmail()"/>
+                    <span asp-validation-for="Email" style="color:red" id="spanEmail"></span>
                 </div><!--Email-->
                 <div class="form-group">
                     <label asp-for="Password" class="control-label" id="labelPassword"></label>
-                    <input asp-for="Password" class="form-control" id="txtPassword" />
-                    <span asp-validation-for="Password" style="color:red" id="spanPassword" ></span>
+                    <input asp-for="Password" class="form-control" id="txtPassword"/>
+                    <span asp-validation-for="Password" style="color:red" id="spanPassword"></span>
                     <br />
                     <div>
                         <label class="control-label" id="labelPasswordCheck">確認密碼</label>
                         <input type="text" class="form-control" id="txtPasswordCheck" onblur="checkPassword()"/>
-                        <span style="color:red" id="spanPasswordCheck" ></span>
+                        <span style="color:red" id="spanPasswordCheck"></span>
                     </div>
                 </div><!--Password-->
                 <div class="form-group">
@@ -52,9 +52,12 @@
                     <span asp-validation-for="Address" style="color:red" id="spanAddress"></span>
                 </div><!--Address-->
                 <div class="form-group">
-                    <input type="submit" value="送出" class="btn btn-primary" />
+                    <input type="submit" value="送出" class="btn btn-primary"/>
                 </div>
             </form>
+            <div class="form-group">
+                <input type="button" value="demo" class="btn btn-primary" onclick="demo()"/>
+            </div>
         </div>
     </div>
 </div>
@@ -66,8 +69,8 @@
 }
 
 <script>
+    var flagName = false, flagPassword = false, flagEmail = false, flagAddress = false
     function checkValue() {
-        var flagName = false, flagPassword = false, flagEmail = false, flagAddress = false
         checkName();
         checkPassword();
         checkEmail();
@@ -106,7 +109,7 @@
             spanFirstName.style.color = "green";
             spanFirstName.innerHTML = "可用";
             flagName = true;
-        }else {
+        } else {
             labelFirstName.style.color = "red";
             txtFirstName.style.borderColor = "red";
             spanFirstName.style.color = "red";
@@ -120,7 +123,7 @@
             spanLastName.style.color = "green";
             spanLastName.innerHTML = "可用";
             flagName = true;
-        }else {
+        } else {
             labelLastName.style.color = "red";
             txtLastName.style.borderColor = "red";
             spanLastName.style.color = "red";
@@ -271,5 +274,13 @@
         }
 
     }//ok
-
+    //demo鍵
+    function demo() {
+        document.getElementById("txtFirstName").value = "Chen";
+        document.getElementById("txtLastName").value = "Jerry";
+        document.getElementById("txtEmail").value = "Chen@gmail.com";
+        document.getElementById("txtPassword").value = "Password123";
+        document.getElementById("txtPasswordCheck").value = "Password123";
+        document.getElementById("txtAddress").value = "復興南路資策會";
+    }
 </script>
