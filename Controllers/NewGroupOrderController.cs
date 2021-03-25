@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using LeSheTuanGo.Models;
 using System.Text;
 
+// add session to use useid
 namespace LeSheTuanGo.Controllers {
     public class NewGroupOrderController : Controller {
         private readonly MidtermContext db;
@@ -14,6 +15,12 @@ namespace LeSheTuanGo.Controllers {
             db = context;
         }
         public IActionResult Index() {
+            int userId = 1;//temp
+            Member user = db.Members.Where(m => m.MemberId == userId).First();
+            ViewData["Address"] = user.Address;
+            //ViewData["DistrictId"] = user.DistrictId;
+            //ViewData["CityId"] = user.District.CityId;
+            //Console.WriteLine(user.District.CityId.ToString());
             ViewData["Category"] = new SelectList(db.CategoryRefs, "CategoryId", "CategoryName");
             ViewData["City"] = new SelectList(db.CityRefs, "CityId", "CityName");
             return View();

@@ -16,36 +16,44 @@
                 <div class="form-group">
                     <label asp-for="FirstName" class="control-label" id="labelFirstName"></label>
                     <input asp-for="FirstName" class="form-control" id="txtFirstName" />
-                    <span asp-validation-for="FirstName" class="text-danger" id="spanFirstName"></span>
+                    <span asp-validation-for="FirstName" style="color:red" id="spanFirstName"></span>
                 </div><!--FirstName-->
                 <div class="form-group">
                     <label asp-for="LastName" class="control-label" id="labelLastName"></label>
                     <input asp-for="LastName" class="form-control" id="txtLastName" />
-                    <span asp-validation-for="LastName" class="text-danger" id="spanLastName"></span>
+                    <span asp-validation-for="LastName" style="color:red" id="spanLastName"></span>
                 </div><!--LastName-->
                 <div class="form-group">
-                    <label asp-for="Email" class="control-label"></label>
+                    <label asp-for="Email" class="control-label" id="labelEmail"></label>
                     <input asp-for="Email" class="form-control" id="txtEmail" />
-                    <span asp-validation-for="Email" class="text-danger"></span>
+                    <span asp-validation-for="Email" style="color:red" id="spanEmail"></span>
                 </div><!--Email-->
                 <div class="form-group">
                     <label asp-for="Password" class="control-label" id="labelPassword"></label>
                     <input asp-for="Password" class="form-control" id="txtPassword" />
-                    <span asp-validation-for="Password"  id="spanPassword" ></span>
+                    <span asp-validation-for="Password" style="color:red" id="spanPassword" ></span>
                     <br />
                     <div>
                         <label class="control-label" id="labelPasswordCheck">確認密碼</label>
                         <input type="text" class="form-control" id="txtPasswordCheck" />
-                        <span asp-validation-for="Password" class="text-danger" id="spanPasswordCheck"></span>
+                        <span style="color:red" id="spanPasswordCheck"></span>
                     </div>
                 </div><!--Password-->
                 <div class="form-group">
-                    <label asp-for="Address" class="control-label"></label>
+                    <label asp-for="Address" class="control-label" id="labelAddress"></label>
+                    <br />
+                    <input type="button" id="test" value="123"/>
+                    <select id="selectCity">
+                        <option></option>
+                    </select>
+                    <select id="selectDistric">
+                        
+                    </select>
                     <input asp-for="Address" class="form-control" id="txtAddress" />
-                    <span asp-validation-for="Address" class="text-danger"></span>
+                    <span asp-validation-for="Address" style="color:red" id="spanAddress"></span>
                 </div><!--Address-->
                 <div class="form-group">
-                    <input type="submit" value="送出" class="btn btn-primary" />
+                    <input type="submit" value="送出" class="btn btn-primary" onclick="checkValue()"/>
                 </div>
             </form>
         </div>
@@ -63,8 +71,14 @@
     function checkValue() {
         checkName();
         checkPassword();
-        isPassword();
-    }
+        checkEmail();
+        checkAddress();
+    }//檢查全部
+    document.getElementById("test").onclick = add;
+    function add() {
+        let city = document.getElementById("selectCity");
+        city.innerHTML += "<option>1348</option>";
+    }//todo ajax
 
     function checkName() {
         let txtFirstName = document.getElementById("txtFirstName");
@@ -73,41 +87,39 @@
         let labelLastName = document.getElementById("labelLastName");
         let spanFirstName = document.getElementById("spanFirstName");
         let spanLastName = document.getElementById("spanLastName");
-        if (txtFirstName.value.length == 0) {
+        if (txtFirstName.value == "") {
             labelFirstName.style.color = "red";
             txtFirstName.style.borderColor = "red";
             spanFirstName.style.color = "red";
-            spanFirstName.innerHTML = "不能為空"
+            spanFirstName.innerHTML = "不能為空";
         } else {
             labelFirstName.style.color = "green";
             txtFirstName.style.borderColor = "green";
             spanFirstName.style.color = "green";
-            spanFirstName.innerHTML = ""
+            spanFirstName.innerHTML = "可用";
         }
-
-        if (txtLastName.value.length == 0) {
+        if (txtLastName.value == "") {
             labelLastName.style.color = "red";
             txtLastName.style.borderColor = "red";
             spanLastName.style.color = "red";
-            spanLastName.innerHTML = "不能為空"
+            spanLastName.innerHTML = "不能為空";
         } else {
             labelLastName.style.color = "green";
             txtLastName.style.borderColor = "green";
             spanLastName.style.color = "green";
-            spanLastName.innerHTML = ""
+            spanLastName.innerHTML = "可用";
+            return;
         }
     }//ok
     function isPassword(pwd) {
-
         var isMatch = pwd.value.match(/^.*(?=.{4,20})(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?!.*[^\x21-\x7e]).*$/)
         if (isMatch) {
             return true;
         } else {
             return false;
         }
-    }
+    }//ok
     function checkPassword() {
-
         let txtPassword = document.getElementById("txtPassword");
         let txtPasswordLen = txtPassword.value.length;
         let labelPassword = document.getElementById("labelPassword");
@@ -116,66 +128,25 @@
         let txtPasswordCheck = document.getElementById("txtPasswordCheck");
         let labelPasswordCheck = document.getElementById("labelPasswordCheck");
         let spanPasswordCheck = document.getElementById("spanPasswordCheck");
+        if (txtPassword.value == "") {
+            spanPassword.innerHTML = "不能為空";
+            labelPassword.style.color = "red";
+            spanPassword.style.color = "red";
+            txtPassword.style.borderColor = "red";
+            return;
+        }
         if (isPassword(txtPassword)) {
-            spanPassword.innerHTML = "可用"
+            spanPassword.innerHTML = "可用";
             labelPassword.style.color = "green";
             spanPassword.style.color = "green";
             txtPassword.style.borderColor = "green";
         } else {
-                spanPassword.innerHTML = "請輸入4~20位英數字字元"
-                labelPassword.style.color = "red";
-                spanPassword.style.color = "red";
-                txtPassword.style.borderColor = "red";
-                return;
+            spanPassword.innerHTML = "請輸入4~20位大小寫英數字";
+            labelPassword.style.color = "red";
+            spanPassword.style.color = "red";
+            txtPassword.style.borderColor = "red";
+            return;
         }
-        //土炮 備份用
-        //var flag1 = false, flag2 = false;
-        //if (txtPasswordLen == 0) {
-        //    spanPassword.innerHTML = "不能為空"
-        //    labelPassword.style.color = "red";
-        //    spanPassword.style.color = "red";
-        //    txtPassword.style.borderColor = "red";
-        //    return;
-        //} else if (txtPasswordLen < 6) {
-        //    spanPassword.innerHTML = "必須六個字以上"
-        //    spanPassword.style.color = "red";
-        //    labelPassword.style.color = "red";
-        //    txtPassword.style.borderColor = "red";
-        //    return;
-        //} else if (txtPasswordLen > 20) {
-        //    spanPassword.innerHTML = "密碼介在6~20字之間"
-        //    labelPassword.style.color = "red";
-        //    spanPassword.style.color = "red";
-        //    txtPassword.style.borderColor = "red";
-        //    return;
-        //}
-        //for (let i = 0; i < txtPasswordLen; i++) {
-        //    let ch = txtPassword.value.charAt(i).toUpperCase();
-        //    if (ch >= "A" && ch <= "Z") {
-        //        flag1 = true;
-        //    } else if (ch >= "0" && ch <= "9") {
-        //        flag2 = true;
-        //    } else {
-        //        spanPassword.innerHTML = "請輸入英文與數字的合法字元"
-        //        labelPassword.style.color = "red";
-        //        spanPassword.style.color = "red";
-        //        txtPassword.style.borderColor = "red";
-        //        return;
-        //    }
-        //}
-        //if (flag1 & flag2) {
-        //    spanPassword.innerHTML = ""
-        //    labelPassword.style.color = "green";
-        //    spanPassword.style.color = "green";
-        //    txtPassword.style.borderColor = "green";
-        //} else {
-        //    spanPassword.innerHTML = "請輸入英文與數字的合法字元"
-        //    labelPassword.style.color = "red";
-        //    spanPassword.style.color = "red";
-        //    txtPassword.style.borderColor = "red";
-        //    return;
-        //}
-
         //驗證確認密碼
         if (txtPassword.value != txtPasswordCheck.value) {
             labelPasswordCheck.style.color = "red";
@@ -190,4 +161,81 @@
         }
 
     }//ok
+    function isEmail(Email) {
+        //Email = document.getElementById("txtEmail").value;
+        var isMatch = Email.value.match(/\b(^(\S+@@).+((\.com)|(\.net)|(\.edu)|(\.mil)|(\.gov)|(\.org)|(\..{2,2}))$)\b/)
+        if (isMatch) {
+            return true;
+        } else {
+            return false;
+        }
+    }//ok
+    function checkEmail() {
+        let txtEmail = document.getElementById("txtEmail");
+        let labelEmail = document.getElementById("labelEmail");
+        let spanEmail = document.getElementById("spanEmail");
+        if (txtEmail.value == "") {
+            spanEmail.innerHTML = "不能為空";
+            labelEmail.style.color = "red";
+            spanEmail.style.color = "red";
+            txtEmail.style.borderColor = "red";
+            return;
+        }
+        if (isEmail(txtEmail)) {
+            spanEmail.innerHTML = "可用";
+            labelEmail.style.color = "green";
+            spanEmail.style.color = "green";
+            txtEmail.style.borderColor = "green";
+            return;
+        } else {
+            spanEmail.innerHTML = "請輸入正確Email格式";
+            labelEmail.style.color = "red";
+            spanEmail.style.color = "red";
+            txtEmail.style.borderColor = "red";
+            return;
+        }
+    }//ok
+    function isAddress(Address) {
+        for (let i = 0; i < Address.value.length; i++) {
+            let ch = Address.value.charAt(i);
+            let chCode = Address.value.charCodeAt(i);
+            if (!(chCode >= 0x4E00 && chCode <= 0x9FFF)) {
+                if (!((ch >= "a" && ch <= "z") || (ch >= "A" && ch <= "Z"))) {
+                    if (!((ch >= "(" && ch <= "-") || (ch >= 0 && ch <= 9))) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+            }
+        }
+    }//ok
+    function checkAddress() {
+        let txtAddress = document.getElementById("txtAddress");
+        let labelAddress = document.getElementById("labelAddress");
+        let spanAddress = document.getElementById("spanAddress");
+        if (txtAddress.value == "") {
+            spanAddress.innerHTML = "不能為空";
+            labelAddress.style.color = "red";
+            spanAddress.style.color = "red";
+            txtAddress.style.borderColor = "red";
+            return;
+        }
+        if (isAddress(txtAddress)) {
+            spanAddress.innerHTML = "";
+            labelAddress.style.color = "green";
+            spanAddress.style.color = "green";
+            txtAddress.style.borderColor = "green";
+            return;
+        } else {
+            spanAddress.innerHTML = "請輸入正確地址格式";
+            labelAddress.style.color = "red";
+            spanAddress.style.color = "red";
+            txtAddress.style.borderColor = "red";
+            return;
+        }
+
+    }//ok
+
+
 </script>

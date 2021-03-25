@@ -13,7 +13,7 @@
         <form asp-action="Index">
             <div class="form-group">
                 <label>產品類別</label>
-                <select id="Category" class="form-control" onchange="getProduct('#ProductId')" asp-items="ViewBag.Category"></select>
+                <select id="Category" class="form-control" oninput="getProduct('#ProductId')" asp-items="ViewBag.Category"></select>
             </div>
             <div class="form-group">
                 <label>產品名稱</label>
@@ -24,15 +24,15 @@
             </div>
             <div class="form-group">
                 <label>城市</label>
-                <select id="CityId" class="form-control" onchange="getDistrict('#DistrictId')" asp-items="ViewBag.City"></select>
+                <select id="CityId" class="form-control" oninput="getDistrict('#DistrictId')" asp-items="ViewBag.City"></select>
             </div>
             <div class="form-group">
-                <label asp-for="DistrictId"></label>
-                <select asp-for="DistrictId" class="form-control" asp-items="ViewBag.DistrictId"></select>
+                <label for="DistrictId">鄉鎮市區</label>
+                <select asp-for="DistrictId" class="form-control"></select>
             </div>
             <div class="form-group">
-                <label asp-for="Address"></label>
-                <input asp-for="Address" class="form-control" />
+                <label asp-for="Address">地址</label>
+                <input asp-for="Address" value=@ViewData["Address"] class="form-control" />
                 <span asp-validation-for="Address" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -66,6 +66,7 @@
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="button" value="test" class="btn btn-primary" onclick="test();"/>
             </div>
         </form>
     </div>
@@ -73,7 +74,17 @@
 
 @section Scripts {
     @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
-    <script>
+<script>
+    let cityS = document.querySelector("#CityId");
+    let distS = document.querySelector("#DistrictId");
+    window.onload = function () {
+        cityS.value = 1;
+        fillDistrict(1, "#DistrictId", function () {
+            distS.value = 5;
+        });
+    }
+    function test() {
         
-    </script>
+    }
+</script>
 }

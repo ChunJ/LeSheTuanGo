@@ -3,10 +3,13 @@
 
 // Write your JavaScript code.
 
-function getDistrict(disId) {
+function getDistrict(distTagId) {
+    fillDistrict(event.target.value, distTagId, null);
+}
+function fillDistrict(cityId, distTagId, callBack) {
     $.get(
         "/Api/getDistrictBy",
-        { cityId: event.target.value },
+        { cityId: cityId },
         function (data, status) {
             if (status == "success") {
                 let stringList = data.split(",");
@@ -14,15 +17,19 @@ function getDistrict(disId) {
                 for (let i = 0; i < stringList.length; i += 2) {
                     htmlString += `<option value=${stringList[i]}>${stringList[i + 1]}</option>`;
                 }
-                document.querySelector(disId).innerHTML = htmlString;
+                document.querySelector(distTagId).innerHTML = htmlString;
+                if (callBack) callBack();
             }
         }
     )
 }
-function getProduct(proId) {
+function getProduct(prodTagId) {
+    fillProduct(event.target.value, prodTagId);
+}
+function fillProduct(cateId, prodTagId, callBack) {
     $.get(
         "/Api/getProductBy",
-        { CategoryId: event.target.value },
+        { CategoryId: cateId },
         function (data, status) {
             if (status == "success") {
                 let stringList = data.split(",");
@@ -30,7 +37,8 @@ function getProduct(proId) {
                 for (let i = 0; i < stringList.length; i += 2) {
                     htmlString += `<option value=${stringList[i]}>${stringList[i + 1]}</option>`;
                 }
-                document.querySelector(proId).innerHTML = htmlString;
+                document.querySelector(prodTagId).innerHTML = htmlString;
+                if (callBack) callBack();
             }
         }
     )
