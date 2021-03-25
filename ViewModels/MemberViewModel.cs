@@ -11,7 +11,7 @@ namespace LeSheTuanGo.ViewModels
     public class MemberViewModel
     {
         private Member iv_Member = null;
-        private Member p { get { return iv_Member; } }
+        public Member member { get { return iv_Member; } }
         public MemberViewModel()
         {
             iv_Member = new Member();
