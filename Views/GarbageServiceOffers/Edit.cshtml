@@ -19,12 +19,16 @@
             </div>
             <div class="form-group">
                 @*<label asp-for="HostMemberId" class="control-label"></label>*@
-                <input type ="hidden" asp-for="HostMemberId" class="form-control" asp-items="ViewBag.HostMemberId"/>
+                <input type="hidden" asp-for="HostMemberId" class="form-control" asp-items="ViewBag.HostMemberId" />
                 @*<span asp-validation-for="HostMemberId" class="text-danger"></span>*@
             </div>
             <div class="form-group">
+                <label asp-for="District.City.CityId" class="control-label"></label>
+                <select asp-for="District.City.CityId" class="form-control" asp-items="ViewBag.CityId" id="cityId" name="cityId" onchange="getDistrict('#DistrictId')"></select>
+            </div>
+            <div class="form-group">
                 <label asp-for="DistrictId" class="control-label"></label>
-                <select asp-for="DistrictId" class="form-control" asp-items="ViewBag.DistrictId"></select>
+                <select asp-for="DistrictId" class="form-control" asp-items="ViewBag.DistrictId" id="DistrictId" name="DistrictId"></select>
                 <span asp-validation-for="DistrictId" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -34,7 +38,7 @@
             </div>
             <div class="form-group">
                 @*<label asp-for="StartTime" class="control-label"></label>*@
-                <input type ="hidden" asp-for="StartTime" class="form-control" />
+                <input type="hidden" asp-for="StartTime" class="form-control" />
                 @*<span asp-validation-for="StartTime" class="text-danger"></span>*@
             </div>
             <div class="form-group">
@@ -49,12 +53,12 @@
             </div>
             <div class="form-group">
                 @*<label asp-for="Latitude" class="control-label"></label>*@
-                <input type ="hidden" asp-for="Latitude" class="form-control" />
+                <input type="hidden" asp-for="Latitude" class="form-control" />
                 @*<span asp-validation-for="Latitude" class="text-danger"></span>*@
             </div>
             <div class="form-group">
                 @*<label asp-for="Longitude" class="control-label"></label>*@
-                <input type ="hidden" asp-for="Longitude" class="form-control" />
+                <input type="hidden" asp-for="Longitude" class="form-control" />
                 @*<span asp-validation-for="Longitude" class="text-danger"></span>*@
             </div>
             <div class="form-group form-check">
@@ -104,11 +108,11 @@
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
+                
             </div>
         </form>
     </div>
 </div>
-
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
