@@ -69,7 +69,7 @@
 }
 
 <script>
-    var flagName = false, flagPassword = false, flagEmail = false, flagAddress = false
+    var flagName = false, flagPassword = false, flagEmail = false, flagAddress = false;
     function checkValue() {
         checkName();
         checkPassword();
@@ -191,6 +191,29 @@
             return false;
         }
     }//ok
+    function checkRepeatEmail(Email) {
+        $.ajax({
+            url: "/Member/checkRepeatEmail?createEmail=" + Email.value,
+            type: "Get",
+            success: function (flag) {
+                let js = JSON.parse(flag);
+                console.log(js);
+                if (js == 1) {
+                    return true;
+                } else if (js == 0) {
+                    return false;
+                }
+            }
+        });
+    //    $.getJSON(
+    //    "/Member/checkRepeatEmail",
+    //    {
+    //        createEmail: document.getElementById("txtEmail").value,
+    //    },
+    //        function (result) {
+    //            console.log(result);
+    //    })
+    }//ok
     function checkEmail() {
         let txtEmail = document.getElementById("txtEmail");
         let labelEmail = document.getElementById("labelEmail");
@@ -201,7 +224,15 @@
             spanEmail.style.color = "red";
             txtEmail.style.borderColor = "red";
             flagEmail = false;
-        }
+        }//如果為空
+        if (!checkRepeatEmail(txtEmail)) {
+            spanEmail.innerHTML = "此帳號已使用過，嘗試登入嗎?";
+            labelEmail.style.color = "red";
+            spanEmail.style.color = "red";
+            txtEmail.style.borderColor = "red";
+            flagEmail = false;
+            return;
+        }//如果已使用
         if (isEmail(txtEmail)) {
             spanEmail.innerHTML = "可用";
             labelEmail.style.color = "green";
@@ -214,7 +245,7 @@
             spanEmail.style.color = "red";
             txtEmail.style.borderColor = "red";
             flagEmail = false;
-        }
+        }//是否為正確Email格式
     }//ok
     function isAddress(Address) {
         for (let i = 0; i < Address.value.length; i++) {

@@ -43,6 +43,8 @@ function fillProduct(cateId, prodTagId, callBack) {
         }
     )
 }
+
+
 //function getLatLng(addressInput, callBack) {
 //    $.getJSON(
 //        "https://maps.googleapis.com/maps/api/geocode/json?",
