@@ -26,6 +26,10 @@ namespace LeSheTuanGo.Models
         public decimal Latitude { get; set; }
         public decimal Longitude { get; set; }
         public int Balance { get; set; }
+        public string ProfileImagePath { get; set; }
+        public string DateOfBirth { get; set; }
+
+        
 
         public virtual DistrictRef District { get; set; }
         public virtual ICollection<GarbageServiceOffer> GarbageServiceOffers { get; set; }

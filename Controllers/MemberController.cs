@@ -57,6 +57,10 @@ namespace LeSheTuanGo.Controllers
             memberData.PasswordSalt = salt;
             memberData.Password = sha256(memberData.Password , salt);
             //密碼加密完成
+            memberData.ProfileImagePath = "123";
+            DateTime date = new DateTime();
+            //todo 需要新增NowTime
+            memberData.DateOfBirth = "123";
             db.Members.Add(memberData.member);
             db.SaveChanges();
             return RedirectToAction("Login");
