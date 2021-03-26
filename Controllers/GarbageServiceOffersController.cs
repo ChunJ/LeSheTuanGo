@@ -41,17 +41,12 @@ namespace LeSheTuanGo.Controllers
         {
             ViewData["DistrictId"] = new SelectList(_context.DistrictRefs, "DistrictId", "DistrictName");
             ViewData["GoRangeId"] = new SelectList(_context.RangeRefs, "RangeId", "RangeInMeters");
-            //ViewData["HostMemberId"] = new SelectList(_context.Members, "MemberId", "MemberID");
-            //ViewData["HostMemberId"] = memberID;
             ViewData["CityId"] = new SelectList(_context.CityRefs, "CityId", "CityName");
             ViewData["ServiceTypeId"] = new SelectList(_context.ServiceTypeRefs, "ServiceTypeId", "ServiceName");
             return View();
         }
 
         // POST: GarbageServiceOffers/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //Bind("GarbageServiceId,ServiceTypeId,HostMemberId,DistrictId,Address,StartTime,EndTime,IsActive,Latitude,Longitude,CanGo,GoRangeId,L3maxCount,L5maxCount,L14maxCount,L25maxCount,L33maxCount,L75maxCount,L120maxCount")] GarbageServiceOffer garbageServiceOffer
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(GarbageServiceOffersViewModel g)
@@ -66,18 +61,19 @@ namespace LeSheTuanGo.Controllers
             }
             ViewData["DistrictId"] = new SelectList(_context.DistrictRefs, "DistrictId", "DistrictName", g.DistrictId);
             ViewData["GoRangeId"] = new SelectList(_context.RangeRefs, "RangeId", "RangeInMeaters", g.GoRangeId);
-            //ViewData["HostMemberId"] = 1;
             ViewData["CityId"] = new SelectList(_context.CityRefs, "CityId", "CityName", g.District);
             ViewData["ServiceTypeId"] = new SelectList(_context.ServiceTypeRefs, "ServiceTypeId", "ServiceName", g.ServiceTypeId);
-            //GarbageServiceOffersViewModel gsovm = new GarbageServiceOffersViewModel(g);
             return View(g);
         }
+
+        #region 縣市區連動用，目前不使用
         public string getDistrict(string cityId)
         {
             var cityref = _context.DistrictRefs.Where(n => n.CityId == int.Parse(cityId)).Select(n=>new { n.DistrictId,n.DistrictName}).ToList();
             var s = JsonConvert.SerializeObject(cityref);
             return s;
         }
+        #endregion
         // GET: GarbageServiceOffers/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -94,16 +90,12 @@ namespace LeSheTuanGo.Controllers
             ViewData["DistrictId"] = new SelectList(_context.DistrictRefs, "DistrictId", "DistrictName", garbageServiceOffer.DistrictId);
             ViewData["GoRangeId"] = new SelectList(_context.RangeRefs, "RangeId", "RangeInMeters", garbageServiceOffer.GoRangeId);
             ViewData["CityId"] = new SelectList(_context.CityRefs, "CityId", "CityName", garbageServiceOffer.District);
-            //ViewData["HostMemberId"] = memberID;
             ViewData["ServiceTypeId"] = new SelectList(_context.ServiceTypeRefs, "ServiceTypeId", "ServiceName", garbageServiceOffer.ServiceTypeId);
-
             GarbageServiceOffersViewModel gsovm = new GarbageServiceOffersViewModel(garbageServiceOffer);
             return View(gsovm);
         }
 
         // POST: GarbageServiceOffers/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("GarbageServiceId,ServiceTypeId,HostMemberId,DistrictId,Address,StartTime,EndTime,IsActive,Latitude,Longitude,CanGo,GoRangeId,L3maxCount,L5maxCount,L14maxCount,L25maxCount,L33maxCount,L75maxCount,L120maxCount")] GarbageServiceOffer garbageServiceOffer)
@@ -136,10 +128,7 @@ namespace LeSheTuanGo.Controllers
             ViewData["DistrictId"] = new SelectList(_context.DistrictRefs, "DistrictId", "DistrictName", garbageServiceOffer.DistrictId);
             ViewData["GoRangeId"] = new SelectList(_context.RangeRefs, "RangeId", "RangeId", garbageServiceOffer.GoRangeId);
             ViewData["CityId"] = new SelectList(_context.CityRefs, "CityId", "CityName", garbageServiceOffer.District);
-            //ViewData["HostMemberId"] = new SelectList(_context.Members, "MemberId", "Address", garbageServiceOffer.HostMemberId);
-            //ViewData["HostMemberId"] = memberID;
             ViewData["ServiceTypeId"] = new SelectList(_context.ServiceTypeRefs, "ServiceTypeId", "ServiceName", garbageServiceOffer.ServiceTypeId);
-
             GarbageServiceOffersViewModel gsovm = new GarbageServiceOffersViewModel(garbageServiceOffer);
             return View(gsovm);
         }
@@ -154,17 +143,10 @@ namespace LeSheTuanGo.Controllers
             var garbageServiceOffer = await _context.GarbageServiceOffers.FindAsync(id);
             _context.GarbageServiceOffers.Remove(garbageServiceOffer);
             await _context.SaveChangesAsync();
-            //var garbageServiceOffer = await _context.GarbageServiceOffers
-            //    .Include(g => g.District)
-            //    .Include(g => g.GoRange)
-            //    .Include(g => g.HostMember)
-            //    .Include(g => g.ServiceType)
-            //    .FirstOrDefaultAsync(m => m.GarbageServiceId == id);
             if (garbageServiceOffer == null)
             {
                 return NotFound();
             }
-            //GarbageServiceOffersViewModel gsovm = new GarbageServiceOffersViewModel(garbageServiceOffer);
             return RedirectToAction(nameof(Index));
         }
 
