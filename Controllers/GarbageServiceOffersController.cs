@@ -32,6 +32,7 @@ namespace LeSheTuanGo.Controllers
             {
                 GarbageServiceOffersViewModel g = new GarbageServiceOffersViewModel(i);
                 ls.Add(g);
+                //A
             }
             return View(ls);
         }
