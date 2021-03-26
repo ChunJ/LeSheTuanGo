@@ -55,6 +55,7 @@ namespace LeSheTuanGo.Controllers
             {
                 g.StartTime = DateTime.Now;
                 g.HostMemberId = memberID;
+                //A
                 g.gso.L3available = g.L3maxCount;
                 g.gso.L5available = g.L5maxCount;
                 g.gso.L14available = g.L14maxCount;
