@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using LeSheTuanGo.Models;
 using System.Security.Cryptography;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace LeSheTuanGo.Controllers
 {
@@ -55,5 +56,29 @@ namespace LeSheTuanGo.Controllers
             string result = Convert.ToBase64String(crypto);//把加密後的字串從Byte[]轉為字串
             return result;//輸出結果
         }
+
+        public string checkRepeatEmail(string createEmail)
+        {
+
+            var Email = from n in db.Members
+                        where n.Email == createEmail
+                        select n;
+            var returnEmail = Email.FirstOrDefault();
+            //var returnEmail = db.Members.Where(m => m.Email == createEmail).FirstOrDefault();
+            string flag = "";
+            if (returnEmail == null)
+            {
+                flag = "1";
+                flag = JsonConvert.SerializeObject(flag);
+                return flag;
+            }
+            else
+            {
+                flag = "0";
+                flag = JsonConvert.SerializeObject(flag);
+                return flag;
+            }
+        }
+
     }
 }
