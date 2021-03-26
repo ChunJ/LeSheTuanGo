@@ -198,21 +198,22 @@
             success: function (flag) {
                 let js = JSON.parse(flag);
                 console.log(js);
-                if (js == 1) {
-                    return true;
-                } else if (js == 0) {
-                    return false;
+                if (js == "Yes") {
+                    spanEmail.innerHTML = "此Email已註冊過,或嘗試登入";
+                    labelEmail.style.color = "red";
+                    spanEmail.style.color = "red";
+                    txtEmail.style.borderColor = "red";
+                    flagEmail = false;
+
+                } else {
+                    spanEmail.innerHTML = "可用";
+                    labelEmail.style.color = "green";
+                    spanEmail.style.color = "green";
+                    txtEmail.style.borderColor = "green";
+                    flagEmail = true;
                 }
             }
         });
-    //    $.getJSON(
-    //    "/Member/checkRepeatEmail",
-    //    {
-    //        createEmail: document.getElementById("txtEmail").value,
-    //    },
-    //        function (result) {
-    //            console.log(result);
-    //    })
     }//ok
     function checkEmail() {
         let txtEmail = document.getElementById("txtEmail");
@@ -225,20 +226,14 @@
             txtEmail.style.borderColor = "red";
             flagEmail = false;
         }//如果為空
-        if (!checkRepeatEmail(txtEmail)) {
-            spanEmail.innerHTML = "此帳號已使用過，嘗試登入嗎?";
-            labelEmail.style.color = "red";
-            spanEmail.style.color = "red";
-            txtEmail.style.borderColor = "red";
-            flagEmail = false;
-            return;
-        }//如果已使用
+        
         if (isEmail(txtEmail)) {
-            spanEmail.innerHTML = "可用";
+            spanEmail.innerHTML = "格式正確";
             labelEmail.style.color = "green";
             spanEmail.style.color = "green";
             txtEmail.style.borderColor = "green";
             flagEmail = true;
+            checkRepeatEmail(txtEmail);
         } else {
             spanEmail.innerHTML = "請輸入正確Email格式";
             labelEmail.style.color = "red";
@@ -246,6 +241,7 @@
             txtEmail.style.borderColor = "red";
             flagEmail = false;
         }//是否為正確Email格式
+
     }//ok
     function isAddress(Address) {
         for (let i = 0; i < Address.value.length; i++) {
