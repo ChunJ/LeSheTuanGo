@@ -1,4 +1,5 @@
 ﻿using LeSheTuanGo.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -11,11 +12,29 @@ namespace LeSheTuanGo.Controllers {
     public class HomeController : Controller {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger) {
-            _logger = logger;
+        //public HomeController(ILogger<HomeController> logger)
+        //{
+        //    _logger = logger;
+        //}
+        private readonly MidtermContext db;
+        public HomeController(MidtermContext context)
+        {
+            db = context;
         }
 
+
         public IActionResult Index() {
+            if (HttpContext.Session.GetInt32(cUtility.Current_User_Id) != null)
+            {
+                int userId = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
+                var user = db.Members.Where(m => m.MemberId == userId).FirstOrDefault();
+                ViewBag.Name = user.LastName;
+            }
+            else
+            {
+                ViewBag.Name = "訪客";
+            }
+
             return View();
         }
         public IActionResult OrderNavi() {

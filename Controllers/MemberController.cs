@@ -9,6 +9,8 @@ using LeSheTuanGo.Models;
 using System.Security.Cryptography;
 using System.Text;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace LeSheTuanGo.Controllers
 {
@@ -19,10 +21,21 @@ namespace LeSheTuanGo.Controllers
         {
             db = context;
         }
-
         public IActionResult Login()
         {
             return View();
+        }
+        [HttpPost]
+        public IActionResult Login(Member member)
+        {
+            string check = JsonConvert.DeserializeObject(checkLogin(member.Email, member.Password)).ToString();
+            if (check == "not User" && check == "incorrect")
+            {
+                return RedirectToAction("Login");
+            }
+            HttpContext.Session.SetInt32(cUtility.Current_User_Id, Convert.ToInt32(check));
+
+            return RedirectToAction("Index","Home");
         }
         public IActionResult Create()
         {
@@ -48,10 +61,12 @@ namespace LeSheTuanGo.Controllers
             db.SaveChanges();
             return RedirectToAction("Login");
         }
-        private string sha256(string input ,string salt)
+
+
+        private string sha256(string inputPwd ,string salt)
         {
             SHA256 sha256 = new SHA256CryptoServiceProvider();//建立一個SHA256
-            byte[] source = Encoding.Default.GetBytes(input +salt);//將字串轉為Byte[]
+            byte[] source = Encoding.Default.GetBytes(inputPwd +salt);//將字串轉為Byte[]
             byte[] crypto = sha256.ComputeHash(source);//進行SHA256加密
             string result = Convert.ToBase64String(crypto);//把加密後的字串從Byte[]轉為字串
             return result;//輸出結果
@@ -68,17 +83,42 @@ namespace LeSheTuanGo.Controllers
             string flag = "";
             if (returnEmail == null)
             {
-                flag = "1";
+                flag = "No";
                 flag = JsonConvert.SerializeObject(flag);
                 return flag;
             }
             else
             {
-                flag = "0";
+                flag = "Yes";
                 flag = JsonConvert.SerializeObject(flag);
                 return flag;
             }
         }
 
+        public string checkLogin(string inputEmail , string inputPassword)
+        {
+            string returnMessage = "";
+            var qEmail = db.Members.Where(n => n.Email == inputEmail).FirstOrDefault();
+            if (qEmail == null)
+            {
+                returnMessage = "not User";
+                returnMessage = JsonConvert.SerializeObject(returnMessage);
+                return returnMessage;
+            }
+            string salt = qEmail.PasswordSalt;
+            string saltedPwd = sha256(inputPassword, salt);
+            if (saltedPwd == qEmail.Password)
+            {
+                returnMessage = qEmail.MemberId.ToString();
+                returnMessage = JsonConvert.SerializeObject(returnMessage);
+                return returnMessage;
+            }
+            else
+            {
+                returnMessage = "incorrect";
+                returnMessage = JsonConvert.SerializeObject(returnMessage);
+                return returnMessage;
+            }
+        }
     }
 }
