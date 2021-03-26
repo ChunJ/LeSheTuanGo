@@ -26,6 +26,7 @@ namespace CoreMVC.Controllers
             //double userLatitude = (double)q.ToList()[0].Latitude;
             //double userLongitude = (double)q.ToList()[0].Longitude;
             //= new GeoCoordinate(userLatitude, userLongitude);
+            //A
             db = context;
         }
         public IActionResult Index()
