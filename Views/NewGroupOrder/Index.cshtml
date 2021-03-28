@@ -37,32 +37,32 @@
                 <span asp-validation-for="Address" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="MaxCount"></label>
+                <label asp-for="MaxCount">目標購買數量</label>
                 <input asp-for="MaxCount" class="form-control" />
                 <span asp-validation-for="MaxCount" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="EndTime"></label>
+                <label asp-for="EndTime">截止時間</label>
                 <input asp-for="EndTime" class="form-control" />
                 <span asp-validation-for="EndTime" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="OrderDescription"></label>
+                <label asp-for="OrderDescription">團購說明</label>
                 <input asp-for="OrderDescription" class="form-control" />
                 <span asp-validation-for="OrderDescription" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="UnitPrice"></label>
+                <label asp-for="UnitPrice">每單位價格</label>
                 <input asp-for="UnitPrice" class="form-control" />
                 <span asp-validation-for="UnitPrice" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
-                <label class="form-check-label">
+                <label class="form-check-label">是否提供外送服務
                     <input class="form-check-input" asp-for="CanGo" /> @Html.DisplayNameFor(model => model.CanGo)
                 </label>
             </div>
             <div class="form-group">
-                <label asp-for="GoRangeId"></label>
+                <label asp-for="GoRangeId">外送距離限制</label>
                 <select asp-for="GoRangeId" class="form-control" asp-items="ViewBag.GoRangeId"></select>
             </div>
             <div class="form-group">
@@ -77,15 +77,21 @@
     @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
 <script>
     let cityS = document.querySelector("#CityId");
-    let distS = document.querySelector("#DistrictId");
+    let distS = document.querySelector("#DistrictId"); 
+    let cateS = document.querySelector("#Category");
+    let prodS = document.querySelector("#ProductId");
     window.onload = function () {
         cityS.value = @ViewData["CityId"];
         fillDistrict(@ViewData["CityId"], "#DistrictId", function () {
             distS.value = @ViewData["DistrictId"];
         });
+        cateS.value = @ViewData["CategoryId"];
+        fillDistrict(@ViewData["CategoryId"], "#ProductId", function () {
+            distS.value = @ViewData["ProductId"];
+        });
     }
     function test() {
-        
+
     }
 </script>
 }

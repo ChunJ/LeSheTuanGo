@@ -65,7 +65,7 @@ namespace LeSheTuanGo.ViewModels
         public int Balance { get { return iv_Member.Balance; } set { iv_Member.Balance = value; } }
 
         public string ProfileImagePath { get { return iv_Member.ProfileImagePath; } set { iv_Member.ProfileImagePath = value; } }
-        public string DateOfBirth { get { return iv_Member.DateOfBirth; } set { iv_Member.DateOfBirth = value; } }
+        //public string DateOfBirth { get { return iv_Member.DateOfBirth; } set { iv_Member.DateOfBirth = value; } }
 
         public virtual DistrictRef District { get; set; }
         public virtual ICollection<GarbageServiceOffer> GarbageServiceOffers { get; set; }

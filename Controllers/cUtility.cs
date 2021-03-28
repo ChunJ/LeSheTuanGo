@@ -11,7 +11,7 @@ namespace LeSheTuanGo.Controllers {
         public static readonly string Current_User_Id = "Current_User_Id";
 
         //input address and output coordinate[lat, lng] 
-        public static decimal[] addressToCoordinate(string address) {
+        public static decimal[] addressToLatlong(string address) {
             //google api key=AIzaSyBircB99P_RvzxWdQT-hk40-h3Ofzlb_vQ
             //目前固定放，之後可加備援的額外key，try/catch
             WebRequest request = WebRequest.Create($"https://maps.googleapis.com/maps/api/geocode/json?address={address}&key=AIzaSyBircB99P_RvzxWdQT-hk40-h3Ofzlb_vQ");
