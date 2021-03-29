@@ -18,17 +18,13 @@ namespace LeSheTuanGo.Controllers
 {
     public class MemberController : Controller
     {
-        //private readonly MidtermContext db;
-        //public MemberController(MidtermContext context)
-        //{
-        //    db = context;
-        //}
-        MidtermContext db = new MidtermContext();
+        private readonly MidtermContext db;
         private IWebHostEnvironment iv_host;
 
-        public MemberController(IWebHostEnvironment p)
+        public MemberController(IWebHostEnvironment host,MidtermContext context)
         {
-            iv_host = p;
+            iv_host = host;
+            db = context;
         }
 
         public IActionResult Login()
@@ -38,7 +34,8 @@ namespace LeSheTuanGo.Controllers
         [HttpPost]
         public IActionResult Login(Member member)
         {
-            string check = JsonConvert.DeserializeObject(checkLogin(member.Email, member.Password)).ToString();
+            string check = checkLogin(member.Email, member.Password);
+            check = JsonConvert.DeserializeObject(check).ToString();
             if (check == "not User" && check == "incorrect")
             {
                 return RedirectToAction("Login");
@@ -78,12 +75,12 @@ namespace LeSheTuanGo.Controllers
                 {
                     memberData.image.CopyTo(photo);
                 }
-                memberData.ProfileImagePath = "~/profileImages/" + photoName;
+                memberData.ProfileImagePath = "/profileImages/" + photoName;
             }
             else
             {
                 string imageDefalt = "profilePic.jpg";
-                memberData.ProfileImagePath = "~/profileImages/" + imageDefalt;
+                memberData.ProfileImagePath = "/profileImages/" + imageDefalt;
             }                
             #endregion
 
@@ -92,7 +89,11 @@ namespace LeSheTuanGo.Controllers
             return RedirectToAction("Login");
         }
 
-
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Home");
+        }
         private string sha256(string inputPwd ,string salt)
         {
             SHA256 sha256 = new SHA256CryptoServiceProvider();//建立一個SHA256
