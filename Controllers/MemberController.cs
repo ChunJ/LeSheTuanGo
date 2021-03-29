@@ -60,7 +60,6 @@ namespace LeSheTuanGo.Controllers
             memberData.ProfileImagePath = "123";
             DateTime date = new DateTime();
             //todo 需要新增NowTime
-            memberData.DateOfBirth = "123";
             db.Members.Add(memberData.member);
             db.SaveChanges();
             return RedirectToAction("Login");

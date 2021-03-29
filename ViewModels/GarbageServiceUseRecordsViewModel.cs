@@ -17,83 +17,87 @@ namespace prj0305.ViewModels
             garbageServiceUseRecord = q;
         }
 
-        [DisplayName("使用者ID")]
+        [DisplayName("委託編號")]
         public int ServiceUseRecordId
         {
             get { return garbageServiceUseRecord.ServiceUseRecordId; }
             set { garbageServiceUseRecord.ServiceUseRecordId = value; }
         }
-        [DisplayName("創造活動者ID")]
+        [DisplayName("使用服務的服務編號")]
         public int GarbageServiceOfferId
         {
             get { return garbageServiceUseRecord.GarbageServiceOfferId; }
             set { garbageServiceUseRecord.GarbageServiceOfferId = value; }
         }
-        [DisplayName("會員ID")]
+        [DisplayName("委託者編號")]
         public int MemberId
         {
             get { return garbageServiceUseRecord.MemberId; }
             set { garbageServiceUseRecord.MemberId = value; }
         }
-        [DisplayName("L3數量")]
+        [DisplayName("要給人倒的3L袋數")]
         public byte L3count
         {
             get { return garbageServiceUseRecord.L3count; }
             set { garbageServiceUseRecord.L3count = value; }
         }
-        [DisplayName("L5數量")]
+        [DisplayName("要給人倒的5L袋數")]
         public byte L5count
         {
             get { return garbageServiceUseRecord.L5count; }
             set { garbageServiceUseRecord.L5count = value; }
         }
-        [DisplayName("L14數量")]
+        [DisplayName("要給人倒的14L袋數")]
         public byte L14count
         {
             get { return garbageServiceUseRecord.L14count; }
             set { garbageServiceUseRecord.L14count = value; }
         }
-        [DisplayName("L25數量")]
+        [DisplayName("要給人倒的25L袋數")]
         public byte L25count
         {
             get { return garbageServiceUseRecord.L25count; }
             set { garbageServiceUseRecord.L25count = value; }
         }
-        [DisplayName("L33數量")]
+        [DisplayName("要給人倒的33L袋數")]
         public byte L33count
         {
             get { return garbageServiceUseRecord.L33count; }
             set { garbageServiceUseRecord.L33count = value; }
         }
-        [DisplayName("L75數量")]
+        [DisplayName("要給人倒的75L袋數")]
         public byte L75count
         {
             get { return garbageServiceUseRecord.L75count; }
             set { garbageServiceUseRecord.L75count = value; }
         }
-        [DisplayName("L120數量")]
+        [DisplayName("要給人倒的120L袋數")]
         public byte L120count
         {
             get { return garbageServiceUseRecord.L120count; }
             set { garbageServiceUseRecord.L120count = value; }
         }
-        [DisplayName("是否前往")]
+        [DisplayName("是否要到府服務")]
         public bool NeedCome
         {
             get { return garbageServiceUseRecord.NeedCome; }
             set { garbageServiceUseRecord.NeedCome = value; }
         }
-        [DisplayName("區域")]
+        [DisplayName("到府位置鄉政市區")]
         public short ComeDistrictId
         {
             get { return garbageServiceUseRecord.ComeDistrictId; }
             set { garbageServiceUseRecord.ComeDistrictId = value; }
         }
-        [DisplayName("地址")]
+        [DisplayName("到府位置道路街名")]
         public string ComeAddress
         {
             get { return garbageServiceUseRecord.ComeAddress; }
             set { garbageServiceUseRecord.ComeAddress = value; }
         }
+
+        public virtual ICollection<DistrictRef>  ComeDistrict { get; set; }
+        public virtual ICollection<GarbageServiceOffer>  GarbageServiceOffer { get; set; }
+        public virtual ICollection<Member>  Member { get; set; }
     }
 }
