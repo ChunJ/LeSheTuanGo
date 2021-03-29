@@ -8,7 +8,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Login" onsubmit="return checkLogin()">
+        <form asp-action="Login" onsubmit="return true">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Email" class="control-label" id="labelEmail"></label>
@@ -17,7 +17,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Password" class="control-label" id="labelPassword"></label>
-                <input asp-for="Password" class="form-control" id="txtPassword" />
+                <input asp-for="Password" class="form-control" id="txtPassword" onblur="checkLogin()"/>
                 <span asp-validation-for="Password" class="text-danger" id="spanPassword"></span>
             </div>
             <div class="form-group">
@@ -43,64 +43,56 @@
     let txtPassword = document.getElementById("txtPassword");
     let spanPassword = document.getElementById("spanPassword");
     let labelPassword = document.getElementById("labelPassword");
-    var checkFlag = false;
     function checkLogin() {
         if (txtEmail.value == "") {
             spanEmail.innerHTML = "不可為空";
             labelEmail.style.color = "red";
             txtEmail.style.borderColor = "red";
-            return checkFlag;
             return false;
         }
         if (txtPassword.value == "") {
             spanPassword.innerHTML = "不可為空";
             labelPassword.style.color = "red";
             txtPassword.style.borderColor = "red";
-            return checkFlag;
             return false;
         }
         isUser(txtEmail, txtPassword);
-        if (checkFlag)
-            return true;
-        else
-            return false;
-    }
+        //    if (checkFlag)
+        //        return true;
+        //    else
+        //        return false;
+    }//ok
     function isUser(Email, Password) {
         $.ajax({
             url: "/Member/checkLogin?inputEmail=" + Email.value + "&inputPassword=" + Password.value,
             type: "Get",
             success: function (returnMessage) {
                 let js = JSON.parse(returnMessage);
+                console.log(js);
                 if (js != "not User" && js != "incorrect") {
                     labelEmail.style.color = "green";
                     txtEmail.style.borderColor = "green";
                     labelPassword.style.color = "green";
                     txtPassword.style.borderColor = "green";
-                    checkFlag = true;
+                    console.log(js);
                     return true;
                 } else if (js == "not User") {
                     spanEmail.innerHTML = "此Email尚未註冊,或嘗試<a href='/Member/Create'>註冊</a>?";
                     labelEmail.style.color = "red";
                     txtEmail.style.borderColor = "red";
-                    checkFlag = false;
                     return false;
                 } else if (js == "incorrect") {
                     spanPassword.innerHTML = "密碼錯誤";
                     labelPassword.style.color = "red";
                     txtPassword.style.borderColor = "red";
-                    checkFlag = false;
                     return false;
                 }
             }
         });
-    }
-    function checkValue() {
-        checkLogin();
-        return checkFlag;
-    }
+    }//ok
     //demo
     function demo() {
-        txtEmail.value = "YuChen@gmail.com";
+        txtEmail.value = "YuChen789@gmail.com";
         txtPassword.value = "Password123";
     }
     //$captcha = $_POST['g-recaptcha-response'];

@@ -32,14 +32,15 @@ namespace LeSheTuanGo.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Login(Member member)
+        public IActionResult Login(Member memberLogin)
         {
-            string check = checkLogin(member.Email, member.Password);
+            string check = checkLogin(memberLogin.Email, memberLogin.Password);
             check = JsonConvert.DeserializeObject(check).ToString();
             if (check == "not User" || check == "incorrect")
             {
-                return RedirectToAction("Login");
+                return View();
             }
+            int userId = (int)HttpContext.Session.GetInt32(cUtility.Current_User_Id);
             return RedirectToAction("Index","Home");
         }
         public IActionResult Create()
@@ -49,9 +50,9 @@ namespace LeSheTuanGo.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(MemberViewModel memberData)
+        public IActionResult Create(MemberViewModel memberCreate)
         {
-            if(string.IsNullOrEmpty(memberData.Address)|| memberData.DistrictId == 0|| string.IsNullOrEmpty(memberData.Email)|| string.IsNullOrEmpty(memberData.Password))
+            if(string.IsNullOrEmpty(memberCreate.Address)|| memberCreate.DistrictId == 0|| string.IsNullOrEmpty(memberCreate.Email)|| string.IsNullOrEmpty(memberCreate.Password))
             {
                 return RedirectToAction("Create");
             }
@@ -60,33 +61,94 @@ namespace LeSheTuanGo.Controllers
             byte[] buff = new byte[10];
             rng.GetBytes(buff);
             string salt = Convert.ToBase64String(buff);
-            memberData.PasswordSalt = salt;
-            memberData.Password = sha256(memberData.Password , salt);
+            memberCreate.PasswordSalt = salt;
+            memberCreate.Password = sha256(memberCreate.Password , salt);
             #endregion
             #region 照片
-            if(memberData.image != null)
+            if (memberCreate.image != null)
             {
                 string photoName = Guid.NewGuid().ToString() + ".jpg";
                 using (var photo = new FileStream(
                     iv_host.WebRootPath + @"\profileImages\" + photoName,
                     FileMode.Create))
                 {
-                    memberData.image.CopyTo(photo);
+                    memberCreate.image.CopyTo(photo);
                 }
-                memberData.ProfileImagePath = "/profileImages/" + photoName;
+                memberCreate.ProfileImagePath = "/profileImages/" + photoName;
             }
             else
             {
                 string imageDefalt = "profilePic.jpg";
-                memberData.ProfileImagePath = "/profileImages/" + imageDefalt;
-            }                
+                memberCreate.ProfileImagePath = "/profileImages/" + imageDefalt;
+            }
             #endregion
-
-            db.Members.Add(memberData.member);
+            db.Members.Add(memberCreate.member);
             db.SaveChanges();
             return RedirectToAction("Login");
         }
 
+        public IActionResult Detail()
+        {
+            int userId = (int)HttpContext.Session.GetInt32(cUtility.Current_User_Id);
+            var qMember = db.Members.Where(n => n.MemberId == userId).FirstOrDefault();
+
+
+            MemberViewModel vm = new MemberViewModel(qMember);
+            return View(vm);
+        }
+
+        public IActionResult EditPassword()
+        {
+            int userId = (int)HttpContext.Session.GetInt32(cUtility.Current_User_Id);
+            var EditPassword = db.Members.Where(n => n.MemberId == userId).FirstOrDefault();
+            MemberViewModel vm = new MemberViewModel(EditPassword);
+            return View(vm);
+        }
+        [HttpPost]
+        public IActionResult EditPassword(MemberViewModel memberEdit)
+        {
+            var selected = db.Members.Where(n => n.MemberId == memberEdit.MemberId).FirstOrDefault();
+            if(selected != null)
+            {
+                selected.Password = sha256(memberEdit.Password, selected.PasswordSalt);
+                db.SaveChanges();
+                return RedirectToAction("Index", "Home");
+            }
+            return View();
+        }
+        public IActionResult EditAddress()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult EditAddress(MemberViewModel memberEdit)
+        {
+            var selected = db.Members.Where(n => n.MemberId == memberEdit.MemberId).FirstOrDefault();
+            if (selected != null)
+            {
+                selected.Address = memberEdit.Address;
+                selected.DistrictId = memberEdit.DistrictId;
+                db.SaveChanges();
+            }
+
+            return View();
+        }//todo
+
+        public IActionResult EditImage()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult EditImage(MemberViewModel memberEdit)
+        {
+            var selected = db.Members.Where(n => n.MemberId == memberEdit.MemberId).FirstOrDefault();
+            if (selected != null)
+            {
+                selected.ProfileImagePath = memberEdit.ProfileImagePath;
+                db.SaveChanges();
+            }
+            return View();
+        }//todo
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();

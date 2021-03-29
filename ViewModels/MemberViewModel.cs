@@ -29,7 +29,6 @@ namespace LeSheTuanGo.ViewModels
         //    OrderBuyRecords = new HashSet<OrderBuyRecord>();
         //    Orders = new HashSet<Order>();
         //}
-
         public int MemberId { get { return iv_Member.MemberId; } set { iv_Member.MemberId = value; } }
 
         [DisplayName("姓")]
@@ -64,7 +63,7 @@ namespace LeSheTuanGo.ViewModels
 
         [DisplayName("餘額")]
         public int Balance { get { return iv_Member.Balance; } set { iv_Member.Balance = value; } }
-
+        [DisplayName("照片")]
         public string ProfileImagePath { get { return iv_Member.ProfileImagePath; } set { iv_Member.ProfileImagePath = value; } }
        
         [DisplayName("生日")]
