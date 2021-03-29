@@ -11,16 +11,26 @@ using System.Text;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace LeSheTuanGo.Controllers
 {
     public class MemberController : Controller
     {
-        private readonly MidtermContext db;
-        public MemberController(MidtermContext context)
+        //private readonly MidtermContext db;
+        //public MemberController(MidtermContext context)
+        //{
+        //    db = context;
+        //}
+        MidtermContext db = new MidtermContext();
+        private IWebHostEnvironment iv_host;
+
+        public MemberController(IWebHostEnvironment p)
         {
-            db = context;
+            iv_host = p;
         }
+
         public IActionResult Login()
         {
             return View();
@@ -42,6 +52,7 @@ namespace LeSheTuanGo.Controllers
             ViewData["City"] = new SelectList(db.CityRefs, "CityId", "CityName");
             return View();
         }
+
         [HttpPost]
         public IActionResult Create(MemberViewModel memberData)
         {
@@ -49,18 +60,33 @@ namespace LeSheTuanGo.Controllers
             {
                 return RedirectToAction("Create");
             }
-            //密碼加密
+            #region 密碼加密
             RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
             byte[] buff = new byte[10];
             rng.GetBytes(buff);
             string salt = Convert.ToBase64String(buff);
             memberData.PasswordSalt = salt;
             memberData.Password = sha256(memberData.Password , salt);
-            //密碼加密完成
-            memberData.ProfileImagePath = "123";
-            DateTime date = new DateTime();
-            //todo 需要新增NowTime
-            memberData.DateOfBirth = "123";
+            #endregion
+            #region 照片
+            if(memberData.image != null)
+            {
+                string photoName = Guid.NewGuid().ToString() + ".jpg";
+                using (var photo = new FileStream(
+                    iv_host.WebRootPath + @"\profileImages\" + photoName,
+                    FileMode.Create))
+                {
+                    memberData.image.CopyTo(photo);
+                }
+                memberData.ProfileImagePath = "~/profileImages/" + photoName;
+            }
+            else
+            {
+                string imageDefalt = "profilePic.jpg";
+                memberData.ProfileImagePath = "~/profileImages/" + imageDefalt;
+            }                
+            #endregion
+
             db.Members.Add(memberData.member);
             db.SaveChanges();
             return RedirectToAction("Login");
