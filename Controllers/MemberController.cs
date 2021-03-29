@@ -62,6 +62,7 @@ namespace LeSheTuanGo.Controllers
             string salt = Convert.ToBase64String(buff);
             memberData.PasswordSalt = salt;
             memberData.Password = sha256(memberData.Password , salt);
+<<<<<<< Updated upstream
             #endregion
             #region 照片
             if(memberData.image != null)
@@ -82,6 +83,12 @@ namespace LeSheTuanGo.Controllers
             }                
             #endregion
 
+=======
+            //密碼加密完成
+            memberData.ProfileImagePath = "123";
+            DateTime date = new DateTime();
+            //todo 需要新增NowTime
+>>>>>>> Stashed changes
             db.Members.Add(memberData.member);
             db.SaveChanges();
             return RedirectToAction("Login");

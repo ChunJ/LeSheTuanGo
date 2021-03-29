@@ -1,4 +1,6 @@
 ﻿using GeoCoordinatePortable;
+using LeSheTuanGo.Models;
+using LeSheTuanGo.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 //JObject
 using Newtonsoft.Json.Linq;
@@ -15,6 +17,37 @@ namespace LeSheTuanGo.Controllers
 {
     public class MapController : Controller
     {
+        int MemberId = 6;
+
+        private readonly MidtermContext iv_context;
+        public MapController(MidtermContext midtermContext)
+        {
+            iv_context = midtermContext;
+        }
+
+        public IActionResult searchByMember()
+        {
+            var memberDistrictId = iv_context.Members.Where(m => m.MemberId == MemberId).First().DistrictId;
+
+            var result = iv_context.GarbageTruckSpots.Where(s => s.DistrictId == memberDistrictId).Take(3).ToList();
+
+            ViewBag.result = result;
+
+            ViewBag.resultLat = result[0].Latitude;
+            ViewBag.resultLng = result[0].Longitude;
+            ViewBag.resultNam = result[0].Address;
+
+            List<GarbageTruckSpotViewModel> garbageTruckSpotViewModels = new List<GarbageTruckSpotViewModel>();
+
+            foreach (GarbageTruckSpot r in result)
+            {
+                GarbageTruckSpotViewModel garbageTruckSpotViewModel = new GarbageTruckSpotViewModel(r);
+                garbageTruckSpotViewModels.Add(garbageTruckSpotViewModel);
+            }
+
+            return View(garbageTruckSpotViewModels);
+        }
+
         public IActionResult Index()
         {
             return View();
