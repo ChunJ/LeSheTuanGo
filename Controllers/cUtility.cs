@@ -10,6 +10,8 @@ namespace LeSheTuanGo.Controllers {
     public static class cUtility {
         //key for session
         public static readonly string Current_User_Id = "Current_User_Id";
+        public static readonly string Current_User_Name = "Current_User_Name";
+        public static readonly string Current_User_Profile_Image = "Current_User_Profile_Image";
 
         //input address and output coordinate[lat, lng] 
         public static decimal[] addressToLatlong(string address) {

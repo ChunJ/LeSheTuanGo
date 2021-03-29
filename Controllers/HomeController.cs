@@ -24,6 +24,7 @@ namespace LeSheTuanGo.Controllers {
 
 
         public IActionResult Index() {
+<<<<<<< HEAD
             if (HttpContext.Session.GetInt32(cUtility.Current_User_Id) != null)
             {
                 int userId = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
@@ -38,6 +39,8 @@ namespace LeSheTuanGo.Controllers {
                 ViewBag.Image = "/images/profilePic.jpg";
             }
 
+=======
+>>>>>>> 139677a252078fbaab83c401179c1530f56c51ae
             return View();
         }
         public IActionResult OrderNavi() {
