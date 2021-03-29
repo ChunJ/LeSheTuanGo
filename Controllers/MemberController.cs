@@ -36,7 +36,7 @@ namespace LeSheTuanGo.Controllers
         {
             string check = checkLogin(member.Email, member.Password);
             check = JsonConvert.DeserializeObject(check).ToString();
-            if (check == "not User" && check == "incorrect")
+            if (check == "not User" || check == "incorrect")
             {
                 return RedirectToAction("Login");
             }
