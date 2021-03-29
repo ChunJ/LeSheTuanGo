@@ -42,16 +42,5 @@ namespace LeSheTuanGo.Controllers {
             short distance = (short)spotA.GetDistanceTo(spotB);
             return distance;
         }
-
-        public static void setUserProfile(ViewDataDictionary viewData, int? userId) {
-            if (userId != null) {
-                var user = db.Members.Where(m => m.MemberId == userId.Value).First();
-                viewData["userNameToDisplay"] = user.LastName;
-                viewData["userProfileImageToShow"] = user.ProfileImagePath;
-            } else {
-                viewData["userNameToDisplay"] = "訪客";
-                viewData["userProfileImageToShow"] = "/images/guestProfile.jpg";
-            }
-        }
     }
 }

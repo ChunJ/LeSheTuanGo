@@ -24,23 +24,6 @@ namespace LeSheTuanGo.Controllers {
 
 
         public IActionResult Index() {
-<<<<<<< HEAD
-            if (HttpContext.Session.GetInt32(cUtility.Current_User_Id) != null)
-            {
-                int userId = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
-                var user = db.Members.Where(m => m.MemberId == userId).FirstOrDefault();
-                ViewBag.Name = user.LastName;
-                ViewBag.Image = user.ProfileImagePath;
-                ViewData
-            }
-            else
-            {
-                ViewBag.Name = "訪客";
-                ViewBag.Image = "/images/profilePic.jpg";
-            }
-
-=======
->>>>>>> 139677a252078fbaab83c401179c1530f56c51ae
             return View();
         }
         public IActionResult OrderNavi() {
