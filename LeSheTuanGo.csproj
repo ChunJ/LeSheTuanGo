@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\images\" />
+    <Folder Include="wwwroot\profileImages\" />
   </ItemGroup>
 
   <ItemGroup>
