@@ -30,6 +30,7 @@ namespace LeSheTuanGo.Controllers {
                 var user = db.Members.Where(m => m.MemberId == userId).FirstOrDefault();
                 ViewBag.Name = user.LastName;
                 ViewBag.Image = user.ProfileImagePath;
+                ViewData
             }
             else
             {
