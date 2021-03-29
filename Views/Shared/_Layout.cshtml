@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http;
+@using LeSheTuanGo.Controllers;
+@{ 
+    ViewData["userid"] = Context.Session.GetInt32(cUtility.Current_User_Id);
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -60,11 +66,14 @@
                         Alma Tseng
                     </button>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" asp-controller="Member" asp-action="Login">登入</a>
-                        <a class="dropdown-item" asp-controller="Member" asp-action="Create">創建</a>
-                        <a class="dropdown-item" href="#">我的帳戶</a>
-                        <a class="dropdown-item" href="#">設定</a>
-                        <a class="dropdown-item" href="#">登出</a>
+                        @if (ViewData["userid"] == null) {
+                            <a class="dropdown-item" asp-controller="Member" asp-action="Login">登入</a>
+                            <a class="dropdown-item" asp-controller="Member" asp-action="Create">創建</a>
+                        } else {
+                            <a class="dropdown-item" href="#">我的帳戶</a>
+                            <a class="dropdown-item" href="#">設定</a>
+                            <a class="dropdown-item" href="#">登出</a>
+                        }
                     </div>
                 </div>
             </div>
