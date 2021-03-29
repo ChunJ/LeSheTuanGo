@@ -40,8 +40,6 @@ namespace LeSheTuanGo.Controllers
             {
                 return RedirectToAction("Login");
             }
-            HttpContext.Session.SetInt32(cUtility.Current_User_Id, Convert.ToInt32(check));
-
             return RedirectToAction("Index","Home");
         }
         public IActionResult Create()
@@ -129,18 +127,21 @@ namespace LeSheTuanGo.Controllers
         public string checkLogin(string inputEmail , string inputPassword)
         {
             string returnMessage = "";
-            var qEmail = db.Members.Where(n => n.Email == inputEmail).FirstOrDefault();
-            if (qEmail == null)
+            var qMember = db.Members.Where(n => n.Email == inputEmail).FirstOrDefault();
+            if (qMember == null)
             {
                 returnMessage = "not User";
                 returnMessage = JsonConvert.SerializeObject(returnMessage);
                 return returnMessage;
             }
-            string salt = qEmail.PasswordSalt;
+            string salt = qMember.PasswordSalt;
             string saltedPwd = sha256(inputPassword, salt);
-            if (saltedPwd == qEmail.Password)
+            if (saltedPwd == qMember.Password)
             {
-                returnMessage = qEmail.MemberId.ToString();
+                HttpContext.Session.SetInt32(cUtility.Current_User_Id, Convert.ToInt32(qMember.MemberId));
+                HttpContext.Session.SetString(cUtility.Current_User_Name, qMember.FirstName + qMember.LastName);
+                HttpContext.Session.SetString(cUtility.Current_User_Profile_Image, qMember.ProfileImagePath);
+                returnMessage = qMember.MemberId.ToString();
                 returnMessage = JsonConvert.SerializeObject(returnMessage);
                 return returnMessage;
             }
