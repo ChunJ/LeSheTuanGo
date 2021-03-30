@@ -8,83 +8,69 @@
 <style>
     #wrap {
         display: flex;
-        height: 80vh
+        height: 80vh;
     }
-</style>
-@*<p>
-        <a asp-action="Create">Create New</a>
-    </p>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.GroupType)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.GroupId)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.SentTime)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Message)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.SentMember)
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-    @foreach (var item in Model) {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.GroupType)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.GroupId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.SentTime)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Message)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.SentMember.Address)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.MessageId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.MessageId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.MessageId">Delete</a>
-                </td>
-            </tr>
-    }
-        </tbody>
-    </table>*@
-<div id="wrap">
 
+    .self {
+        text-align: right;
+        /*position:relative;*/
+    }
+
+        .self div {
+            text-align: right;
+            background-color: greenyellow;
+            word-break: break-all;
+/*            width: 40%;
+            position: absolute;
+            right: 0;
+            bottom: 0;*/
+        }
+
+    .other {
+        text-align: left;
+        /*position: relative;*/
+
+    }
+
+        .other div {
+            text-align: left;
+            background-color: azure;
+            word-break: break-all;
+/*            width: 40%;
+            position: absolute;
+            right: 0;
+            bottom: 0;*/
+        }
+</style>
+<div id="wrap">
+    @*<input type="hidden" id="memberID" />*@
     <div id="link" style="border:5px solid red;background-color:green;flex: 1 1 0">
-        <button>A</button>
     </div>
     <div style="position: relative; border: 5px solid red; background-color: aqua; flex: 1 1 0">
-        <div id="chat" style="border:1px dashed;width:100%;height:95%;">
-
+        <div id="chat" style="width:100%;height:95%;overflow:auto;">
         </div>
-        <span style="position: absolute;bottom:0 "><input type="text" /><button>enter</button></span>
+        <span style="position: absolute;bottom:0 ">
+            <input type="text" id="message" />
+            <button id="btnSend" disabled='disabled'>Send</button>
+        </span>
     </div>
     <div id="detail" style="border:5px solid red;background-color:yellow;flex: 1 1 0">
-        
+
     </div>
 </div>
+<div>memberid<div>message</div></div>
+
+@*<script src="~/lib/jquery/dist/jquery.min.js"></script>*@
 
 
-    @*<script src="~/lib/jquery/dist/jquery.min.js"></script>*@
-
-
-    @section Scripts {
-        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-        <script>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script>
+        "use strict";
+        var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+        var gmemberid = @ViewBag.memberid;
+            //ready
     $(function () {
         var txt = "";
         @{
@@ -93,40 +79,72 @@
                 @: txt += "<button onclick='chatGetOrder("+@i+")'>" + @i + "</button>"
                 }
         }
+        //$("#memberID").val(gmemberid);
         $("#link").html(txt);
     })
+        connection.on("ReceiveMessage", function (memberid, message, orderid) {
+            if ($("#OrderId").val() == orderid) {
+                let msgclass = (gmemberid == memberid) ? 'self' : 'other';
+                $("#chat").append("<div class='" + msgclass + "'>" + memberid + "說：<div>" + message + "</div></div>")
 
-    function chatGetOrder(i) {
-        //var orderID = document.getElementById(this).text;
-        /*console.log(i);*/
-        var urlorder = "/ChatMessageRecords/chatGetOrderDetail?orderId=" + i;
-        $.ajax({
-            url: urlorder,
-            type: "GET",
-            success: function (data) {
-                var s = JSON.parse(data);
-                var txt = "";
-                for (let i = 0; i < s.length; i++) {
-                    txt += "<label>團編號：" + s[i].OrderId + "</label><br />";
-                    txt += "<label>地址：" + s[i].Address + "</label>"
-                }
-                $("#detail").html(txt);
-            },
+            }
+        });
+            //選團
+        function chatGetOrder(i) {
+            if (connection.connectionState != "Connected") {
+                connection.start().then(function () {
+                    document.getElementById("btnSend").disabled = false;
+                }).catch(function (err) {
+                    return console.error(err.toString());
+                })
+            };
+
+            var urlorder = "/ChatMessageRecords/chatGetOrderDetail?orderId=" + i;
+            $.ajax({
+                url: urlorder,
+                type: "GET",
+                success: function (data) {
+                    var s = JSON.parse(data);
+                    var txt = "";
+                    for (let i = 0; i < s.length; i++) {
+                        txt += "<input type='hidden' id='OrderId' value='" + s[i].OrderId+"'/>"
+                        txt += "<label>團編號：" + s[i].OrderId + "</label><br />";
+                        txt += "<label>地址：" + s[i].Address + "</label>"
+                    }
+                    $("#detail").html(txt);
+                },
+            })
+
+            var urlchat = "/ChatMessageRecords/chatGetChat?orderId=" + i;
+            $.ajax({
+                url: urlchat,
+                type: "GET",
+                success: function (data) {
+                    var s = JSON.parse(data);
+                    var txt = "";
+                    for (let i = 0; i < s.length; i++) {
+                        let msgclass = (s[i].SentMemberId == gmemberid) ? 'self' : 'other';
+                        txt += "<div class='"+msgclass+"'>" + s[i].SentMemberId + "說：<div>" + s[i].Message + "</div></div>"
+                    }
+                    $("#chat").html(txt);
+                },
+            })
+        }
+            //發訊息
+
+        $('#btnSend').click(function() {
+            var message = $("#message").val();
+            var orderid = $("#OrderId").val();
+            var memberid = gmemberid;
+            connection.invoke("SendMessage", memberid, message,orderid).catch(function (err) {
+                return console.error(err.toString());
+            });
+            $.ajax({
+                type: "POST",
+                url: "/ChatMessageRecords/Create",
+                data: { message: message, orderid: orderid, memberid: memberid }
+            });
         })
 
-        var urlchat = "/ChatMessageRecords/chatGetChat?orderId=" + i;
-        $.ajax({
-            url: urlchat,
-            type: "GET",
-            success: function (data) {
-                //var s = JSON.parse(data);
-                var txt = "";
-                for (let i = 0; i < s.length; i++) {
-                    txt += "<option value='" + s[i].DistrictId + "'>" + s[i].DistrictName + "</option>"
-                }
-                $("#DistrictId").html(txt);
-            },
-        })
-    }
-        </script>
-    }
+    </script>
+}
