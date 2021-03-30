@@ -81,15 +81,72 @@ namespace LeSheTuanGo.Controllers
                 memberData.ProfileImagePath = "/profileImages/" + imageDefalt;
             }                
             #endregion
-            //密碼加密完成
-            DateTime date = new DateTime();
-            //todo 需要新增NowTime
-
             db.Members.Add(memberData.member);
             db.SaveChanges();
             return RedirectToAction("Login");
         }
+        public IActionResult Detail()
+        {
+            int userId = (int)HttpContext.Session.GetInt32(cUtility.Current_User_Id);
+            var qMember = db.Members.Where(n => n.MemberId == userId).FirstOrDefault();
 
+
+            MemberViewModel vm = new MemberViewModel(qMember);
+            return View(vm);
+        }
+
+        public IActionResult EditPassword()
+        {
+            int userId = (int)HttpContext.Session.GetInt32(cUtility.Current_User_Id);
+            var EditPassword = db.Members.Where(n => n.MemberId == userId).FirstOrDefault();
+            MemberViewModel vm = new MemberViewModel(EditPassword);
+            return View(vm);
+        }
+        [HttpPost]
+        public IActionResult EditPassword(MemberViewModel memberEdit)
+        {
+            var selected = db.Members.Where(n => n.MemberId == memberEdit.MemberId).FirstOrDefault();
+            if (selected != null)
+            {
+                selected.Password = sha256(memberEdit.Password, selected.PasswordSalt);
+                db.SaveChanges();
+                return RedirectToAction("Index", "Home");
+            }
+            return View();
+        }
+        public IActionResult EditAddress()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult EditAddress(MemberViewModel memberEdit)
+        {
+            var selected = db.Members.Where(n => n.MemberId == memberEdit.MemberId).FirstOrDefault();
+            if (selected != null)
+            {
+                selected.Address = memberEdit.Address;
+                selected.DistrictId = memberEdit.DistrictId;
+                db.SaveChanges();
+            }
+
+            return View();
+        }//todo
+
+        public IActionResult EditImage()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult EditImage(MemberViewModel memberEdit)
+        {
+            var selected = db.Members.Where(n => n.MemberId == memberEdit.MemberId).FirstOrDefault();
+            if (selected != null)
+            {
+                selected.ProfileImagePath = memberEdit.ProfileImagePath;
+                db.SaveChanges();
+            }
+            return View();
+        }//todo
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
