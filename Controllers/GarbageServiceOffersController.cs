@@ -20,7 +20,7 @@ namespace LeSheTuanGo.Controllers
             _context = context;
         }
 
-        int memberID = 6;
+        int memberID = 3;
 
         //總覽
         // GET: GarbageServiceOffers
@@ -32,7 +32,6 @@ namespace LeSheTuanGo.Controllers
             {
                 GarbageServiceOffersViewModel g = new GarbageServiceOffersViewModel(i);
                 ls.Add(g);
-                //A
             }
             return View(ls);
         }
@@ -56,14 +55,6 @@ namespace LeSheTuanGo.Controllers
             {
                 g.StartTime = DateTime.Now;
                 g.HostMemberId = memberID;
-                //A
-                g.gso.L3available = g.L3maxCount;
-                g.gso.L5available = g.L5maxCount;
-                g.gso.L14available = g.L14maxCount;
-                g.gso.L25available = g.L25maxCount;
-                g.gso.L33available = g.L33maxCount;
-                g.gso.L75available = g.L75maxCount;
-                g.gso.L120available = g.L120maxCount;
                 _context.Add(g.gso);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

@@ -1,5 +1,4 @@
 ﻿using LeSheTuanGo.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -12,16 +11,9 @@ namespace LeSheTuanGo.Controllers {
     public class HomeController : Controller {
         private readonly ILogger<HomeController> _logger;
 
-        //public HomeController(ILogger<HomeController> logger)
-        //{
-        //    _logger = logger;
-        //}
-        private readonly MidtermContext db;
-        public HomeController(MidtermContext context)
-        {
-            db = context;
+        public HomeController(ILogger<HomeController> logger) {
+            _logger = logger;
         }
-
 
         public IActionResult Index() {
             return View();

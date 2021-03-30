@@ -8,27 +8,24 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Login" onsubmit="return true">
+        <form asp-action="Login">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Email" class="control-label" id="labelEmail"></label>
-                <input asp-for="Email" class="form-control" id="txtEmail"/>
-                <span asp-validation-for="Email" class="text-danger" id="spanEmail"></span>
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Password" class="control-label" id="labelPassword"></label>
-                <input asp-for="Password" class="form-control" id="txtPassword" onblur="checkLogin()"/>
-                <span asp-validation-for="Password" class="text-danger" id="spanPassword"></span>
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="登入" class="btn btn-primary" />
-                <input type="button" value="忘記密碼" class="btn btn-primary" />
-                <input type="button" value="註冊" class="btn btn-primary" asp-action="Create"/>
             </div>
-            @*<div class="g-recaptcha" data-sitekey="6LdLl4UaAAAAAJHIzFhcfwmN2Gui1oNs9L-3lEJM"></div>*@
-
+            <div class="g-recaptcha" data-sitekey="6LdLl4UaAAAAAJHIzFhcfwmN2Gui1oNs9L-3lEJM"></div>
             <div class="form-group">
-                <input type="button" value="Demo" class="btn btn-primary" onclick="demo()" />
+                <input type="button" value="忘記密碼" class="btn btn-primary" />
             </div>
         </form>
     </div>
@@ -37,60 +34,7 @@
 
 <script src="https://www.google.com/recaptcha/api.js"></script>
 <script>
-    let txtEmail = document.getElementById("txtEmail");
-    let spanEmail = document.getElementById("spanEmail");
-    let labelEmail = document.getElementById("labelEmail");
-    let txtPassword = document.getElementById("txtPassword");
-    let spanPassword = document.getElementById("spanPassword");
-    let labelPassword = document.getElementById("labelPassword");
-    function checkLogin() {
-        if (txtEmail.value == "") {
-            spanEmail.innerHTML = "不可為空";
-            labelEmail.style.color = "red";
-            txtEmail.style.borderColor = "red";
-            return false;
-        }
-        if (txtPassword.value == "") {
-            spanPassword.innerHTML = "不可為空";
-            labelPassword.style.color = "red";
-            txtPassword.style.borderColor = "red";
-            return false;
-        }
-        isUser(txtEmail, txtPassword);
-    }//ok
-    function isUser(Email, Password) {
-        $.ajax({
-            url: "/Member/checkLogin?inputEmail=" + Email.value + "&inputPassword=" + Password.value,
-            type: "Get",
-            success: function (returnMessage) {
-                let js = JSON.parse(returnMessage);
-                console.log(js);
-                if (js != "not User" && js != "incorrect") {
-                    labelEmail.style.color = "green";
-                    txtEmail.style.borderColor = "green";
-                    labelPassword.style.color = "green";
-                    txtPassword.style.borderColor = "green";
-                    console.log(js);
-                    return true;
-                } else if (js == "not User") {
-                    spanEmail.innerHTML = "此Email尚未註冊,或嘗試<a href='/Member/Create'>註冊</a>?";
-                    labelEmail.style.color = "red";
-                    txtEmail.style.borderColor = "red";
-                    return false;
-                } else if (js == "incorrect") {
-                    spanPassword.innerHTML = "密碼錯誤";
-                    labelPassword.style.color = "red";
-                    txtPassword.style.borderColor = "red";
-                    return false;
-                }
-            }
-        });
-    }//ok
-    //demo
-    function demo() {
-        txtEmail.value = "YuChen789@gmail.com";
-        txtPassword.value = "Password123";
-    }
+    
     //$captcha = $_POST['g-recaptcha-response'];
     //$secretKey = "6LdLl4UaAAAAAJHIzFhcfwmN2Gui1oNs9L";
     //$ip = $_SERVER['REMOTE_ADDR'];

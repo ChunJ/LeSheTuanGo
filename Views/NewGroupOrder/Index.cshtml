@@ -11,20 +11,21 @@
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Index">
-            <input asp-for="HostMemberId" value="" hidden />
+            <input asp-for="HostMemberId" value="" hidden/>
             <div class="form-group">
                 <label>產品類別</label>
-                <select id="CategoryId" class="form-control" onchange="getProduct('#ProductId')" asp-items="ViewBag.Category"></select>
+                <select id="Category" class="form-control" oninput="getProduct('#ProductId')" asp-items="ViewBag.Category"></select>
             </div>
             <div class="form-group">
-                <label for="ProductId">產品名稱</label>
-                <select asp-for="ProductId" class="form-control"></select>
+                <label>產品名稱</label>
+                <select asp-for="ProductId" class="form-control" asp-items="ViewBag.ProductId"></select>
                 <select class="form-control" data-val="true" data-val-required="The DistrictId field is required.">
+
                 </select>
             </div>
             <div class="form-group">
                 <label>城市</label>
-                <select id="CityId" class="form-control" onchange="getDistrict('#DistrictId')" asp-items="ViewBag.City"></select>
+                <select id="CityId" class="form-control" oninput="getDistrict('#DistrictId')" asp-items="ViewBag.City"></select>
             </div>
             <div class="form-group">
                 <label for="DistrictId">鄉鎮市區</label>
@@ -36,62 +37,55 @@
                 <span asp-validation-for="Address" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="MaxCount">目標購買數量</label>
+                <label asp-for="MaxCount"></label>
                 <input asp-for="MaxCount" class="form-control" />
                 <span asp-validation-for="MaxCount" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="EndTime">截止時間</label>
+                <label asp-for="EndTime"></label>
                 <input asp-for="EndTime" class="form-control" />
                 <span asp-validation-for="EndTime" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="UnitPrice">每單位價格</label>
+                <label asp-for="OrderDescription"></label>
+                <input asp-for="OrderDescription" class="form-control" />
+                <span asp-validation-for="OrderDescription" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UnitPrice"></label>
                 <input asp-for="UnitPrice" class="form-control" />
                 <span asp-validation-for="UnitPrice" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    是否提供外送服務
                     <input class="form-check-input" asp-for="CanGo" /> @Html.DisplayNameFor(model => model.CanGo)
                 </label>
             </div>
             <div class="form-group">
-                <label asp-for="GoRangeId">外送距離限制</label>
+                <label asp-for="GoRangeId"></label>
                 <select asp-for="GoRangeId" class="form-control" asp-items="ViewBag.GoRangeId"></select>
             </div>
             <div class="form-group">
-                <label asp-for="OrderDescription">團購說明</label>
-                <textarea id="OrderDescription" name="OrderDescription" rows="7" class="form-control"></textarea>
-                <span asp-validation-for="OrderDescription" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
-                <input type="button" value="test" class="btn btn-primary" onclick="test();" />
+                <input type="button" value="test" class="btn btn-primary" onclick="test();"/>
             </div>
         </form>
     </div>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
 <script>
     let cityS = document.querySelector("#CityId");
-    let distS = document.querySelector("#DistrictId"); 
-    let cateS = document.querySelector("#CategoryId");
-    let prodS = document.querySelector("#ProductId");
+    let distS = document.querySelector("#DistrictId");
     window.onload = function () {
         cityS.value = @ViewData["CityId"];
         fillDistrict(@ViewData["CityId"], "#DistrictId", function () {
             distS.value = @ViewData["DistrictId"];
         });
-        cateS.value = @ViewData["CategoryId"];
-        fillProduct(@ViewData["CategoryId"], "#ProductId", function () {
-            distS.value = @ViewData["ProductId"];
-        });
     }
     function test() {
-
+        
     }
 </script>
 }
