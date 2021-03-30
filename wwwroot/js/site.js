@@ -42,7 +42,7 @@ function fillProduct(cateId, prodTagId, callBack) {
             }
         }
     )
-}
+} 
 
 
 //function getLatLng(addressInput, callBack) {

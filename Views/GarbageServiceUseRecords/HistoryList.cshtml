@@ -1,0 +1,73 @@
+﻿@model IEnumerable<LeSheTuanGo.Models.GarbageServiceUseRecord>
+
+<p>
+    <a asp-action="Index">返回</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+
+            <th>
+                3公升
+            </th>
+            <th>
+                5公升
+            </th>
+            <th>
+                14公升
+            </th>
+            <th>
+                25公升
+            </th>
+            <th>
+                33公升
+            </th>
+            <th>
+                75公升
+            </th>
+            <th>
+                120公升
+            </th>
+
+            <th>
+                地址
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.L3count)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.L5count)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.L14count)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.L25count)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.L33count)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.L75count)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.L120count)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.ComeAddress)
+                </td>
+                <td>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

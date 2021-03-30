@@ -1,4 +1,5 @@
 ﻿using LeSheTuanGo.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -28,7 +29,6 @@ namespace LeSheTuanGo.ViewModels
         //    OrderBuyRecords = new HashSet<OrderBuyRecord>();
         //    Orders = new HashSet<Order>();
         //}
-
         public int MemberId { get { return iv_Member.MemberId; } set { iv_Member.MemberId = value; } }
 
         [DisplayName("姓")]
@@ -63,7 +63,20 @@ namespace LeSheTuanGo.ViewModels
 
         [DisplayName("餘額")]
         public int Balance { get { return iv_Member.Balance; } set { iv_Member.Balance = value; } }
+        [DisplayName("照片")]
+        public string ProfileImagePath { get { return iv_Member.ProfileImagePath; } set { iv_Member.ProfileImagePath = value; } }
+//<<<<<<< Updated upstream
+       
+        [DisplayName("生日")]
+//=======
+//>>>>>>> Stashed changes
+        public DateTime DateOfBirth { get { return iv_Member.DateOfBirth; } set { iv_Member.DateOfBirth = value; } }
 
+        [DisplayName("照片")]
+
+        public IFormFile image { get; set; }
+
+        //
         public virtual DistrictRef District { get; set; }
         public virtual ICollection<GarbageServiceOffer> GarbageServiceOffers { get; set; }
         public virtual ICollection<GarbageServiceUseRecord> GarbageServiceUseRecords { get; set; }
