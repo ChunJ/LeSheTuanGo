@@ -9,9 +9,13 @@
     <p>
         <a asp-action="HistoryList">歷史訂單</a>
     </p>
-    距離:
+    @*距離:
     <input type="text" />
-    <input type="button" value="確定">
+    <input type="button" value="確定">*@
+    <div>
+        <label for="distance" class="control-label">距離</label>
+        <select class="form-control" asp-items="ViewBag.GoRange" id="distance" onchange="str_distanceChange()"></select>
+    </div>
 
     <table class="table">
         <thead>
@@ -46,12 +50,13 @@
                     120公升上限
                 </th>
                 <th>
-                    地址
+                    鄉鎮區
                 </th>
+
                 <th width="60"></th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="re" name="re">
             @foreach (var item in Model)
             {
                 <tr>
@@ -90,5 +95,38 @@
                     </td>
                 </tr>
             }
+            
+
         </tbody>
     </table>
+
+    <script>
+    function str_distanceChange() {
+        $.ajax({
+            url: "/GarbageServiceUseRecords/Refresh?le=" + distance.value,
+            type: "GET",
+            success: function (ls) {
+                let s = JSON.parse(ls);
+                let txt = "";
+
+              
+                for (var i = 0; i < s.length; i++) {
+                    txt += "<tr><td>" + s[i].Address+ "</td>";
+                    txt += "<td>" + s[i].EndTime + "</td>";
+                    txt += "<td>" + s[i].L3maxCount + "</td>";
+                    txt += "<td>" + s[i].L5maxCount + "</td>";
+                    txt += "<td>" + s[i].L14maxCount + "</td>";
+                    txt += "<td>" + s[i].L25maxCount + "</td>";
+                    txt += "<td>" + s[i].L33maxCount + "</td>";
+                    txt += "<td>" + s[i].L75maxCount + "</td>";
+                    txt += "<td>" + s[i].L120maxCount + "</td>";
+                 txt += "<td><a href='/GarbageServiceUseRecords/JoinGroup/" + s[i].GarbageServiceId + "'>修改</a></td >";
+
+                }
+                $("#re").html(txt);
+            }
+
+        });
+
+    }
+    </script>

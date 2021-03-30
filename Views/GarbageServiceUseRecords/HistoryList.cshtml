@@ -1,5 +1,9 @@
 ﻿@model IEnumerable<LeSheTuanGo.Models.GarbageServiceUseRecord>
 
+
+@{
+    ViewData["Title"] = "歷史訂單";
+}
 <p>
     <a asp-action="Index">返回</a>
 </p>
@@ -7,6 +11,9 @@
     <thead>
         <tr>
 
+            <th>
+                地址
+            </th>
             <th>
                 3公升
             </th>
@@ -29,9 +36,7 @@
                 120公升
             </th>
 
-            <th>
-                地址
-            </th>
+
             <th></th>
         </tr>
     </thead>
@@ -40,6 +45,9 @@
         {
             <tr>
 
+                <td>
+                    @Html.DisplayFor(modelItem => item.ComeAddress)
+                </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.L3count)
                 </td>
@@ -62,8 +70,14 @@
                     @Html.DisplayFor(modelItem => item.L120count)
                 </td>
 
+
+
                 <td>
-                    @Html.DisplayFor(modelItem => item.ComeAddress)
+                    @Html.ActionLink("修改", "Edit", new { id = item.GarbageServiceOfferId })
+                </td>
+
+                <td>
+                    @Html.ActionLink("刪除", "Delete", new { id = item.GarbageServiceOfferId, id2 = item.GarbageServiceOffer.GarbageServiceId }, new { onclick = "return confirm('確定刪除?')" })
                 </td>
                 <td>
                 </td>
