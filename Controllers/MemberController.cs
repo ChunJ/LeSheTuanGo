@@ -81,10 +81,12 @@ namespace LeSheTuanGo.Controllers
                 memberData.ProfileImagePath = "/profileImages/" + imageDefalt;
             }
             #endregion
+            #region 地址轉經緯
             decimal[] addressToLatlong = new decimal[2];
             addressToLatlong = cUtility.addressToLatlong(memberData.Address);
             memberData.Latitude = addressToLatlong[0];
             memberData.Longitude = addressToLatlong[1];
+            #endregion
             db.Members.Add(memberData.member);
             db.SaveChanges();
             return RedirectToAction("Login");
@@ -93,6 +95,9 @@ namespace LeSheTuanGo.Controllers
         {
             int userId = (int)HttpContext.Session.GetInt32(cUtility.Current_User_Id);
             var qMember = db.Members.Where(n => n.MemberId == userId).FirstOrDefault();
+            var qDistrict = db.DistrictRefs.Where(n => n.DistrictId == qMember.DistrictId).FirstOrDefault();
+            var qCity = db.CityRefs.Where(n => n.CityId == qDistrict.CityId).FirstOrDefault();
+            qMember.Address = qCity.CityName + qDistrict.DistrictName + qMember.Address;
             MemberViewModel vm = new MemberViewModel(qMember);
             return View(vm);
         }
@@ -123,6 +128,7 @@ namespace LeSheTuanGo.Controllers
                 return RedirectToAction("Detail");
             var EditPassword = db.Members.Where(n => n.MemberId == memberId).FirstOrDefault();
             MemberViewModel vm = new MemberViewModel(EditPassword);
+            ViewData["City"] = new SelectList(db.CityRefs, "CityId", "CityName");
             return View(vm);
         }
         [HttpPost]
@@ -133,7 +139,14 @@ namespace LeSheTuanGo.Controllers
             {
                 selected.Address = memberEdit.Address;
                 selected.DistrictId = memberEdit.DistrictId;
+
+                decimal[] addressToLatlong = new decimal[2];
+                addressToLatlong = cUtility.addressToLatlong(selected.Address);
+                selected.Latitude = addressToLatlong[0];
+                selected.Longitude = addressToLatlong[1];
+
                 db.SaveChanges();
+                return RedirectToAction("Detail");
             }
 
             return View();
@@ -193,7 +206,6 @@ namespace LeSheTuanGo.Controllers
             string result = Convert.ToBase64String(crypto);//把加密後的字串從Byte[]轉為字串
             return result;//輸出結果
         }
-
         public string checkRepeatEmail(string createEmail)
         {
 
@@ -232,7 +244,7 @@ namespace LeSheTuanGo.Controllers
             if (saltedPwd == selected.Password)
             {
                 HttpContext.Session.SetInt32(cUtility.Current_User_Id, Convert.ToInt32(selected.MemberId));
-                HttpContext.Session.SetString(cUtility.Current_User_Name, selected.FirstName + selected.LastName);
+                HttpContext.Session.SetString(cUtility.Current_User_Name, selected.FirstName + " " + selected.LastName);
                 HttpContext.Session.SetString(cUtility.Current_User_Profile_Image, selected.ProfileImagePath);
                 returnMessage = selected.MemberId.ToString();
                 returnMessage = JsonConvert.SerializeObject(returnMessage);
