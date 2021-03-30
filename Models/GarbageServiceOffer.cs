@@ -31,13 +31,6 @@ namespace LeSheTuanGo.Models
         public byte L33maxCount { get; set; }
         public byte L75maxCount { get; set; }
         public byte L120maxCount { get; set; }
-        public byte L3available { get; set; }
-        public byte L5available { get; set; }
-        public byte L14available { get; set; }
-        public byte L25available { get; set; }
-        public byte L33available { get; set; }
-        public byte L75available { get; set; }
-        public byte L120available { get; set; }
 
         public virtual DistrictRef District { get; set; }
         public virtual RangeRef GoRange { get; set; }

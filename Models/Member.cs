@@ -9,11 +9,8 @@ namespace LeSheTuanGo.Models
     {
         public Member()
         {
-            ChatMessageRecords = new HashSet<ChatMessageRecord>();
             GarbageServiceOffers = new HashSet<GarbageServiceOffer>();
             GarbageServiceUseRecords = new HashSet<GarbageServiceUseRecord>();
-            GarbageSpotAlerts = new HashSet<GarbageSpotAlert>();
-            Notifications = new HashSet<Notification>();
             OrderBuyRecords = new HashSet<OrderBuyRecord>();
             Orders = new HashSet<Order>();
         }
@@ -21,7 +18,6 @@ namespace LeSheTuanGo.Models
         public int MemberId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public DateTime DateOfBirth { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
         public string PasswordSalt { get; set; }
@@ -30,14 +26,10 @@ namespace LeSheTuanGo.Models
         public decimal Latitude { get; set; }
         public decimal Longitude { get; set; }
         public int Balance { get; set; }
-        public string ProfileImagePath { get; set; }
 
         public virtual DistrictRef District { get; set; }
-        public virtual ICollection<ChatMessageRecord> ChatMessageRecords { get; set; }
         public virtual ICollection<GarbageServiceOffer> GarbageServiceOffers { get; set; }
         public virtual ICollection<GarbageServiceUseRecord> GarbageServiceUseRecords { get; set; }
-        public virtual ICollection<GarbageSpotAlert> GarbageSpotAlerts { get; set; }
-        public virtual ICollection<Notification> Notifications { get; set; }
         public virtual ICollection<OrderBuyRecord> OrderBuyRecords { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
     }

@@ -18,12 +18,11 @@ namespace LeSheTuanGo.Models
         }
 
         public virtual DbSet<CategoryRef> CategoryRefs { get; set; }
-        public virtual DbSet<ChatMessageRecord> ChatMessageRecords { get; set; }
+        public virtual DbSet<Chat> Chats { get; set; }
         public virtual DbSet<CityRef> CityRefs { get; set; }
         public virtual DbSet<DistrictRef> DistrictRefs { get; set; }
         public virtual DbSet<GarbageServiceOffer> GarbageServiceOffers { get; set; }
         public virtual DbSet<GarbageServiceUseRecord> GarbageServiceUseRecords { get; set; }
-        public virtual DbSet<GarbageSpotAlert> GarbageSpotAlerts { get; set; }
         public virtual DbSet<GarbageTruckSpot> GarbageTruckSpots { get; set; }
         public virtual DbSet<Member> Members { get; set; }
         public virtual DbSet<Notification> Notifications { get; set; }
@@ -33,6 +32,7 @@ namespace LeSheTuanGo.Models
         public virtual DbSet<RangeRef> RangeRefs { get; set; }
         public virtual DbSet<Route> Routes { get; set; }
         public virtual DbSet<ServiceTypeRef> ServiceTypeRefs { get; set; }
+        public virtual DbSet<TrashBag> TrashBags { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -60,26 +60,11 @@ namespace LeSheTuanGo.Models
                     .HasMaxLength(5);
             });
 
-            modelBuilder.Entity<ChatMessageRecord>(entity =>
+            modelBuilder.Entity<Chat>(entity =>
             {
-                entity.HasKey(e => e.MessageId)
-                    .HasName("PK_ChatMessages");
+                entity.HasNoKey();
 
-                entity.Property(e => e.MessageId).HasColumnName("MessageID");
-
-                entity.Property(e => e.GroupId).HasColumnName("GroupID");
-
-                entity.Property(e => e.Message).IsRequired();
-
-                entity.Property(e => e.SentMemberId).HasColumnName("SentMemberID");
-
-                entity.Property(e => e.SentTime).HasColumnType("datetime");
-
-                entity.HasOne(d => d.SentMember)
-                    .WithMany(p => p.ChatMessageRecords)
-                    .HasForeignKey(d => d.SentMemberId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ChatMessageRecords_Members");
+                entity.Property(e => e.ChatroomId).HasColumnName("ChatroomID");
             });
 
             modelBuilder.Entity<CityRef>(entity =>
@@ -135,39 +120,23 @@ namespace LeSheTuanGo.Models
 
                 entity.Property(e => e.HostMemberId).HasColumnName("HostMemberID");
 
-                entity.Property(e => e.IsActive).HasColumnName("isActive");
-
-                entity.Property(e => e.L120available).HasColumnName("L120Available");
-
                 entity.Property(e => e.L120maxCount).HasColumnName("L120MaxCount");
-
-                entity.Property(e => e.L14available).HasColumnName("L14Available");
 
                 entity.Property(e => e.L14maxCount).HasColumnName("L14MaxCount");
 
-                entity.Property(e => e.L25available).HasColumnName("L25Available");
-
                 entity.Property(e => e.L25maxCount).HasColumnName("L25MaxCount");
-
-                entity.Property(e => e.L33available).HasColumnName("L33Available");
 
                 entity.Property(e => e.L33maxCount).HasColumnName("L33MaxCount");
 
-                entity.Property(e => e.L3available).HasColumnName("L3Available");
-
                 entity.Property(e => e.L3maxCount).HasColumnName("L3MaxCount");
-
-                entity.Property(e => e.L5available).HasColumnName("L5Available");
 
                 entity.Property(e => e.L5maxCount).HasColumnName("L5MaxCount");
 
-                entity.Property(e => e.L75available).HasColumnName("L75Available");
-
                 entity.Property(e => e.L75maxCount).HasColumnName("L75MaxCount");
 
-                entity.Property(e => e.Latitude).HasColumnType("numeric(9, 7)");
+                entity.Property(e => e.Latitude).HasColumnType("numeric(8, 6)");
 
-                entity.Property(e => e.Longitude).HasColumnType("numeric(10, 7)");
+                entity.Property(e => e.Longitude).HasColumnType("numeric(9, 6)");
 
                 entity.Property(e => e.ServiceTypeId).HasColumnName("ServiceTypeID");
 
@@ -248,29 +217,6 @@ namespace LeSheTuanGo.Models
                     .HasConstraintName("FK_GarbageEmptySubscribes_Members");
             });
 
-            modelBuilder.Entity<GarbageSpotAlert>(entity =>
-            {
-                entity.HasKey(e => e.AlertId);
-
-                entity.Property(e => e.AlertId).HasColumnName("AlertID");
-
-                entity.Property(e => e.GarbageTruckSpotId).HasColumnName("GarbageTruckSpotID");
-
-                entity.Property(e => e.MemberId).HasColumnName("MemberID");
-
-                entity.HasOne(d => d.GarbageTruckSpot)
-                    .WithMany(p => p.GarbageSpotAlerts)
-                    .HasForeignKey(d => d.GarbageTruckSpotId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_GarbageSpotAlerts_GarbageTruckSpots");
-
-                entity.HasOne(d => d.Member)
-                    .WithMany(p => p.GarbageSpotAlerts)
-                    .HasForeignKey(d => d.MemberId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Notifications_Members");
-            });
-
             modelBuilder.Entity<GarbageTruckSpot>(entity =>
             {
                 entity.Property(e => e.GarbageTruckSpotId).HasColumnName("GarbageTruckSpotID");
@@ -281,10 +227,10 @@ namespace LeSheTuanGo.Models
 
                 entity.Property(e => e.DistrictId).HasColumnName("DistrictID");
 
-                entity.Property(e => e.Latitude).HasColumnType("numeric(9, 7)");
+                entity.Property(e => e.Latitude).HasColumnType("numeric(8, 6)");
 
                 entity.Property(e => e.Longitude)
-                    .HasColumnType("numeric(10, 7)")
+                    .HasColumnType("numeric(9, 6)")
                     .HasColumnName("longitude");
 
                 entity.Property(e => e.RouteId).HasColumnName("RouteID");
@@ -310,8 +256,6 @@ namespace LeSheTuanGo.Models
                     .IsRequired()
                     .HasMaxLength(30);
 
-                entity.Property(e => e.DateOfBirth).HasColumnType("date");
-
                 entity.Property(e => e.DistrictId).HasColumnName("DistrictID");
 
                 entity.Property(e => e.Email)
@@ -327,13 +271,13 @@ namespace LeSheTuanGo.Models
                     .IsRequired()
                     .HasMaxLength(15);
 
-                entity.Property(e => e.Latitude).HasColumnType("numeric(9, 7)");
+                entity.Property(e => e.Latitude).HasColumnType("numeric(8, 6)");
 
-                entity.Property(e => e.Longitude).HasColumnType("numeric(10, 7)");
+                entity.Property(e => e.Longitude).HasColumnType("numeric(9, 6)");
 
                 entity.Property(e => e.Password)
                     .IsRequired()
-                    .HasMaxLength(44)
+                    .HasMaxLength(40)
                     .IsUnicode(false)
                     .IsFixedLength(true);
 
@@ -342,10 +286,6 @@ namespace LeSheTuanGo.Models
                     .HasMaxLength(16)
                     .IsUnicode(false)
                     .IsFixedLength(true);
-
-                entity.Property(e => e.ProfileImagePath)
-                    .IsRequired()
-                    .HasMaxLength(255);
 
                 entity.HasOne(d => d.District)
                     .WithMany(p => p.Members)
@@ -356,21 +296,23 @@ namespace LeSheTuanGo.Models
 
             modelBuilder.Entity<Notification>(entity =>
             {
-                entity.HasKey(e => e.NotifyId);
+                entity.HasNoKey();
 
-                entity.Property(e => e.NotifyId).HasColumnName("NotifyID");
+                entity.Property(e => e.GarbageTruckSpotId).HasColumnName("GarbageTruckSpotID");
 
                 entity.Property(e => e.MemberId).HasColumnName("MemberID");
 
-                entity.Property(e => e.NotifyMessage).IsRequired();
-
-                entity.Property(e => e.SentTime).HasColumnType("datetime");
+                entity.HasOne(d => d.GarbageTruckSpot)
+                    .WithMany()
+                    .HasForeignKey(d => d.GarbageTruckSpotId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Notifications_GarbageTruckSpots");
 
                 entity.HasOne(d => d.Member)
-                    .WithMany(p => p.Notifications)
+                    .WithMany()
                     .HasForeignKey(d => d.MemberId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Notifications_Members1");
+                    .HasConstraintName("FK_Notifications_Members");
             });
 
             modelBuilder.Entity<Order>(entity =>
@@ -389,11 +331,9 @@ namespace LeSheTuanGo.Models
 
                 entity.Property(e => e.HostMemberId).HasColumnName("HostMemberID");
 
-                entity.Property(e => e.IsActive).HasColumnName("isActive");
+                entity.Property(e => e.Latitude).HasColumnType("numeric(8, 6)");
 
-                entity.Property(e => e.Latitude).HasColumnType("numeric(9, 7)");
-
-                entity.Property(e => e.Longitude).HasColumnType("numeric(10, 7)");
+                entity.Property(e => e.Longitude).HasColumnType("numeric(9, 6)");
 
                 entity.Property(e => e.OrderDescription).IsRequired();
 
@@ -469,9 +409,7 @@ namespace LeSheTuanGo.Models
 
                 entity.Property(e => e.ProductDescription).IsRequired();
 
-                entity.Property(e => e.ProductImagePath)
-                    .IsRequired()
-                    .HasMaxLength(255);
+                entity.Property(e => e.ProductImage).IsRequired();
 
                 entity.Property(e => e.ProductName)
                     .IsRequired()
@@ -522,6 +460,11 @@ namespace LeSheTuanGo.Models
                 entity.Property(e => e.ServiceName)
                     .IsRequired()
                     .HasMaxLength(20);
+            });
+
+            modelBuilder.Entity<TrashBag>(entity =>
+            {
+                entity.Property(e => e.TrashBagId).HasColumnName("TrashBagID");
             });
 
             OnModelCreatingPartial(modelBuilder);
