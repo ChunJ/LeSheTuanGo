@@ -20,11 +20,11 @@ namespace LeSheTuanGo.Models
         public decimal Latitude { get; set; }
         public decimal Longitude { get; set; }
         public byte MaxCount { get; set; }
+        public byte AvailableCount { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
-        public string OrderDescription { get; set; }
         public bool IsActive { get; set; }
-        public bool IsFull { get; set; }
+        public string OrderDescription { get; set; }
         public decimal UnitPrice { get; set; }
         public bool CanGo { get; set; }
         public byte GoRangeId { get; set; }

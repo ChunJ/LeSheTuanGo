@@ -11,31 +11,42 @@
     <hr />
     <div class="row">
         <div class="col-md-4">
-            <form asp-action="Create" onsubmit="return checkValue()">
+            <form asp-action="Create" onsubmit="return checkValue()" enctype="multipart/form-data">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
                     <label asp-for="FirstName" class="control-label" id="labelFirstName"></label>
-                    <input asp-for="FirstName" class="form-control" id="txtFirstName"/>
+                    <input asp-for="FirstName" class="form-control" id="txtFirstName" />
                     <span asp-validation-for="FirstName" style="color:red" id="spanFirstName"></span>
                 </div><!--FirstName-->
                 <div class="form-group">
                     <label asp-for="LastName" class="control-label" id="labelLastName"></label>
-                    <input asp-for="LastName" class="form-control" id="txtLastName" onblur="checkName()"/>
+                    <input asp-for="LastName" class="form-control" id="txtLastName" onblur="checkName()" />
                     <span asp-validation-for="LastName" style="color:red" id="spanLastName"></span>
                 </div><!--LastName-->
                 <div class="form-group">
+                    <label asp-for="DateOfBirth" class="control-label" id="labelBirth"></label>
+                    <input type="date" asp-for="DateOfBirth" class="form-control" id="txtBirth" value="2000-01-01" min="1930-01-01" />
+                    <span asp-validation-for="DateOfBirth" style="color:red" id="spanBirth"></span>
+                </div><!--DateOfBirth-->
+                <div class="form-group">
+                    <label asp-for="image" class="control-label" id="labelImage"></label>
+                    <input type="file" asp-for="image" id="txtImage" accept=".png, .jpg, .jpeg"/>
+                    <span asp-validation-for="image" style="color:red" id="spanImage"></span>
+                </div>image
+
+                <div class="form-group">
                     <label asp-for="Email" class="control-label" id="labelEmail"></label>
-                    <input asp-for="Email" class="form-control" id="txtEmail" onblur="checkEmail()"/>
+                    <input asp-for="Email" class="form-control" id="txtEmail" onblur="checkEmail()" />
                     <span asp-validation-for="Email" style="color:red" id="spanEmail"></span>
                 </div><!--Email-->
                 <div class="form-group">
                     <label asp-for="Password" class="control-label" id="labelPassword"></label>
-                    <input asp-for="Password" class="form-control" id="txtPassword"/>
+                    <input asp-for="Password" class="form-control" id="txtPassword" />
                     <span asp-validation-for="Password" style="color:red" id="spanPassword"></span>
                     <br />
                     <div>
                         <label class="control-label" id="labelPasswordCheck">確認密碼</label>
-                        <input type="text" class="form-control" id="txtPasswordCheck" onblur="checkPassword()"/>
+                        <input type="text" class="form-control" id="txtPasswordCheck" onblur="checkPassword()" />
                         <span style="color:red" id="spanPasswordCheck"></span>
                     </div>
                 </div><!--Password-->
@@ -48,11 +59,11 @@
                     <select id="selectDistric" asp-for="DistrictId">
                         <option hidden id="optionCity">請選擇</option>
                     </select>
-                    <input asp-for="Address" class="form-control" id="txtAddress" onblur="checkAddress()"/>
+                    <input asp-for="Address" class="form-control" id="txtAddress" onblur="checkAddress()" />
                     <span asp-validation-for="Address" style="color:red" id="spanAddress"></span>
                 </div><!--Address-->
                 <div class="form-group">
-                    <input type="submit" value="送出" class="btn btn-primary"/>
+                    <input type="submit" value="送出" class="btn btn-primary" />
                 </div>
             </form>
             <div class="form-group">
@@ -198,21 +209,22 @@
             success: function (flag) {
                 let js = JSON.parse(flag);
                 console.log(js);
-                if (js == 1) {
-                    return true;
-                } else if (js == 0) {
-                    return false;
+                if (js == "Yes") {
+                    spanEmail.innerHTML = "此Email已註冊過,或嘗試<a href='/Member/Login'>登入</a>";
+                    labelEmail.style.color = "red";
+                    spanEmail.style.color = "red";
+                    txtEmail.style.borderColor = "red";
+                    flagEmail = false;
+
+                } else {
+                    spanEmail.innerHTML = "可用";
+                    labelEmail.style.color = "green";
+                    spanEmail.style.color = "green";
+                    txtEmail.style.borderColor = "green";
+                    flagEmail = true;
                 }
             }
         });
-    //    $.getJSON(
-    //    "/Member/checkRepeatEmail",
-    //    {
-    //        createEmail: document.getElementById("txtEmail").value,
-    //    },
-    //        function (result) {
-    //            console.log(result);
-    //    })
     }//ok
     function checkEmail() {
         let txtEmail = document.getElementById("txtEmail");
@@ -225,20 +237,13 @@
             txtEmail.style.borderColor = "red";
             flagEmail = false;
         }//如果為空
-        if (!checkRepeatEmail(txtEmail)) {
-            spanEmail.innerHTML = "此帳號已使用過，嘗試登入嗎?";
-            labelEmail.style.color = "red";
-            spanEmail.style.color = "red";
-            txtEmail.style.borderColor = "red";
-            flagEmail = false;
-            return;
-        }//如果已使用
+        
         if (isEmail(txtEmail)) {
-            spanEmail.innerHTML = "可用";
+            spanEmail.innerHTML = "格式正確";
             labelEmail.style.color = "green";
             spanEmail.style.color = "green";
             txtEmail.style.borderColor = "green";
-            flagEmail = true;
+            checkRepeatEmail(txtEmail);
         } else {
             spanEmail.innerHTML = "請輸入正確Email格式";
             labelEmail.style.color = "red";
@@ -246,6 +251,7 @@
             txtEmail.style.borderColor = "red";
             flagEmail = false;
         }//是否為正確Email格式
+
     }//ok
     function isAddress(Address) {
         for (let i = 0; i < Address.value.length; i++) {
@@ -309,7 +315,7 @@
     function demo() {
         document.getElementById("txtFirstName").value = "Chen";
         document.getElementById("txtLastName").value = "Jerry";
-        document.getElementById("txtEmail").value = "Chen@gmail.com";
+        document.getElementById("txtEmail").value = "YuChen@gmail.com";
         document.getElementById("txtPassword").value = "Password123";
         document.getElementById("txtPasswordCheck").value = "Password123";
         document.getElementById("txtAddress").value = "復興南路資策會";
