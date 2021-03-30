@@ -1,0 +1,103 @@
+﻿@model LeSheTuanGo.ViewModels.MemberViewModel
+
+<h1>變更地址</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditAddress" onsubmit="checkValue()">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="MemberId" />
+            <div class="form-group">
+                <label asp-for="Address" class="control-label" id="labelAddress"></label>
+                <br />
+                <select id="selectCity" onchange="getDistrict('#selectDistric')" asp-items="ViewBag.City">
+                    <option hidden id="optionCity">請選擇</option>
+                </select>
+                <select id="selectDistric" asp-for="DistrictId">
+                    <option hidden id="optionCity">請選擇</option>
+                </select>
+                <input asp-for="Address" value="" class="form-control" id="txtAddress" onblur="checkAddress()" />
+                <span asp-validation-for="Address" style="color:red" id="spanAddress"></span>
+            </div><!--Address-->
+            <div class="form-group">
+                <input type="submit" value="送出" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Detail">回上一頁</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+<script>
+    var flagAddress = false;
+    function checkValue() {
+        if (flagAddress)
+            return true;
+        else
+            return false;
+    }
+    function isAddress(Address) {
+        for (let i = 0; i < Address.value.length; i++) {
+            let ch = Address.value.charAt(i);
+            let chCode = Address.value.charCodeAt(i);
+            if (!(chCode >= 0x4E00 && chCode <= 0x9FFF)) {
+                if (!((ch >= "a" && ch <= "z") || (ch >= "A" && ch <= "Z"))) {
+                    if (!((ch >= "(" && ch <= "-") || (ch >= 0 && ch <= 9))) {
+                        return false;
+                    } else {
+                        continue;
+                    }
+                } else
+                    continue
+            } else
+                continue;
+        }
+        return true;
+    }//ok
+    function checkAddress() {
+        let txtAddress = document.getElementById("txtAddress");
+        let labelAddress = document.getElementById("labelAddress");
+        let spanAddress = document.getElementById("spanAddress");
+
+        let selectDistric = document.getElementById("selectDistric");
+        let selectCity = document.getElementById("selectCity");
+
+        if (selectDistric.options.selectedIndex == 0) {
+            selectCity.style.borderColor = "red";
+            selectDistric.style.borderColor = "red";
+            flagAddress = false;
+        } else {
+            selectCity.style.borderColor = "green";
+            selectDistric.style.borderColor = "green";
+            flagAddress = true;
+        }
+
+        if (txtAddress.value == "") {
+            spanAddress.innerHTML = "不能為空";
+            labelAddress.style.color = "red";
+            spanAddress.style.color = "red";
+            txtAddress.style.borderColor = "red";
+            flagAddress = false;
+        }
+        if (isAddress(txtAddress)) {
+            spanAddress.innerHTML = "";
+            labelAddress.style.color = "green";
+            spanAddress.style.color = "green";
+            txtAddress.style.borderColor = "green";
+            flagAddress = true;
+        } else {
+            spanAddress.innerHTML = "請輸入正確地址格式";
+            labelAddress.style.color = "red";
+            spanAddress.style.color = "red";
+            txtAddress.style.borderColor = "red";
+            flagAddress = false;
+        }
+
+    }//ok
+
+</script>

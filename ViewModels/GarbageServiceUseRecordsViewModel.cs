@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace prj0305.ViewModels
+namespace LeSheTuanGo.ViewModels
 {
     public class GarbageServiceUseRecordsViewModel
     {

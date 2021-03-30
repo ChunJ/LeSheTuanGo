@@ -30,9 +30,10 @@
                 </div><!--DateOfBirth-->
                 <div class="form-group">
                     <label asp-for="image" class="control-label" id="labelImage"></label>
-                    <input type="file" asp-for="image" id="txtImage" accept=".png, .jpg, .jpeg"/>
+                    <input type="file" asp-for="image" id="txtImage" accept=".png, .jpg, .jpeg" onchange="imageShow()" />
                     <span asp-validation-for="image" style="color:red" id="spanImage"></span>
-                </div>image
+                </div><!--image-->
+                <img width="200" id="uploadPreview" />
 
                 <div class="form-group">
                     <label asp-for="Email" class="control-label" id="labelEmail"></label>
@@ -311,6 +312,17 @@
         }
 
     }//ok
+    function imageShow() {
+        var file = document.querySelector("#txtImage").files[0]
+        var newfile = new File([file], new Date().getTime() + ".jpg", { type: "image/jpeg" });
+        var reader = new FileReader();
+        reader.onload = function (oFREvent) {
+            document.querySelector("#uploadPreview").src = oFREvent.target.result;
+        };
+        reader.readAsDataURL(newfile);
+        console.log(reader);
+    }//ok
+
     //demo鍵
     function demo() {
         document.getElementById("txtFirstName").value = "Chen";

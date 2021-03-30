@@ -33,7 +33,7 @@ namespace CoreMVC.Controllers
         public IActionResult Index()
         {
             //var garbageServiceOffer = db.GarbageServiceOffers.Select(n => n).ToList();
-            var q =db.GarbageServiceOffers.Include(g => g.GoRange).Include(g=>g.District).ToList();
+            var q =db.GarbageServiceOffers.Include(m => m.GoRange).Include(m=>m.District).ToList();
             ViewData["GoRange"] = new SelectList(db.RangeRefs, "RangeId", "RangeInMeters");
             return View(q);
             //return View(garbageServiceOffer);
@@ -42,9 +42,10 @@ namespace CoreMVC.Controllers
         [HttpPost]
         public IActionResult Index(int distance)
         {
-            var q = from n in (new MidtermContext()).GarbageServiceOffers
-                    where Geo.GetDistanceTo(new GeoCoordinate((double)n.Latitude, (double)n.Longitude)) < distance
-                    select n;
+            //var q = from m in (new MidtermContext()).GarbageServiceOffers
+            //        where Geo.GetDistanceTo(new GeoCoordinate((double)m.Latitude, (double)m.Longitude)) < distance
+            //        select m;
+            var q = db.GarbageServiceOffers.Where(m => Geo.GetDistanceTo(new GeoCoordinate((double)m.Latitude, (double)m.Longitude)) < distance);
 
             return View(q);
         }
@@ -65,38 +66,34 @@ namespace CoreMVC.Controllers
 
         public IActionResult Edit(int id)
         {
-            var garbageServiceOffer = db.GarbageServiceOffers.Where(m => m.HostMemberId == id).FirstOrDefault();
-            return View(garbageServiceOffer);
+            var q = db.GarbageServiceUseRecords.Where(m => m.GarbageServiceOfferId == id).FirstOrDefault();
+            return View(q);
         }
 
         [HttpPost]
-        public IActionResult Edit(GarbageServiceOffer garbageServiceOffer)
+        public IActionResult Edit(GarbageServiceUseRecord garbageServiceUseRecord)
         {
             if (ModelState.IsValid)
             {
-                var modify = db.GarbageServiceOffers.Where(m => m.HostMemberId == garbageServiceOffer.HostMemberId).FirstOrDefault();
-                modify.ServiceTypeId = garbageServiceOffer.ServiceTypeId;
-                modify.HostMemberId = garbageServiceOffer.HostMemberId;
-                modify.DistrictId = garbageServiceOffer.DistrictId;
-                modify.Address = garbageServiceOffer.Address;
-                modify.StartTime = garbageServiceOffer.StartTime;
-                modify.EndTime = garbageServiceOffer.EndTime;
-                modify.IsActive = garbageServiceOffer.IsActive;
-                modify.Latitude = garbageServiceOffer.Latitude;
-                modify.Longitude = garbageServiceOffer.Longitude;
-                modify.CanGo = garbageServiceOffer.CanGo;
-                modify.GoRange = garbageServiceOffer.GoRange;
-                modify.L3maxCount = garbageServiceOffer.L3maxCount;
-                modify.L5maxCount = garbageServiceOffer.L5maxCount;
-                modify.L14maxCount = garbageServiceOffer.L14maxCount;
-                modify.L25maxCount = garbageServiceOffer.L25maxCount;
-                modify.L33maxCount = garbageServiceOffer.L33maxCount;
-                modify.L75maxCount = garbageServiceOffer.L75maxCount;
-                modify.L120maxCount = garbageServiceOffer.L120maxCount;
+                var q = db.GarbageServiceUseRecords.Where(m => m.ServiceUseRecordId == garbageServiceUseRecord.ServiceUseRecordId).FirstOrDefault();
+                q.ServiceUseRecordId = garbageServiceUseRecord.ServiceUseRecordId;
+                q.GarbageServiceOfferId = garbageServiceUseRecord.GarbageServiceOfferId;
+                q.MemberId = garbageServiceUseRecord.MemberId;
+                q.L3count = garbageServiceUseRecord.L3count;
+                q.L5count = garbageServiceUseRecord.L5count;
+                q.L14count = garbageServiceUseRecord.L14count;
+                q.L25count = garbageServiceUseRecord.L25count;
+                q.L33count = garbageServiceUseRecord.L33count;
+                q.L75count = garbageServiceUseRecord.L75count;
+                q.L120count = garbageServiceUseRecord.L120count;
+                q.NeedCome = garbageServiceUseRecord.NeedCome;
+                q.ComeDistrictId = garbageServiceUseRecord.ComeDistrictId;
+                q.ComeAddress = garbageServiceUseRecord.ComeAddress;
+
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(garbageServiceOffer);
+            return View(garbageServiceUseRecord);
         }
         public IActionResult Delete(int id,int id2)
         {
@@ -190,7 +187,7 @@ namespace CoreMVC.Controllers
                      
             //         where Geo.GetDistanceTo(new GeoCoordinate((double)n.Latitude, (double)n.Longitude)) / 1000 <= (double)距離
             //         select n;
-              var q2 = db.GarbageServiceOffers.AsEnumerable().Where(n => Geo.GetDistanceTo(new GeoCoordinate((double)n.Latitude, (double)n.Longitude)) / 1000 <= (double)距離);
+              var q2 = db.GarbageServiceOffers.AsEnumerable().Where(m => Geo.GetDistanceTo(new GeoCoordinate((double)m.Latitude, (double)m.Longitude)) / 1000 <= (double)距離);
             var q3 = q2.ToList();
             string ls= JsonConvert.SerializeObject(q3);
 
