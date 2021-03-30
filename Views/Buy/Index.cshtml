@@ -1,0 +1,191 @@
+﻿@*@model IEnumerable<prj0305.Models.Order>*@
+@model IEnumerable<prj0305.ViewModels.JoinGroupViewModel>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+
+    <title>minimalistica</title>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+    <link rel="stylesheet" href="~/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="~/css/tooplate-style.css" />
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+
+    <style type="text/css">
+        /* Always set the map height explicitly to define the size of the div
+        * element that contains the map. */
+        #map {
+            height: 100%;
+        }
+    </style>
+
+    <script>
+
+
+        let map;
+
+        function initMap() {
+
+            map = new google.maps.Map(document.getElementById("map"), {
+
+                zoom: 2,
+                center: new google.maps.LatLng(2.8, -187.3),
+                mapTypeId: "terrain",
+            });
+            // Create atag and set the USGS URL as the source.
+            const script = document.createElement("script");
+            // This example uses a local copy of the GeoJSON stored at
+            // http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojsonp
+            script.src =
+                "https://developers.google.com/maps/documentation/javascript/examples/json/earthquake_GeoJSONP.js";
+            document.getElementsByTagName("head")[0].appendChild(script);
+        }
+
+        // Loop through the results array and place a marker for each
+        // set of coordinates.
+        const eqfeed_callback = function (results) {
+            for (let i = 0; i < results.features.length; i++) {
+                const coords = results.features[i].geometry.coordinates;
+                const latLng = new google.maps.LatLng(coords[1], coords[0]);
+                new google.maps.Marker({
+                    position: latLng,
+                    map: map,
+                });
+            }
+        };
+    </script>
+</head>
+<body>
+
+
+
+    @*@{int orderCount = 0; string orderN = "productName"; List<int> ProductIds = new List<int>();}*@
+
+    <div class="col-md-4">
+        <label for="distance" class="control-label">距離</label>
+        <select class="form-control" asp-items="ViewBag.GoRange" id="distance" onchange="str_distanceChange()"></select>
+    </div>
+    @Html.ActionLink("訂單紀錄", "HistoryList")
+    <div id="content" name="content">
+
+        @foreach (var item in Model)
+        {
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="tm-bg-circle-white tm-flex-center-v">
+                        <header class="text-center">
+                            <h4 name="" id=""><span>@Html.DisplayNameFor(model => model.VProduct.ProductName): @Html.DisplayFor(modelItem => item.JOrder.Product.ProductName)</span></h4>
+                        </header>
+                        <p><span>@Html.DisplayNameFor(model => model.Address):</span>@item.JOrder.Address</p>
+                        <p><span>@Html.DisplayNameFor(model => model.MaxCount):</span>@item.JOrder.MaxCount</p>
+                        <p><span>@Html.DisplayNameFor(model => model.EndTime):</span>@item.JOrder.EndTime</p>
+                        <p><span>@Html.DisplayNameFor(model => model.OrderDescription):</span>@item.JOrder.OrderDescription</p>
+                        <p><span>@Html.DisplayNameFor(model => model.UnitPrice):</span>@item.JOrder.UnitPrice</p>
+                        <p><span>@Html.DisplayNameFor(model => model.CanGo):</span>@item.JOrder.CanGo</p>
+
+                        <p class="text-center mt-4 mb-0"><a href="/Buy/JoinGroup/ @item.JOrder.OrderId" class="btn tm-btn-secondary">加入</a></p>
+
+                    </div>
+                    </div>
+                </div>
+            </div>
+            }
+
+            @*<div class="col last">
+            <h3><a href="#">Quisque consectetur odio</a></h3>
+            <p>Quisque consectetur odio ut sem semper commodo. Maecenas iaculis leo a ligula euismod condimentum. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Ut enim risus, rhoncus sit amet ultricies vel, aliquet ut dolor. Duis iaculis urna vel massa ultricies suscipit. Phasellus diam sapien, fermentum a eleifend non, luctus non augue. Quisque scelerisque purus quis eros sollicitudin gravida. Aliquam erat volutpat. Donec a sem consequat tortor posuere dignissim sit amet at.</p>
+            <p>&not; <a href="#">read more</a></p>
+        </div>*@
+            <div id="footer">
+                <p>Copyright &copy; <em>minimalistica</em> &middot; Design: Luka Cvrk, <a href="http://www.solucija.com/">Solucija</a></p>
+            </div>
+        </div>
+    <div id="map"></div>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBircB99P_RvzxWdQT-hk40-h3Ofzlb_vQ&callback=initMap&libraries=&v=weekly"
+            async=async></script>
+
+
+
+    <script>
+
+        var groupCount   =0                                                             //查詢到的團購總數
+        function str_distanceChange()                                      //下拉式選單選擇項目改變
+        {
+            @*@{ orderCount = 0; }*@
+            $.ajax({
+                url: "/Buy/Refresh?re=" + distance.value,
+                type: "GET",
+
+                success: function (ls)
+                {
+                    let s = JSON.parse(ls);
+                    let txt = "";
+                    console.log(s);
+                    var productName = ""
+                    for (var i = 0; i < s.length; i++) {
+                        productName = "productName" + groupCount
+                        txt += "<div class='container'>";
+                        txt += "<div class='row'>";
+                        txt += "<div class='col-sm-12'>";
+                        txt += "<div class='tm - bg - circle - white tm - flex - center - v'>";
+                        txt += "<header class='text - center'>";
+                        txt += "<h4 name='" + productName + "' id='" + productName + "'value='" + s[i].ProductId + "'></h3>";
+                        txt +="</header>"
+                        txt += "<p>" +"地址:" + s[i].Address + "</p>";
+                        txt += "<p>" +"結束時間:"+ s[i].EndTime + "</p>";
+                        txt += "<p>" +"訂單描述:"+ s[i].OrderDescription + "</p>";
+                        txt += "<p>" +"單位價格:"+ s[i].UnitPrice + "</p>";
+                        txt += "<p>" + "是否接受外送" + s[i].CanGo + "</p>";
+                        txt += "<p class='text - center mt - 4 mb - 0'><a href='/Buy/JoinGroup/" + s[i].OrderId + "'  class='btn tm - btn - secondary'>加入</a></p>";
+                        txt += "</div>";
+                        txt += "</div>";
+                        txt += "</div>";
+                        txt += "</div>";
+
+                        groupCount = groupCount + 1
+                    }
+                    $("#content").html(txt);
+                    insertProductName();
+                }
+            });
+
+        }
+        function insertProductName()                       //新增商品名稱到對應標籤
+        {
+            var insertCount=0                                     //商品名稱計數
+            for (var i = 0; i < groupCount; i++)
+            {
+                var tempLabelID = "productName" + i
+                var tempProductID = document.getElementById(tempLabelID).getAttribute('value')
+                console.log(tempProductID)
+                tempProductID
+                $.ajax({
+                    url: "/Buy/InsertProductName?Pid=" + tempProductID,
+                    type: "GET",
+                    success: function (ls) {
+                        let s = JSON.parse(ls);
+                        let txt = "";
+                        console.log(s);
+                        var v = "productName" + insertCount
+                        console.log(v);
+                        document.getElementById(v).innerHTML ="商品名稱:"+s[0]
+                        insertCount++
+                        }
+                });
+
+            }
+            insertCount = 0
+            groupCount = 0;
+        }
+
+    </script>
+
+</body>
+</html>
+
+
+
+
+
