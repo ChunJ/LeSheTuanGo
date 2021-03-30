@@ -25,51 +25,123 @@
         }
     </style>
     @*<script>
-      let map;
+          let map;
 
-      function initMap() {
-        map = new google.maps.Map(document.getElementById("map"), {
-          center: { lat: @ViewBag.resultLat, lng: @ViewBag.resultLng },
-          zoom: 18,
-        });
-        new google.maps.Marker({
-              position: { lat: @ViewBag.resultLat, lng: @ViewBag.resultLng },
-              map,
-              animation: google.maps.Animation.DROP,
-              title: "hi",
-              icon: "https://crd-rubbish.epd.ntpc.gov.tw/maps/images/icon/Icon_LegendC.png",
-        });
-      }
-    </script>*@
-<script>
-      let map;
+          function initMap() {
+            map = new google.maps.Map(document.getElementById("map"), {
+              center: { lat: @ViewBag.resultLat, lng: @ViewBag.resultLng },
+              zoom: 18,
+            });
+            new google.maps.Marker({
+                  position: { lat: @ViewBag.resultLat, lng: @ViewBag.resultLng },
+                  map,
+                  animation: google.maps.Animation.DROP,
+                  title: "hi",
+                  icon: "https://crd-rubbish.epd.ntpc.gov.tw/maps/images/icon/Icon_LegendC.png",
+            });
+          }
+        </script>*@
+    <script>
+        let map;
 
-      function initMap(lat,lng) {
-          var coor = new google.maps.LatLng(lat, lng)
+        function initMap(lat, lng) {
 
-          map = new google.maps.Map(document.getElementById("map"), {
-          center: coor,
-          zoom: 18,
-        });
-        //  var coor=new google.maps.LatLng(lat,lng)
-        new google.maps.Marker({
-              position: coor,
-              map,
-              animation: google.maps.Animation.DROP,
-              title: "hi",
-              icon: "https://crd-rubbish.epd.ntpc.gov.tw/maps/images/icon/Icon_LegendC.png",
-        });
-      }
-</script>
+            if (lng !== "l") {
+                var coor = new google.maps.LatLng(lat, lng);
+                var mbr = new google.maps.LatLng(25.0339400, 121.5435000);  //fixed for now
+
+                map = new google.maps.Map(document.getElementById("map"), {
+                    center: coor,
+                    zoom: 18,
+                });
+
+                new google.maps.Marker({
+                    position: mbr,
+                    map,
+                    title: "YOU",
+                    icon: "https://crd-rubbish.epd.ntpc.gov.tw/maps/images/icon/Icon_LegendD.png",
+                });
+
+                new google.maps.Marker({
+                    position: coor,
+                    map,
+                    animation: google.maps.Animation.DROP,
+                    title: "collect spot",
+                    icon: "https://crd-rubbish.epd.ntpc.gov.tw/maps/images/icon/Icon_LegendC.png",
+                });
+            }
+            else {
+                var mbr = new google.maps.LatLng(25.0339400, 121.5435000);  //fixed for now
+
+                map = new google.maps.Map(document.getElementById("map"), {
+                    center: mbr,
+                    zoom: 17,
+                });
+
+                new google.maps.Marker({
+                    position: mbr,
+                    map,
+                    title: "YOU",
+                    icon: "https://crd-rubbish.epd.ntpc.gov.tw/maps/images/icon/Icon_LegendD.png",
+                });
+
+                //console.log(typeof lat);
+                for (let i = 0; i < lat.length; i++) {
+                    new google.maps.Marker({
+                        position: { lat: lat[i]["Latitude"], lng: lat[i]["Longitude"] },
+                        map,
+                        animation: google.maps.Animation.DROP,
+                        title: lat[i]["Address"],
+                        icon: "https://crd-rubbish.epd.ntpc.gov.tw/maps/images/icon/Icon_LegendC.png",
+                    });
+                }
+            }
+        }
+    </script>
 </head>
-<body>
-    <div id="map" style="height: 50%;width: 50%;"></div>
-    <button onclick="initMap(@ViewBag.resultLat, @ViewBag.resultLng)">1</button>
-    <button onclick="initMap(@ViewBag.result[1].Latitude, @ViewBag.result[1].Longitude)">2</button>
-    <button onclick="initMap(@ViewBag.result[2].Latitude, @ViewBag.result[2].Longitude)">3</button>
+<body onload="init100M()">
+    @*<button onclick="init100M()">100M</button>*@
+    <div id="map" style="height: 50%;width: 100%;"></div>
+    <table class="table" id="table100m">
+        <tr>
+            <th>收集地點</th>
+            <th>到達時間</th>
+            <th>距離</th>
+            <th style="display:none">lat</th>
+            <th style="display:none">lng</th>
+        </tr>
+    </table>
+
+    @*<button onclick="initMap(@ViewBag.resultLat, @ViewBag.resultLng)">1</button>
+        <button onclick="initMap(@ViewBag.result[1].Latitude, @ViewBag.result[1].Longitude)">2</button>
+        <button onclick="initMap(@ViewBag.result[2].Latitude, @ViewBag.result[2].Longitude)">3</button>*@
 
     <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBircB99P_RvzxWdQT-hk40-h3Ofzlb_vQ&callback=initMap&libraries=&v=weekly"
             async></script>
+    <script>
+        let table100m = document.getElementById("table100m");
+
+        function init100M() {
+            $.ajax({
+                url: "/map/spotlessthan100m",
+                type: "GET",
+                success: function (listJsonString) {
+                    let js = JSON.parse(listJsonString);
+                    initMap(js,"l");
+                    for (let i = 0; i < js.length; i++) {
+                        table100m.innerHTML +=
+                            '<tr onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ')">'
+                            + '<th>' + js[i]["Address"] + '</th>'
+                            + '<th>' + js[i]["ArrivalTime"] + '</th>'
+                            + '<th>' + js[i]["distance"] + '</th>'
+                            + '<th style="display:none">' + js[i]["Latitude"] + '</th>'
+                            + '<th style="display:none">' + js[i]["Longitude"] + '</th>'
+                            + '</tr>';
+                    }
+                }
+            })
+        }
+    </script>
 </body>
 </html>

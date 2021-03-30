@@ -2,6 +2,7 @@
 using LeSheTuanGo.Models;
 using LeSheTuanGo.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 //JObject
 using Newtonsoft.Json.Linq;
 using System;
@@ -17,7 +18,7 @@ namespace LeSheTuanGo.Controllers
 {
     public class MapController : Controller
     {
-        int MemberId = 6;
+        int MemberId = 1;
 
         private readonly MidtermContext iv_context;
         public MapController(MidtermContext midtermContext)
@@ -25,6 +26,24 @@ namespace LeSheTuanGo.Controllers
             iv_context = midtermContext;
         }
 
+        public string spotLessThan100M()
+        {
+            //set 100m for now
+            var memberDistrictId = iv_context.Members.Where(m => m.MemberId == MemberId).First().DistrictId;
+            var memberLat = iv_context.Members.Where(m => m.MemberId == MemberId).First().Latitude;
+            var memberLng = iv_context.Members.Where(m => m.MemberId == MemberId).First().Longitude;
+
+            var result = iv_context.GarbageTruckSpots.Where(s => s.DistrictId == memberDistrictId).ToList();
+
+            var q = from i in result select new { i.Address, i.ArrivalTime, i.Latitude, i.Longitude, distance=cUtility.distanceBetweenTwoSpots(memberLat,memberLng,i.Latitude,i.Longitude) };
+            var qList = q.OrderBy(q => q.distance).Take(10).ToList();
+
+            string listJsonString = JsonConvert.SerializeObject(qList);
+
+            return listJsonString;
+        }
+        
+        
         public IActionResult searchByMember()
         {
             var memberDistrictId = iv_context.Members.Where(m => m.MemberId == MemberId).First().DistrictId;
