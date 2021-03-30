@@ -1,0 +1,51 @@
+﻿@model LeSheTuanGo.Models.ChatMessageRecord
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>ChatMessageRecord</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="MessageId" />
+            <div class="form-group">
+                <label asp-for="GroupType" class="control-label"></label>
+                <input asp-for="GroupType" class="form-control" />
+                <span asp-validation-for="GroupType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GroupId" class="control-label"></label>
+                <input asp-for="GroupId" class="form-control" />
+                <span asp-validation-for="GroupId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SentTime" class="control-label"></label>
+                <input asp-for="SentTime" class="form-control" />
+                <span asp-validation-for="SentTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SentMemberId" class="control-label"></label>
+                <select asp-for="SentMemberId" class="form-control" asp-items="ViewBag.SentMemberId"></select>
+                <span asp-validation-for="SentMemberId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Message" class="control-label"></label>
+                <input asp-for="Message" class="form-control" />
+                <span asp-validation-for="Message" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
