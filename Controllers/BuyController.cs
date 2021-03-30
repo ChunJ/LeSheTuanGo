@@ -1,7 +1,7 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using prj0305.Models;
+using LeSheTuanGo.Models;
 using System;
 using System.Collections.Generic;
 //using System.Device.Location;
@@ -9,11 +9,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using System.Device.Location;
-using Microsoft.AspNetCore.Http;
-using prj0305.ViewModels;
 
-namespace prj0305.Controllers
+using Microsoft.AspNetCore.Http;
+using LeSheTuanGo.ViewModels;
+using GeoCoordinatePortable;
+
+namespace LeSheTuanGo.Controllers
 {
 
     public class BuyController : Controller

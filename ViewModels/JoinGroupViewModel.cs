@@ -1,11 +1,11 @@
-﻿using prj0305.Models;
+﻿using LeSheTuanGo.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace prj0305.ViewModels
+namespace LeSheTuanGo.ViewModels
 {
     public class JoinGroupViewModel
     {
