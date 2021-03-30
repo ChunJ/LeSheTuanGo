@@ -1,0 +1,43 @@
+﻿@model IEnumerable<LeSheTuanGo.Models.GarbageServiceOffer>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>服務清單</h1>
+<a asp-action="HistoryList">歷史訂單</a>
+<div>
+    <label for="distance" class="control-label">距離</label>
+    <select class="form-control" asp-items="ViewBag.GoRange" id="distance" onchange="str_distanceChange()"></select>
+</div>
+
+<script>
+function str_distanceChange() {
+    $.ajax({
+        url: "/GarbageServiceUseRecords/Refresh?le=" + distance.value,
+        type: "GET",
+        success: function (ls) {
+            let s = JSON.parse(ls);
+            let txt = "";
+
+              
+            for (var i = 0; i < s.length; i++) {
+                txt += "<tr><td>" + s[i].Address+ "</td>";
+                txt += "<td>" + s[i].EndTime + "</td>";
+                txt += "<td>" + s[i].L3maxCount + "</td>";
+                txt += "<td>" + s[i].L5maxCount + "</td>";
+                txt += "<td>" + s[i].L14maxCount + "</td>";
+                txt += "<td>" + s[i].L25maxCount + "</td>";
+                txt += "<td>" + s[i].L33maxCount + "</td>";
+                txt += "<td>" + s[i].L75maxCount + "</td>";
+                txt += "<td>" + s[i].L120maxCount + "</td>";
+                txt += "<td><a href='/GarbageServiceUseRecords/JoinGroup/" + s[i].GarbageServiceId + "'>修改</a></td >";
+
+            }
+            $("#re").html(txt);
+        }
+
+    });
+
+}
+</script>
