@@ -312,7 +312,6 @@
         }
 
     }//ok
-
     function imageShow() {
         var file = document.querySelector("#txtImage").files[0]
         var newfile = new File([file], new Date().getTime() + ".jpg", { type: "image/jpeg" });
@@ -322,7 +321,7 @@
         };
         reader.readAsDataURL(newfile);
         console.log(reader);
-    }
+    }//ok
 
     //demo鍵
     function demo() {

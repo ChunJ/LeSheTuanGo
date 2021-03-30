@@ -79,8 +79,12 @@ namespace LeSheTuanGo.Controllers
             {
                 string imageDefalt = "profilePic.jpg";
                 memberData.ProfileImagePath = "/profileImages/" + imageDefalt;
-            }                
+            }
             #endregion
+            decimal[] addressToLatlong = new decimal[2];
+            addressToLatlong = cUtility.addressToLatlong(memberData.Address);
+            memberData.Latitude = addressToLatlong[0];
+            memberData.Longitude = addressToLatlong[1];
             db.Members.Add(memberData.member);
             db.SaveChanges();
             return RedirectToAction("Login");
@@ -89,8 +93,6 @@ namespace LeSheTuanGo.Controllers
         {
             int userId = (int)HttpContext.Session.GetInt32(cUtility.Current_User_Id);
             var qMember = db.Members.Where(n => n.MemberId == userId).FirstOrDefault();
-
-
             MemberViewModel vm = new MemberViewModel(qMember);
             return View(vm);
         }

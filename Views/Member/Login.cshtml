@@ -8,7 +8,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Login" onsubmit="return true">
+        <form asp-action="Login" id="form">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Email" class="control-label" id="labelEmail"></label>
@@ -17,11 +17,11 @@
             </div>
             <div class="form-group">
                 <label asp-for="Password" class="control-label" id="labelPassword"></label>
-                <input asp-for="Password" class="form-control" id="txtPassword" onblur="checkLogin()"/>
+                <input asp-for="Password" class="form-control" id="txtPassword"/>
                 <span asp-validation-for="Password" class="text-danger" id="spanPassword"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="登入" class="btn btn-primary" />
+                <input type="button" value="登入" class="btn btn-primary" onclick="checkLogin()"/>
                 <input type="button" value="忘記密碼" class="btn btn-primary" />
                 <input type="button" value="註冊" class="btn btn-primary" asp-action="Create"/>
             </div>
@@ -43,19 +43,11 @@
     let txtPassword = document.getElementById("txtPassword");
     let spanPassword = document.getElementById("spanPassword");
     let labelPassword = document.getElementById("labelPassword");
+    let form = document.getElementById("form");
+    var flagNull = false, flagUser = false;
     function checkLogin() {
-        if (txtEmail.value == "") {
-            spanEmail.innerHTML = "不可為空";
-            labelEmail.style.color = "red";
-            txtEmail.style.borderColor = "red";
-            return false;
-        }
-        if (txtPassword.value == "") {
-            spanPassword.innerHTML = "不可為空";
-            labelPassword.style.color = "red";
-            txtPassword.style.borderColor = "red";
-            return false;
-        }
+        if (!isNull())
+            return;
         isUser(txtEmail, txtPassword);
     }//ok
     function isUser(Email, Password) {
@@ -64,28 +56,51 @@
             type: "Get",
             success: function (returnMessage) {
                 let js = JSON.parse(returnMessage);
-                console.log(js);
                 if (js != "not User" && js != "incorrect") {
                     labelEmail.style.color = "green";
                     txtEmail.style.borderColor = "green";
                     labelPassword.style.color = "green";
                     txtPassword.style.borderColor = "green";
-                    console.log(js);
-                    return true;
+                    form.submit();
                 } else if (js == "not User") {
                     spanEmail.innerHTML = "此Email尚未註冊,或嘗試<a href='/Member/Create'>註冊</a>?";
+                    spanPassword.innerHTML = "";
                     labelEmail.style.color = "red";
                     txtEmail.style.borderColor = "red";
-                    return false;
                 } else if (js == "incorrect") {
+                    spanEmail.innerHTML = "";
                     spanPassword.innerHTML = "密碼錯誤";
                     labelPassword.style.color = "red";
                     txtPassword.style.borderColor = "red";
-                    return false;
-                }
+                } 
             }
         });
     }//ok
+    function isNull() {
+        if (txtEmail.value == "" && txtPassword.value == "") {
+            spanEmail.innerHTML = "不可為空";
+            spanPassword.innerHTML = "不可為空";
+            labelEmail.style.color = "red";
+            labelPassword.style.color = "red";
+            txtEmail.style.borderColor = "red";
+            txtPassword.style.borderColor = "red";
+            return false;
+        }
+        if (txtEmail.value == "") {
+            spanEmail.innerHTML = "不可為空";
+            labelEmail.style.color = "red";
+            txtEmail.style.borderColor = "red";
+            return false;
+        } 
+        if (txtPassword.value == "") {
+            spanPassword.innerHTML = "不可為空";
+            labelPassword.style.color = "red";
+            txtPassword.style.borderColor = "red";
+            return false;
+        } else
+            return true;
+    }//ok
+
     //demo
     function demo() {
         txtEmail.value = "YuChen789@gmail.com";
