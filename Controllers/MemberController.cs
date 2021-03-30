@@ -95,10 +95,11 @@ namespace LeSheTuanGo.Controllers
             return View(vm);
         }
 
-        public IActionResult EditPassword()
+        public IActionResult EditPassword(int? memberId)
         {
-            int userId = (int)HttpContext.Session.GetInt32(cUtility.Current_User_Id);
-            var EditPassword = db.Members.Where(n => n.MemberId == userId).FirstOrDefault();
+            if (memberId == null)
+                return RedirectToAction("Detail");
+            var EditPassword = db.Members.Where(n => n.MemberId == memberId).FirstOrDefault();
             MemberViewModel vm = new MemberViewModel(EditPassword);
             return View(vm);
         }
@@ -114,9 +115,13 @@ namespace LeSheTuanGo.Controllers
             }
             return View();
         }
-        public IActionResult EditAddress()
+        public IActionResult EditAddress(int? memberId)
         {
-            return View();
+            if (memberId == null)
+                return RedirectToAction("Detail");
+            var EditPassword = db.Members.Where(n => n.MemberId == memberId).FirstOrDefault();
+            MemberViewModel vm = new MemberViewModel(EditPassword);
+            return View(vm);
         }
         [HttpPost]
         public IActionResult EditAddress(MemberViewModel memberEdit)
@@ -132,9 +137,13 @@ namespace LeSheTuanGo.Controllers
             return View();
         }//todo
 
-        public IActionResult EditImage()
+        public IActionResult EditImage(int? memberId)
         {
-            return View();
+            if (memberId == null)
+                return RedirectToAction("Detail");
+            var EditPassword = db.Members.Where(n => n.MemberId == memberId).FirstOrDefault();
+            MemberViewModel vm = new MemberViewModel(EditPassword);
+            return View(vm);
         }
         [HttpPost]
         public IActionResult EditImage(MemberViewModel memberEdit)
@@ -142,10 +151,32 @@ namespace LeSheTuanGo.Controllers
             var selected = db.Members.Where(n => n.MemberId == memberEdit.MemberId).FirstOrDefault();
             if (selected != null)
             {
+                #region 照片
+                if (memberEdit.image != null)
+                {
+                    string photoName = Guid.NewGuid().ToString() + ".jpg";
+                    using (var photo = new FileStream(
+                        iv_host.WebRootPath + @"\profileImages\" + photoName,
+                        FileMode.Create))
+                    {
+                        memberEdit.image.CopyTo(photo);
+                    }
+                    memberEdit.ProfileImagePath = "/profileImages/" + photoName;
+                }
+                else
+                {
+                    string imageDefalt = "profilePic.jpg";
+                    memberEdit.ProfileImagePath = "/profileImages/" + imageDefalt;
+                }
+                #endregion
+
                 selected.ProfileImagePath = memberEdit.ProfileImagePath;
                 db.SaveChanges();
+                HttpContext.Session.SetInt32(cUtility.Current_User_Id, Convert.ToInt32(selected.MemberId));
+                HttpContext.Session.SetString(cUtility.Current_User_Name, selected.FirstName + selected.LastName);
+                HttpContext.Session.SetString(cUtility.Current_User_Profile_Image, selected.ProfileImagePath);
             }
-            return View();
+            return RedirectToAction("Detail");
         }//todo
         public IActionResult Logout()
         {
@@ -187,21 +218,21 @@ namespace LeSheTuanGo.Controllers
         public string checkLogin(string inputEmail , string inputPassword)
         {
             string returnMessage = "";
-            var qMember = db.Members.Where(n => n.Email == inputEmail).FirstOrDefault();
-            if (qMember == null)
+            var selected = db.Members.Where(n => n.Email == inputEmail).FirstOrDefault();
+            if (selected == null)
             {
                 returnMessage = "not User";
                 returnMessage = JsonConvert.SerializeObject(returnMessage);
                 return returnMessage;
             }
-            string salt = qMember.PasswordSalt;
+            string salt = selected.PasswordSalt;
             string saltedPwd = sha256(inputPassword, salt);
-            if (saltedPwd == qMember.Password)
+            if (saltedPwd == selected.Password)
             {
-                HttpContext.Session.SetInt32(cUtility.Current_User_Id, Convert.ToInt32(qMember.MemberId));
-                HttpContext.Session.SetString(cUtility.Current_User_Name, qMember.FirstName + qMember.LastName);
-                HttpContext.Session.SetString(cUtility.Current_User_Profile_Image, qMember.ProfileImagePath);
-                returnMessage = qMember.MemberId.ToString();
+                HttpContext.Session.SetInt32(cUtility.Current_User_Id, Convert.ToInt32(selected.MemberId));
+                HttpContext.Session.SetString(cUtility.Current_User_Name, selected.FirstName + selected.LastName);
+                HttpContext.Session.SetString(cUtility.Current_User_Profile_Image, selected.ProfileImagePath);
+                returnMessage = selected.MemberId.ToString();
                 returnMessage = JsonConvert.SerializeObject(returnMessage);
                 return returnMessage;
             }

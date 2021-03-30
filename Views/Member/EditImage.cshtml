@@ -1,0 +1,43 @@
+﻿@model LeSheTuanGo.ViewModels.MemberViewModel
+
+<h4>更改照片</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditImage" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="MemberId" />
+            <div class="form-group">
+                <label asp-for="image" class="control-label" id="labelImage"></label>
+                <input type="file" asp-for="image" id="txtImage" accept=".png, .jpg, .jpeg" onchange="imageShow()" />
+                <span asp-validation-for="image" style="color:red" id="spanImage"></span>
+            </div><!--image-->
+            <img src="@Model.ProfileImagePath" width="200" id="uploadPreview" />
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+
+
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Detail">返回</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+<script type="text/javascript">
+    function imageShow() {
+        var file = document.querySelector("#txtImage").files[0]
+        var newfile = new File([file], new Date().getTime() + ".jpg", { type: "image/jpeg" });
+        var reader = new FileReader();
+        reader.onload = function (oFREvent) {
+            document.querySelector("#uploadPreview").src = oFREvent.target.result;
+        };
+        reader.readAsDataURL(newfile);
+        console.log(reader);
+    }
+</script>

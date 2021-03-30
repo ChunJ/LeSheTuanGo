@@ -65,11 +65,8 @@ namespace LeSheTuanGo.ViewModels
         public int Balance { get { return iv_Member.Balance; } set { iv_Member.Balance = value; } }
         [DisplayName("照片")]
         public string ProfileImagePath { get { return iv_Member.ProfileImagePath; } set { iv_Member.ProfileImagePath = value; } }
-//<<<<<<< Updated upstream
        
         [DisplayName("生日")]
-//=======
-//>>>>>>> Stashed changes
         public DateTime DateOfBirth { get { return iv_Member.DateOfBirth; } set { iv_Member.DateOfBirth = value; } }
 
         [DisplayName("照片")]
