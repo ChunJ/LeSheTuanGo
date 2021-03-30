@@ -105,7 +105,10 @@ namespace LeSheTuanGo.Controllers
             var countMax = from n in _context.Orders
                            where n.OrderId==id
                            select n;
-
+            var member = _context.Members.Include(n => n.District).Where(n => n.MemberId == MemberID);
+            ViewData["City"] = new SelectList(_context.CityRefs, "CityId", "CityName");
+            ViewBag.DistrictId = member.FirstOrDefault().DistrictId;
+            ViewBag.CityId = member.FirstOrDefault().District.CityId;
             ViewBag.total = countMax.FirstOrDefault().AvailableCount;
             return View(list);
         }

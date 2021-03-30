@@ -43,7 +43,14 @@ function fillProduct(cateId, prodTagId, callBack) {
         }
     )
 } 
-
+function getDistrict2(distTagId) {
+    fillDistrict(event.target.value, distTagId, null);
+    changeDist();
+}
+function changeDist() {
+    let distV = $('#DistrictId').val();
+    $('#ComeDistrictID').val(distV);
+}
 
 //function getLatLng(addressInput, callBack) {
 //    $.getJSON(

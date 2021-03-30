@@ -2,14 +2,22 @@
 
 @foreach (var item in Model)
 {
+    <div class="form-group">
+        <label>城市</label>
+        <select id="CityId" class="form-control" onchange="getDistrict2('#DistrictId')" asp-items="ViewBag.City"></select>
+    </div>
+    <div class="form-group">
+        <label for="DistrictId">鄉鎮市區</label>
+        <select id="DistrictId" class="form-control" onchange="changeDist()"></select>
+    </div>
     <div>@Html.DisplayNameFor(model => model.Address)@Html.DisplayFor(modelItem => item.JOrder.Address)</div>
-     <div>@Html.DisplayNameFor(model => model.EndTime)@Html.DisplayFor(modelItem => item.JOrder.EndTime)</div>
-     <div>@Html.DisplayNameFor(model => model.OrderDescription)@Html.DisplayFor(modelItem => item.JOrder.OrderDescription)</div>
-<div> @Html.DisplayNameFor(model => model.UnitPrice)@Html.DisplayFor(modelItem => item.JOrder.UnitPrice)</div>
-     <div>@Html.DisplayNameFor(model => model.CanGo)@Html.DisplayFor(modelItem => item.JOrder.CanGo)</div>
- <div>@Html.DisplayNameFor(model => model.GoRangeId)@Html.DisplayFor(modelItem => item.JOrder.GoRange.RangeInMeters)</div>
+    <div>@Html.DisplayNameFor(model => model.EndTime)@Html.DisplayFor(modelItem => item.JOrder.EndTime)</div>
+    <div>@Html.DisplayNameFor(model => model.OrderDescription)@Html.DisplayFor(modelItem => item.JOrder.OrderDescription)</div>
+    <div> @Html.DisplayNameFor(model => model.UnitPrice)@Html.DisplayFor(modelItem => item.JOrder.UnitPrice)</div>
+    <div>@Html.DisplayNameFor(model => model.CanGo)@Html.DisplayFor(modelItem => item.JOrder.CanGo)</div>
+    <div>@Html.DisplayNameFor(model => model.GoRangeId)@Html.DisplayFor(modelItem => item.JOrder.GoRange.RangeInMeters)</div>
 }
-    @*<table class="table">
+@*<table class="table">
         <thead>
             <tr>
 
@@ -83,7 +91,18 @@
 
 
 
-    <script>
+<script>
+let cityS = document.querySelector("#CityId");
+    let distS = document.querySelector("#DistrictId");
+    window.onload = function () {
+        cityS.value = @ViewData["CityId"];
+        fillDistrict(@ViewData["CityId"], "#DistrictId", function () {
+            distS.value = @ViewData["DistrictId"];
+            //let distV = $('#DistrictId').val();
+            //$('#ComeDistrictID').val(distV);
+        });
+        
+    }
         function stopInputNum() {
             var id = parseInt($('#count').val());
             var max = parseInt($('#count').attr('max'));
@@ -97,4 +116,4 @@
             }
 
         }
-    </script>
+</script>
