@@ -90,7 +90,7 @@ namespace LeSheTuanGo.Controllers
             db.Members.Add(memberData.member);
             db.SaveChanges();
             return RedirectToAction("Login");
-        }
+        }//todo 要發送Email開通信 3/30
         public IActionResult Detail()
         {
             int userId = (int)HttpContext.Session.GetInt32(cUtility.Current_User_Id);
@@ -121,7 +121,7 @@ namespace LeSheTuanGo.Controllers
                 return RedirectToAction("Index", "Home");
             }
             return View();
-        }
+        }//todo 要驗證跟舊密碼是否相同 3/30
         public IActionResult EditAddress(int? memberId)
         {
             if (memberId == null)
@@ -150,7 +150,7 @@ namespace LeSheTuanGo.Controllers
             }
 
             return View();
-        }//todo
+        }
 
         public IActionResult EditImage(int? memberId)
         {
@@ -188,16 +188,21 @@ namespace LeSheTuanGo.Controllers
                 selected.ProfileImagePath = memberEdit.ProfileImagePath;
                 db.SaveChanges();
                 HttpContext.Session.SetInt32(cUtility.Current_User_Id, Convert.ToInt32(selected.MemberId));
-                HttpContext.Session.SetString(cUtility.Current_User_Name, selected.FirstName + selected.LastName);
+                HttpContext.Session.SetString(cUtility.Current_User_Name, selected.FirstName + " " + selected.LastName);
                 HttpContext.Session.SetString(cUtility.Current_User_Profile_Image, selected.ProfileImagePath);
             }
             return RedirectToAction("Detail");
-        }//todo
+        }
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
             return RedirectToAction("Index", "Home");
         }
+        public IActionResult forgetPassword()
+        {
+            return View(); 
+        }//todo 忘記密碼 要寄Email驗證 3/30
+
         private string sha256(string inputPwd ,string salt)
         {
             SHA256 sha256 = new SHA256CryptoServiceProvider();//建立一個SHA256

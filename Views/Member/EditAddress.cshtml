@@ -16,7 +16,7 @@
                 <select id="selectDistric" asp-for="DistrictId">
                     <option hidden id="optionCity">請選擇</option>
                 </select>
-                <input asp-for="Address" value=" " class="form-control" id="txtAddress" onblur="checkAddress()" />
+                <input asp-for="Address" value="" class="form-control" id="txtAddress" onblur="checkAddress()" />
                 <span asp-validation-for="Address" style="color:red" id="spanAddress"></span>
             </div><!--Address-->
             <div class="form-group">

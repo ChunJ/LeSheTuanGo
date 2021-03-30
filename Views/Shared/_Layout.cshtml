@@ -65,7 +65,7 @@
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
                                     @if (Context.Session.GetInt32(cUtility.Current_User_Id) == null) {
                                         <a class="dropdown-item" asp-controller="Member" asp-action="Login">登入</a>
-                                        <a class="dropdown-item" asp-controller="Member" asp-action="Create">創建</a>
+                                        <a class="dropdown-item" asp-controller="Member" asp-action="Create">註冊</a>
                                     } else {
                                         <a class="dropdown-item" asp-controller="Member" asp-action="Detail">我的帳戶</a>
                                         <a class="dropdown-item" href="#">設定</a>
