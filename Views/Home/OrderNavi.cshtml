@@ -2,22 +2,31 @@
 @{
     ViewData["Title"] = "參與團購";
 }
-
-<div class="w-75 px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+<div class="text-center">
     <h1 class="display-4">參與團購</h1>
     <p class="lead mt-2">你可以搜尋並加入現有的團購，或是自己擔任團購召集人，創立新的購物團</p>
 </div>
 
-<div class="row h-75">
-    <div class="text-center w-50 h-100">
-        <a asp-area="" asp-controller="NewGroupOrder" asp-action="Index">
-            <h2>開新團購</h2>
-        </a>
+<div class="row justify-content-center">
+    <div class="col-6 col-lg-5">
+        <div class="text-center rounded bg-white">
+            <a class="nav-link text-dark" asp-area="" asp-controller="NewGroupOrder" asp-action="Index">
+                <h2 >開新團購</h2>
+            </a>
+            <p>
+                說明文字
+            </p>
+        </div>
     </div>
-    <div class="text-center w-50 h-100">
-        <a asp-area="" asp-controller="Home" asp-action="Index">
-            <h2>加入現有團購</h2>
-        </a>
+    <div class="col-6 col-lg-5">
+        <div class="text-center rounded bg-white">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">
+                <h2>加入現有團購</h2>
+            </a>
+            <p>
+                說明文字
+            </p>
+        </div>
     </div>
 </div>
 

@@ -2,7 +2,30 @@
 @{
     ViewData["Title"] = "ServiceNavi";
 }
+<div class="text-center">
+    <h1 class="display-4">垃圾託倒服務</h1>
+    <p class="lead mt-2">你可以委託其他人幫你倒垃圾，或是幫忙別人倒垃圾。</p>
+</div>
 
-<h1>ServiceNavi</h1>
-<a class="nav-link text-dark" asp-area="" asp-controller="GarbageServiceOffers" asp-action="Index">幫人倒垃圾</a>
-<a class="nav-link text-dark" asp-area="" asp-controller="GarbageServiceUseRecords" asp-action="Index">請人倒垃圾</a>
+<div class="row justify-content-center">
+    <div class="col-6 col-lg-5">
+        <div class="text-center rounded bg-white">
+            <a class="nav-link text-dark" asp-area="" asp-controller="GarbageServiceOffers" asp-action="Create">
+                <h2>幫人倒垃圾</h2>
+            </a>
+            <p>
+                說明文字
+            </p>
+        </div>
+    </div>
+    <div class="col-6 col-lg-5">
+        <div class="text-center rounded bg-white">
+            <a class="nav-link text-dark" asp-area="" asp-controller="GarbageServiceUseRecords" asp-action="Index">
+                <h2>請人倒垃圾</h2>
+            </a>
+            <p>
+                說明文字
+            </p>
+        </div>
+    </div>
+</div>
