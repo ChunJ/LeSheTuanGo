@@ -14,6 +14,7 @@ namespace LeSheTuanGo.Controllers{
     public class GarbageServiceUseController : Controller{
         private readonly MidtermContext db;
         private Member currentMember = null;
+        private GeoCoordinate Geo = null;
         public GarbageServiceUseController(MidtermContext context){
             db = context;
             if (HttpContext.Session.GetInt32(cUtility.Current_User_Id) != null) {

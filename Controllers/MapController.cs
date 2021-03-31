@@ -36,7 +36,7 @@ namespace LeSheTuanGo.Controllers
             var result = iv_context.GarbageTruckSpots.Where(s => s.DistrictId == memberDistrictId).ToList();
 
             var q = from i in result select new { i.Address, i.ArrivalTime, i.Latitude, i.Longitude, distance=cUtility.distanceBetweenTwoSpots(memberLat,memberLng,i.Latitude,i.Longitude) };
-            var qList = q.OrderBy(q => q.distance).Take(10).ToList();
+            var qList = q.OrderBy(q => q.distance)./*Take(10).*/ToList();
 
             string listJsonString = JsonConvert.SerializeObject(qList);
 
@@ -64,7 +64,8 @@ namespace LeSheTuanGo.Controllers
                 garbageTruckSpotViewModels.Add(garbageTruckSpotViewModel);
             }
 
-            return View(garbageTruckSpotViewModels);
+            //return View(garbageTruckSpotViewModels);
+            return View();
         }
 
         public IActionResult Index()
