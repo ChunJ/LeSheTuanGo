@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LeSheTuanGo.Models;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
 
 namespace LeSheTuanGo.Controllers
 {
@@ -18,10 +19,11 @@ namespace LeSheTuanGo.Controllers
         {
             _context = context;
         }
-        int memberID = 2;
+        int memberID = 0;
         // GET: ChatMessageRecords
         public async Task<IActionResult> Index()
         {
+            memberID = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
             //var midtermContext = _context.ChatMessageRecords.Include(c => c.SentMember);
             var orderQuery = _context.Orders.Where(n => n.HostMemberId == memberID).Select(n=>n.OrderId) ;
             var orderBuyRQuery =  _context.OrderBuyRecords.Where(n => n.MemberId == memberID).Select(n => n.OrderId);
