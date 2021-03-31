@@ -93,7 +93,7 @@ namespace LeSheTuanGo.Controllers
         }//todo 要發送Email開通信 3/30
         public IActionResult Detail()
         {
-            int userId = (int)HttpContext.Session.GetInt32(cUtility.Current_User_Id);
+            int userId = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
             var qMember = db.Members.Where(n => n.MemberId == userId).FirstOrDefault();
             var qDistrict = db.DistrictRefs.Where(n => n.DistrictId == qMember.DistrictId).FirstOrDefault();
             var qCity = db.CityRefs.Where(n => n.CityId == qDistrict.CityId).FirstOrDefault();
@@ -121,7 +121,7 @@ namespace LeSheTuanGo.Controllers
                 return RedirectToAction("Index", "Home");
             }
             return View();
-        }//todo 要驗證跟舊密碼是否相同 3/30
+        }
         public IActionResult EditAddress(int? memberId)
         {
             if (memberId == null)
@@ -261,6 +261,23 @@ namespace LeSheTuanGo.Controllers
                 returnMessage = JsonConvert.SerializeObject(returnMessage);
                 return returnMessage;
             }
+        }
+        public string samePassword(string inputPassword)
+        {
+            int userId = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
+            var q = db.Members.Where(n => n.MemberId == userId).FirstOrDefault();
+            string returnMessage = "";
+            if (q == null)
+            {
+                returnMessage = "fail";
+                return returnMessage;
+            }
+            if (q.Password == sha256(inputPassword, q.PasswordSalt))
+                returnMessage = "correct";
+            else
+                returnMessage = "incorrcet";
+            returnMessage = JsonConvert.SerializeObject(returnMessage);
+            return returnMessage;
         }
     }
 }

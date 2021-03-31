@@ -14,6 +14,7 @@ namespace LeSheTuanGo.Controllers{
     public class GarbageServiceUseController : Controller{
         private readonly MidtermContext db;
         private Member currentMember = null;
+        private GeoCoordinate Geo = null;
         public GarbageServiceUseController(MidtermContext context){
             db = context;
             if (HttpContext.Session.GetInt32(cUtility.Current_User_Id) != null) {
@@ -145,12 +146,12 @@ namespace LeSheTuanGo.Controllers{
                     select n;
             var 距離 = q.ToList().First().RangeInMeters;
             //var q2 = from n in (new MidtermContext()).GarbageServiceOffers.AsEnumerable()
-                     
+
             //         where Geo.GetDistanceTo(new GeoCoordinate((double)n.Latitude, (double)n.Longitude)) / 1000 <= (double)距離
             //         select n;
-              var q2 = db.GarbageServiceOffers.AsEnumerable().Where(m => Geo.GetDistanceTo(new GeoCoordinate((double)m.Latitude, (double)m.Longitude)) / 1000 <= (double)距離);
+            var q2 = db.GarbageServiceOffers.AsEnumerable().Where(m => Geo.GetDistanceTo(new GeoCoordinate((double)m.Latitude, (double)m.Longitude)) / 1000 <= (double)距離);
             var q3 = q2.ToList();
-            string ls= JsonConvert.SerializeObject(q3);
+            string ls = JsonConvert.SerializeObject(q3);
 
             //List<string> disName = new List<string>();
             //for (int i = 0; i < q3.Count; i++)
