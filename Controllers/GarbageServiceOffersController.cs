@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using LeSheTuanGo.Models;
 using LeSheTuanGo.ViewModels;
+using Microsoft.AspNetCore.Http;
 
 namespace LeSheTuanGo.Controllers
 {
@@ -20,12 +21,13 @@ namespace LeSheTuanGo.Controllers
             _context = context;
         }
 
-        int memberID = 6;
+        int memberID = 0;
 
         //總覽
         // GET: GarbageServiceOffers
         public async Task<IActionResult> Index()
         {
+            memberID = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
             var midtermContext = await _context.GarbageServiceOffers.Where(g=>g.HostMemberId==memberID).Include(g => g.District).Include(g => g.GoRange).Include(g => g.HostMember).Include(g => g.ServiceType).ToListAsync();
             List<GarbageServiceOffersViewModel> ls = new List<GarbageServiceOffersViewModel>();
             foreach (var i in midtermContext)

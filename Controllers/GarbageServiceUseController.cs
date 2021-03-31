@@ -139,20 +139,22 @@ namespace LeSheTuanGo.Controllers{
 
             return View(q);
         }
-        public string Refresh(string le)
-        {
-            var q = from n in (new MidtermContext()).RangeRefs
-                    where n.RangeId.ToString() == le
-                    select n;
-            var 距離 = q.ToList().First().RangeInMeters;
+        //public string Refresh(string le)
+        //{
+            //var q = from n in (new MidtermContext()).RangeRefs
+            //        where n.RangeId.ToString() == le
+            //        select n;
+            //var 距離 = q.ToList().First().RangeInMeters;
+            
+            //  var q2 = db.GarbageServiceOffers.AsEnumerable().Where(m => Geo.GetDistanceTo(new GeoCoordinate((double)m.Latitude, (double)m.Longitude)) / 1000 <= (double)距離);
+            //var q3 = q2.ToList();
+            //string ls= JsonConvert.SerializeObject(q3);
+            //return ls;
+
             //var q2 = from n in (new MidtermContext()).GarbageServiceOffers.AsEnumerable()
 
             //         where Geo.GetDistanceTo(new GeoCoordinate((double)n.Latitude, (double)n.Longitude)) / 1000 <= (double)距離
             //         select n;
-            var q2 = db.GarbageServiceOffers.AsEnumerable().Where(m => Geo.GetDistanceTo(new GeoCoordinate((double)m.Latitude, (double)m.Longitude)) / 1000 <= (double)距離);
-            var q3 = q2.ToList();
-            string ls = JsonConvert.SerializeObject(q3);
-
             //List<string> disName = new List<string>();
             //for (int i = 0; i < q3.Count; i++)
             //{
@@ -161,8 +163,8 @@ namespace LeSheTuanGo.Controllers{
             //}
             //ViewBag.disName = disName;
 
-            return ls;
-        }
+
+        //}
        
       
 

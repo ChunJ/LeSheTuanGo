@@ -106,9 +106,9 @@
         <tr>
             <th>收集地點</th>
             <th>到達時間</th>
-            <th>距離</th>
-            <th style="display:none">lat</th>
-            <th style="display:none">lng</th>
+            <th>距離（公尺）</th>
+            @*<th style="display:none">lat</th>
+                <th style="display:none">lng</th>*@
         </tr>
     </table>
 
@@ -128,15 +128,18 @@
                 type: "GET",
                 success: function (listJsonString) {
                     let js = JSON.parse(listJsonString);
-                    initMap(js,"l");
+                    js = js.sort(function (a, b) {
+                        return a.ArrivalTime > b.ArrivalTime ? 1 : -1;
+                    });
+                    initMap(js, "l");
                     for (let i = 0; i < js.length; i++) {
                         table100m.innerHTML +=
                             '<tr onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ')">'
                             + '<th>' + js[i]["Address"] + '</th>'
                             + '<th>' + js[i]["ArrivalTime"] + '</th>'
                             + '<th>' + js[i]["distance"] + '</th>'
-                            + '<th style="display:none">' + js[i]["Latitude"] + '</th>'
-                            + '<th style="display:none">' + js[i]["Longitude"] + '</th>'
+                            //+ '<th style="display:none">' + js[i]["Latitude"] + '</th>'
+                            //+ '<th style="display:none">' + js[i]["Longitude"] + '</th>'
                             + '</tr>';
                     }
                 }
