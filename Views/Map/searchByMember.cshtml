@@ -102,14 +102,18 @@
 <body onload="init100M()">
     @*<button onclick="init100M()">100M</button>*@
     <div id="map" style="height: 50%;width: 100%;"></div>
+    <button onclick="clearContent()">100M</button>
     <table class="table" id="table100m">
-        <tr>
-            <th>收集地點</th>
-            <th>到達時間</th>
-            <th>距離（公尺）</th>
-            @*<th style="display:none">lat</th>
-                <th style="display:none">lng</th>*@
-        </tr>
+        <tbody id="header">
+            <tr>
+                <th>收集地點</th>
+                <th>到達時間</th>
+                <th>距離（公尺）</th>
+                @*<th style="display:none">lat</th>
+                    <th style="display:none">lng</th>*@
+            </tr>
+        </tbody>
+        <tbody id="content"></tbody>
     </table>
 
     @*<button onclick="initMap(@ViewBag.resultLat, @ViewBag.resultLng)">1</button>
@@ -121,19 +125,22 @@
             async></script>
     <script>
         let table100m = document.getElementById("table100m");
+        let tbodycont = document.getElementById("content");
+
+        var js;  //store material from backend
 
         function init100M() {
             $.ajax({
                 url: "/map/spotlessthan100m",
                 type: "GET",
                 success: function (listJsonString) {
-                    let js = JSON.parse(listJsonString);
-                    js = js.sort(function (a, b) {
-                        return a.ArrivalTime > b.ArrivalTime ? 1 : -1;
-                    });
+                    js = JSON.parse(listJsonString);
+                    //js = js.sort(function (a, b) {
+                    //    return a.ArrivalTime < b.ArrivalTime ? -1 : 1;
+                    //});
                     initMap(js, "l");
                     for (let i = 0; i < js.length; i++) {
-                        table100m.innerHTML +=
+                        tbodycont.innerHTML +=
                             '<tr onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ')">'
                             + '<th>' + js[i]["Address"] + '</th>'
                             + '<th>' + js[i]["ArrivalTime"] + '</th>'
@@ -144,6 +151,12 @@
                     }
                 }
             })
+        }
+
+        function clearContent() {
+            document.getElementById("content").remove();
+            console.log(js);
+            //todo: test if global-var content still available after refresh/F5
         }
     </script>
 </body>
