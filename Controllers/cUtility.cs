@@ -11,6 +11,7 @@ namespace LeSheTuanGo.Controllers {
         //key for session
         public static readonly string Current_User_Id = "Current_User_Id";
         public static readonly string Current_User_Name = "Current_User_Name";
+        public static readonly string Current_User_Validate = "Current_User_Validate"; //之後會驗證是否通過Email驗證
         public static readonly string Current_User_Profile_Image = "Current_User_Profile_Image";
 
         //input address and output coordinate[lat, lng] 

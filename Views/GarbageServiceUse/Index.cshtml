@@ -1,43 +1,103 @@
 ﻿@model IEnumerable<LeSheTuanGo.Models.GarbageServiceOffer>
+@using System;
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "搜尋倒垃圾服務";
+    int[] sizeNumber = new int[7] { 3, 5, 14, 25, 33, 75, 120 };
 }
 
-<h1>服務清單</h1>
+<h1>搜尋倒垃圾服務</h1>
 <a asp-action="HistoryList">歷史訂單</a>
-<div>
-    <label for="distance" class="control-label">距離</label>
-    <select class="form-control" asp-items="ViewBag.GoRange" id="distance" onchange="str_distanceChange()"></select>
+<div class="row">
+    <div class="col-6">
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <label>城市</label>
+                    <select id="CityId" class="form-control" onchange="getDistrict('#DistrictId')" asp-items="ViewBag.City"></select>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label>鄉鎮市區</label>
+                    <select name="DistrictId" id="DistrictId" class="form-control"></select>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group">
+                    <label>地址</label>
+                    <input class="form-control" id="addressInput" type="text" value=@ViewData["Address"]/>
+                </div>
+            </div>
+            @{
+                for (int i = 0; i < sizeNumber.Length; i++) {
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label>@sizeNumber[i]公升袋數</label>
+                            <input class="form-control" id="@("l"+sizeNumber[i]+"Count")" type="number" />
+                        </div>
+                    </div>
+                }
+            }
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="distance" class="control-label">距離</label>
+                    <select class="form-control" asp-items="ViewBag.GoRange" id="distance" onchange="str_distanceChange()"></select>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="queryByAddress()">搜尋</button>
+            <button class="btn btn-primary">test</button>
+        </div>
+    </div>
+    <div class="col-6" id="searchResult">
+
+    </div>
 </div>
 
+@section Scripts {
 <script>
-function str_distanceChange() {
-    $.ajax({
-        url: "/GarbageServiceUseRecords/Refresh?le=" + distance.value,
-        type: "GET",
-        success: function (ls) {
-            let s = JSON.parse(ls);
-            let txt = "";
+    let cityS = document.querySelector("#CityId");
+    let distS = document.querySelector("#DistrictId");
+    let addressIn = document.querySelector("#addressInput");
+    let l3Count = document.querySelector("#l3Count");
+    let l5Count = document.querySelector("#l5Count");
+    let l14Count = document.querySelector("#l14Count");
+    let l25Count = document.querySelector("#l25Count");
+    let l33Count = document.querySelector("#l33Count");
+    let l75Count = document.querySelector("#l75Count");
+    let l120Count = document.querySelector("#l120Count");
+    let result = document.querySelector("#searchResult");
+    let lastAddress = "";
+    let resultList;
+    window.onload = function () {
+        cityS.value = @ViewData["CityId"];
+        fillDistrict(@ViewData["CityId"], "#DistrictId", function () {
+            distS.value = @ViewData["DistrictId"];
+        });
+    }
 
-              
-            for (var i = 0; i < s.length; i++) {
-                txt += "<tr><td>" + s[i].Address+ "</td>";
-                txt += "<td>" + s[i].EndTime + "</td>";
-                txt += "<td>" + s[i].L3maxCount + "</td>";
-                txt += "<td>" + s[i].L5maxCount + "</td>";
-                txt += "<td>" + s[i].L14maxCount + "</td>";
-                txt += "<td>" + s[i].L25maxCount + "</td>";
-                txt += "<td>" + s[i].L33maxCount + "</td>";
-                txt += "<td>" + s[i].L75maxCount + "</td>";
-                txt += "<td>" + s[i].L120maxCount + "</td>";
-                txt += "<td><a href='/GarbageServiceUseRecords/JoinGroup/" + s[i].GarbageServiceId + "'>修改</a></td >";
+    function test() {
 
+    }
+    function queryByAddress() {
+        $.get(
+            "/GarbageServiceUse/Search",
+            {
+                DistrictInput: distS.value,
+                addressInput: addressIn.value
+            },
+            function (data, status) {
+                if (status == "success") {
+                    resultList = JSON.parse(data);
+                    console.log(resultList);
+                    let htmlString = "";
+                    for (let i = 0; i < resultList.length; i ++) {
+                        htmlString += `<h3>${resultList[i].Address}</h3>`;
+                    }
+                    result.innerHTML = htmlString;
+                }
             }
-            $("#re").html(txt);
-        }
-
-    });
-
-}
+        )
+    }
 </script>
+}
