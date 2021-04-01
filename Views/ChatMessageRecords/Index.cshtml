@@ -36,6 +36,7 @@
         }
 
     .other {
+        float: left;
         text-align: left;
         width: 60%;
     }
@@ -90,8 +91,8 @@
             if ($("#OrderId").val() == orderid) {
                 let msgclass = (gmemberid == memberid) ? 'self' : 'other';
                 $("#chat").append("<div class='" + msgclass + "'>" + memberid + "說：<div>" + message + "</div></div>")
-
             }
+            $("#chat").scrollTop($('#chat').prop("scrollHeight"));
         });
             //選團
         function chatGetOrder(i) {
@@ -132,6 +133,7 @@
 
                     }
                     $("#chat").html(txt);
+                    $("#chat").scrollTop($('#chat').prop("scrollHeight"));
                 },
             })
         }
@@ -140,6 +142,7 @@
         $('#btnSend').click(function () {
 
             var message = $("#message").val();
+            $("#message").val('');
             var orderid = $("#OrderId").val();
             var memberid = gmemberid.toString();
             connection.invoke("SendMessage", memberid, message, orderid).catch(function (err) {
@@ -149,7 +152,7 @@
             $.ajax({
                 type: "POST",
                 url: "/ChatMessageRecords/Create",
-                data: { message: message, orderid: orderid, memberid: memberid }
+                data: { message: message, orderid: orderid, memberid: memberid },
             });
         })
 
