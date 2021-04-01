@@ -13,50 +13,65 @@ using System.Threading.Tasks;
 namespace LeSheTuanGo.Controllers{
     public class GarbageServiceUseController : Controller{
         private readonly MidtermContext db;
-        private Member currentMember = null;
-        private GeoCoordinate Geo = null;
         public GarbageServiceUseController(MidtermContext context){
             db = context;
-            if (HttpContext.Session.GetInt32(cUtility.Current_User_Id) != null) {
-                int userId = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
-                int Memberid = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
-                currentMember = db.Members.Where(m => m.MemberId == userId).First();
-            }
         }
         public IActionResult Index(){
+            if (HttpContext.Session.GetInt32(cUtility.Current_User_Id) != null) {
+                int Memberid = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
+                var user = db.Members.Where(m => m.MemberId == Memberid).Include(m => m.District).First();
+                ViewData["Address"] = user.Address;
+                ViewData["DistrictId"] = user.DistrictId;
+                ViewData["CityId"] = user.District.CityId;
+            } else {
+                //ViewData["Address"] = "";
+                ViewData["DistrictId"] = 1;
+                ViewData["CityId"] = 1;
+            }
             ViewData["City"] = new SelectList(db.CityRefs, "CityId", "CityName");
             ViewData["GoRange"] = new SelectList(db.RangeRefs, "RangeId", "RangeInMeters");
             return View();
         }
-        public string search(
-            int districtInput,
-            string addressInput,
-            int rangeIdInput,
-            bool l3,
-            bool l5,
-            bool l14,
-            bool l25,
-            bool l33,
-            bool l75,
-            bool l120) {
-            var distant = db.RangeRefs.Where(r => r.RangeId == rangeIdInput).First().RangeInMeters;
-            DistrictRef dist = db.DistrictRefs.Where(d => d.DistrictId == districtInput)
-                .Include(d => d.City).First();
-            string address = dist.City.CityName + dist.DistrictName + addressInput;
-            var latlong = cUtility.addressToLatlong(address);
-            GeoCoordinate userLocation = new GeoCoordinate((double)latlong[0], (double)latlong[1]);
+        
+        public string Search(
+            int DistrictInput, string addressInput) {
+            var distantMax = db.RangeRefs.Last().RangeInMeters;
 
-            var bagTypeSearch = from n in (new MidtermContext()).Orders.AsEnumerable()
-                                where userLocation.GetDistanceTo(new GeoCoordinate((double)n.Latitude, (double)n.Longitude)) / 1000 <= (double)distant
-                                select n;
-
-            var rangeSearch = from n in bagTypeSearch.AsEnumerable()
-                     where userLocation.GetDistanceTo(new GeoCoordinate((double)n.Latitude, (double)n.Longitude)) / 1000 <= (double)distant
-                              select n;
-            var A = bagTypeSearch.ToList();
-            string ls = JsonConvert.SerializeObject(A);
-
-            return ls;
+            //disable query and use the first user's location for testing
+            //DistrictRef dist = db.DistrictRefs.Where(d => d.DistrictId == DistrictInput)
+            //    .Include(d => d.City).First();
+            //string address = dist.City.CityName + dist.DistrictName + addressInput;
+            //var latlong = cUtility.addressToLatlong(address);
+            //GeoCoordinate userLocation = new GeoCoordinate((double)latlong[0], (double)latlong[1]);
+            var tempUser = db.Members.First();
+            GeoCoordinate userLocation = new GeoCoordinate((double)tempUser.Latitude, (double)tempUser.Longitude);
+            var bagTypeSearch = from o in db.GarbageServiceOffers
+                                where o.IsActive == true && 
+                                !(o.L3available == 0
+                                && o.L5available == 0 && o.L14available == 0
+                                && o.L25available == 0 && o.L33available == 0
+                                && o.L75available == 0 && o.L120available == 0)
+                                select o;
+            var rangeSearch = from o in bagTypeSearch.Include(o=>o.District).Include(o=>o.District.City)
+                              select new {
+                                  o.GarbageServiceId,
+                                  o.District.DistrictName,
+                                  o.District.City.CityName,
+                                  o.Address,
+                                  o.EndTime,
+                                  o.CanGo,
+                                  o.L3available,
+                                  o.L5available,
+                                  o.L14available,
+                                  o.L25available,
+                                  o.L33available,
+                                  o.L75available,
+                                  o.L120available,
+                                  Distant = userLocation.GetDistanceTo(new GeoCoordinate((double)o.Latitude, (double)o.Longitude)),
+                              };
+            var offerList = bagTypeSearch.ToList();
+            string jsonString = JsonConvert.SerializeObject(offerList);
+            return jsonString;
         }
 
         public IActionResult Join(int id)
@@ -81,7 +96,7 @@ namespace LeSheTuanGo.Controllers{
         }
 
         [HttpPost]
-        public IActionResult JoinGroup(int id2,int garbageserviceofferid, int L3, int L5, int L14, int L25, int L33, int L75, int L120, bool needcome, int comedistrictid, string comeaddress)
+        public IActionResult Join(int id2,int garbageserviceofferid, int L3, int L5, int L14, int L25, int L33, int L75, int L120, bool needcome, int comedistrictid, string comeaddress)
         {
             GarbageServiceUseRecord GB = new GarbageServiceUseRecord();
             GB.L3count = (Byte)L3;
@@ -139,35 +154,5 @@ namespace LeSheTuanGo.Controllers{
 
             return View(q);
         }
-        //public string Refresh(string le)
-        //{
-            //var q = from n in (new MidtermContext()).RangeRefs
-            //        where n.RangeId.ToString() == le
-            //        select n;
-            //var 距離 = q.ToList().First().RangeInMeters;
-            
-            //  var q2 = db.GarbageServiceOffers.AsEnumerable().Where(m => Geo.GetDistanceTo(new GeoCoordinate((double)m.Latitude, (double)m.Longitude)) / 1000 <= (double)距離);
-            //var q3 = q2.ToList();
-            //string ls= JsonConvert.SerializeObject(q3);
-            //return ls;
-
-            //var q2 = from n in (new MidtermContext()).GarbageServiceOffers.AsEnumerable()
-
-            //         where Geo.GetDistanceTo(new GeoCoordinate((double)n.Latitude, (double)n.Longitude)) / 1000 <= (double)距離
-            //         select n;
-            //List<string> disName = new List<string>();
-            //for (int i = 0; i < q3.Count; i++)
-            //{
-            //    var q4 = db.DistrictRefs.Where(n => n.DistrictId == q3[i].DistrictId).Select(n => n.DistrictName);
-            //    disName.Add( q4.First());
-            //}
-            //ViewBag.disName = disName;
-
-
-        //}
-       
-      
-
-
     }
 }
