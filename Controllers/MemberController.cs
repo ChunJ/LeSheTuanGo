@@ -101,6 +101,11 @@ namespace LeSheTuanGo.Controllers
             var qCity = db.CityRefs.Where(n => n.CityId == qDistrict.CityId).FirstOrDefault();
             qMember.Address = qCity.CityName + qDistrict.DistrictName + qMember.Address;
             MemberViewModel vm = new MemberViewModel(qMember);
+            if (qMember.Validate)
+                vm.Auth = "已驗證";
+            else
+                vm.Auth = "未驗證";
+
             return View(vm);
         }
 
@@ -284,11 +289,14 @@ namespace LeSheTuanGo.Controllers
         public IActionResult openMember(string memberId)
         {
             var q = db.Members.Where(n => n.MemberId.ToString() == memberId).FirstOrDefault();
-            if (q.Test != 1)
-                q.Test = 1;
+            if (!q.Validate)
+            {
+                q.Validate = true;
+                db.SaveChanges();
+            }
             else
                 return RedirectToAction("Index", "Home");
-            db.SaveChanges();
+            
             return RedirectToAction("Login", "Member");
         }//todo引導頁面
         public void sendEmail(string inputEmail , int inputId)
@@ -303,7 +311,7 @@ namespace LeSheTuanGo.Controllers
             mail.To.Add(inputEmail);
             mail.Priority = MailPriority.Normal;
             mail.Subject = "樂圾團GO驗證信";
-            mail.Body = "點選網址，啟動會員 :\r\n" + bodyEmail; 
+            mail.Body = "點選網址，啟動會員 :\r\n" + bodyEmail; //todo 可能可以在裡面加a標籤 看情形
             MySmtp.Send(mail);
         }
     }

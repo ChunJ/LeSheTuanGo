@@ -31,7 +31,7 @@ namespace LeSheTuanGo.Models
         public decimal Longitude { get; set; }
         public int Balance { get; set; }
         public string ProfileImagePath { get; set; }
-        public int Test { get; set; }
+        public bool Auth { get; set; }
 
         public virtual DistrictRef District { get; set; }
         public virtual ICollection<ChatMessageRecord> ChatMessageRecords { get; set; }
