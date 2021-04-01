@@ -117,6 +117,7 @@ namespace LeSheTuanGo.Controllers
         {
             //todo 地址更改
             //MidtermContext mid = new MidtermContext();
+            MemberID = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
             var q = from n in _context.Orders
                     where n.OrderId == id
                     select n;
