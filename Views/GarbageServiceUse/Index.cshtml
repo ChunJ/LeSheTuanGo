@@ -2,11 +2,11 @@
 @using System;
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "搜尋倒垃圾服務";
     int[] sizeNumber = new int[7] { 3, 5, 14, 25, 33, 75, 120 };
 }
 
-<h1>服務清單</h1>
+<h1>搜尋倒垃圾服務</h1>
 <a asp-action="HistoryList">歷史訂單</a>
 <div class="row">
     <div class="col-6">
@@ -45,7 +45,7 @@
                     <select class="form-control" asp-items="ViewBag.GoRange" id="distance" onchange="str_distanceChange()"></select>
                 </div>
             </div>
-            <button class="btn btn-primary">搜尋</button>
+            <button class="btn btn-primary" onclick="queryByAddress()">搜尋</button>
             <button class="btn btn-primary">test</button>
         </div>
     </div>
@@ -89,6 +89,7 @@
             function (data, status) {
                 if (status == "success") {
                     resultList = JSON.parse(data);
+                    console.log(resultList);
                     let htmlString = "";
                     for (let i = 0; i < resultList.length; i ++) {
                         htmlString += `<h3>${resultList[i].Address}</h3>`;

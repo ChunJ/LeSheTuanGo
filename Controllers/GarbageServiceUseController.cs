@@ -35,8 +35,8 @@ namespace LeSheTuanGo.Controllers{
         
         public string Search(
             int DistrictInput, string addressInput) {
-            var distantMax = db.RangeRefs.Last().RangeInMeters;
-
+            //var distantMax = db.RangeRefs.Last().RangeInMeters;
+            int distantMax = 3000;
             //disable query and use the first user's location for testing
             //DistrictRef dist = db.DistrictRefs.Where(d => d.DistrictId == DistrictInput)
             //    .Include(d => d.City).First();
@@ -52,24 +52,24 @@ namespace LeSheTuanGo.Controllers{
                                 && o.L25available == 0 && o.L33available == 0
                                 && o.L75available == 0 && o.L120available == 0)
                                 select o;
-            var rangeSearch = from o in bagTypeSearch.Include(o=>o.District).Include(o=>o.District.City)
-                              select new {
-                                  o.GarbageServiceId,
-                                  o.District.DistrictName,
-                                  o.District.City.CityName,
-                                  o.Address,
-                                  o.EndTime,
-                                  o.CanGo,
-                                  o.L3available,
-                                  o.L5available,
-                                  o.L14available,
-                                  o.L25available,
-                                  o.L33available,
-                                  o.L75available,
-                                  o.L120available,
-                                  Distant = userLocation.GetDistanceTo(new GeoCoordinate((double)o.Latitude, (double)o.Longitude)),
-                              };
-            var offerList = bagTypeSearch.ToList();
+            var newObject = from o in bagTypeSearch.Include(o=>o.District).Include(o=>o.District.City)
+                            select new {
+                                o.GarbageServiceId,
+                                o.District.DistrictName,
+                                o.District.City.CityName,
+                                o.Address,
+                                o.EndTime,
+                                o.CanGo,
+                                o.L3available,
+                                o.L5available,
+                                o.L14available,
+                                o.L25available,
+                                o.L33available,
+                                o.L75available,
+                                o.L120available,
+                                Distant = userLocation.GetDistanceTo(new GeoCoordinate((double)o.Latitude, (double)o.Longitude)),
+                            };
+            var offerList = newObject.AsEnumerable().Where(o => o.Distant <= distantMax).ToList();
             string jsonString = JsonConvert.SerializeObject(offerList);
             return jsonString;
         }

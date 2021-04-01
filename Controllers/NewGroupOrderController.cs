@@ -18,9 +18,8 @@ namespace LeSheTuanGo.Controllers {
             db = context;
         }
         public IActionResult Index() {
-            //if (HttpContext.Session.GetInt32(cUtility.Current_User_Id) == null) return RedirectToAction("Login", "Member");
-            //int userId = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
-            int userId = 1;
+            if (HttpContext.Session.GetInt32(cUtility.Current_User_Id) == null) return RedirectToAction("Login", "Member");
+            int userId = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
             //使用使用者的地址
             var user = db.Members.Where(m => m.MemberId == userId).Include(m=>m.District).First();
             ViewData["Address"] = user.Address;
@@ -38,6 +37,7 @@ namespace LeSheTuanGo.Controllers {
         //see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         public async Task<IActionResult> Index(Order order) {
+            if (HttpContext.Session.GetInt32(cUtility.Current_User_Id) == null) return RedirectToAction("Login", "Member");
             order.HostMemberId = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
             order.StartTime = DateTime.Now;
             DistrictRef dist = db.DistrictRefs.Where(d => d.DistrictId == order.DistrictId)

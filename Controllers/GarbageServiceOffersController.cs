@@ -42,6 +42,8 @@ namespace LeSheTuanGo.Controllers
         // GET: GarbageServiceOffers/Create
         public IActionResult Create()
         {
+            if (HttpContext.Session.GetInt32(cUtility.Current_User_Id) == null) return RedirectToAction("Login", "Member");
+            int userId = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
             ViewData["DistrictId"] = new SelectList(_context.DistrictRefs, "DistrictId", "DistrictName");
             ViewData["GoRangeId"] = new SelectList(_context.RangeRefs, "RangeId", "RangeInMeters");
             ViewData["CityId"] = new SelectList(_context.CityRefs, "CityId", "CityName");
@@ -51,14 +53,22 @@ namespace LeSheTuanGo.Controllers
 
         // POST: GarbageServiceOffers/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(GarbageServiceOffersViewModel g)
         {
+            if (HttpContext.Session.GetInt32(cUtility.Current_User_Id) == null) return RedirectToAction("Login", "Member");
+            g.HostMemberId = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
             if (g.Address!=null)
             {
                 g.StartTime = DateTime.Now;
-                g.HostMemberId = memberID;
+                //get latlong from address
+                DistrictRef dist = _context.DistrictRefs.Where(d => d.DistrictId == g.DistrictId)
+                .Include(d => d.City).First();
+                string address = dist.City.CityName + dist.DistrictName + g.Address;
+                var latlong = cUtility.addressToLatlong(address);
+                g.Latitude = latlong[0];
+                g.Longitude = latlong[1];
                 //A
+                g.IsActive = true;
                 g.gso.L3available = g.L3maxCount;
                 g.gso.L5available = g.L5maxCount;
                 g.gso.L14available = g.L14maxCount;
@@ -68,7 +78,7 @@ namespace LeSheTuanGo.Controllers
                 g.gso.L120available = g.L120maxCount;
                 _context.Add(g.gso);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Create));
             }
             ViewData["DistrictId"] = new SelectList(_context.DistrictRefs, "DistrictId", "DistrictName", g.DistrictId);
             ViewData["GoRangeId"] = new SelectList(_context.RangeRefs, "RangeId", "RangeInMeaters", g.GoRangeId);
