@@ -74,7 +74,7 @@ namespace LeSheTuanGo.ViewModels
         public IFormFile image { get; set; }
 
         [DisplayName("驗證")]
-        public string Auth { get ; set ; }
+        public string Validate { get ; set ; }
 
         //
         public virtual DistrictRef District { get; set; }

@@ -102,9 +102,9 @@ namespace LeSheTuanGo.Controllers
             qMember.Address = qCity.CityName + qDistrict.DistrictName + qMember.Address;
             MemberViewModel vm = new MemberViewModel(qMember);
             if (qMember.Validate)
-                vm.Auth = "已驗證";
+                vm.Validate = "已驗證";
             else
-                vm.Auth = "未驗證";
+                vm.Validate = "未驗證";
 
             return View(vm);
         }
