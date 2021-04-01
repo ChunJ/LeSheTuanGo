@@ -53,7 +53,6 @@
         }
 </style>
 <div id="wrap">
-    @*<input type="hidden" id="memberID" />*@
     <div id="link" style="border:5px solid red;background-color:green;flex: 1 1 0">
     </div>
     <div style="position: relative; border: 5px solid red; background-color: aqua; flex: 1 1 0">
@@ -76,8 +75,8 @@
         "use strict";
         var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
         var gmemberid = @ViewBag.memberid;
-            //ready
-    $(function () {
+        //ready事件，查詢已參加的團產生清單
+        $(function () {
         var txt = "";
         @{
             foreach (var i in ViewBag.order)
@@ -86,13 +85,16 @@
                 }
         }
         $("#link").html(txt);
-    })
+        })
+
+        //建立SignalR連線，接收訊息用事件
         connection.on("ReceiveMessage", function (memberid, message, orderid) {
             if ($("#OrderId").val() == orderid) {
                 let msgclass = (gmemberid == memberid) ? 'self' : 'other';
                 $("#chat").append("<div class='" + msgclass + "'>" + memberid + "說：<div>" + message + "</div></div>")
             }
-            $("#chat").scrollTop($('#chat').prop("scrollHeight"));
+            //$("#chat").scrollTop($('#chat').prop("scrollHeight"));
+            $("#chat").animate({ scrollTop: $('#chat').prop("scrollHeight") }, 500);
         });
             //選團
         function chatGetOrder(i) {
@@ -103,7 +105,7 @@
                     return console.error(err.toString());
                 })
             };
-
+            //取得團明細
             var urlorder = "/ChatMessageRecords/chatGetOrderDetail?orderId=" + i;
             $.ajax({
                 url: urlorder,
@@ -119,7 +121,7 @@
                     $("#detail").html(txt);
                 },
             })
-
+            //取得聊天紀錄
             var urlchat = "/ChatMessageRecords/chatGetChat?orderId=" + i;
             $.ajax({
                 url: urlchat,
