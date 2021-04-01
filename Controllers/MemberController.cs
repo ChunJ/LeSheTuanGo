@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
+using System.Net.Mail;
 
 namespace LeSheTuanGo.Controllers
 {
@@ -89,6 +90,7 @@ namespace LeSheTuanGo.Controllers
             #endregion
             db.Members.Add(memberData.member);
             db.SaveChanges();
+            sendEmail(memberData.Email , memberData.MemberId);
             return RedirectToAction("Login");
         }//todo 要發送Email開通信 3/30
         public IActionResult Detail()
@@ -278,6 +280,31 @@ namespace LeSheTuanGo.Controllers
                 returnMessage = "incorrcet";
             returnMessage = JsonConvert.SerializeObject(returnMessage);
             return returnMessage;
+        }
+        public IActionResult openMember(string memberId)
+        {
+            var q = db.Members.Where(n => n.MemberId.ToString() == memberId).FirstOrDefault();
+            if (q.Test != 1)
+                q.Test = 1;
+            else
+                return RedirectToAction("Index", "Home");
+            db.SaveChanges();
+            return RedirectToAction("Login", "Member");
+        }//todo引導頁面
+        public void sendEmail(string inputEmail , int inputId)
+        {
+            string bodyEmail = "https://localhost:5001/Member/openMember?memberId="+inputId;
+            SmtpClient MySmtp = new SmtpClient("smtp.gmail.com", 587);
+            MySmtp.Credentials = new System.Net.NetworkCredential("msit129GarbageCar@gmail.com", "@msit129GarbageCar@");
+
+            MySmtp.EnableSsl = true;
+            MailMessage mail = new MailMessage();
+            mail.From = new MailAddress(inputEmail, "樂圾團GO驗證信");
+            mail.To.Add(inputEmail);
+            mail.Priority = MailPriority.Normal;
+            mail.Subject = "樂圾團GO驗證信";
+            mail.Body = "點選網址，啟動會員 :\r\n" + bodyEmail; 
+            MySmtp.Send(mail);
         }
     }
 }
