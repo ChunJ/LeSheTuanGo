@@ -11,9 +11,9 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace LeSheTuanGo.Controllers{
-    public class GarbageServiceUseController : Controller{
+    public class ServiceUseController : Controller{
         private readonly MidtermContext db;
-        public GarbageServiceUseController(MidtermContext context){
+        public ServiceUseController(MidtermContext context){
             db = context;
         }
         public IActionResult Index() {

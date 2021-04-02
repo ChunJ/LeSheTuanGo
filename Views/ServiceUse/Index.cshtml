@@ -1,5 +1,4 @@
-﻿@model IEnumerable<LeSheTuanGo.Models.GarbageServiceOffer>
-@using System;
+﻿@using System;
 
 @{
     ViewData["Title"] = "搜尋倒垃圾服務";
@@ -126,7 +125,7 @@
             lastDistrict = distS.value;
             lastAddress = addressIn;
             $.get(
-                "/GarbageServiceUse/Search",
+                "/ServiceUse/Search",
                 {
                     DistrictInput: distS.value,
                     addressInput: addressIn.value
@@ -172,7 +171,7 @@
     }
     function getDetail(idInput) {
         $.get(
-            "/GarbageServiceUse/getOfferDetail",
+            "/ServiceUse/getOfferDetail",
             {
                 id:idInput
             },

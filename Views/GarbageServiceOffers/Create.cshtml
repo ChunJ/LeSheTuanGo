@@ -1,5 +1,4 @@
 ﻿@model LeSheTuanGo.ViewModels.GarbageServiceOffersViewModel
-
 @{
     ViewData["Title"] = "新增倒垃圾服務";
 }
@@ -7,83 +6,90 @@
 <h1>新增倒垃圾服務</h1>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-6">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="ServiceTypeId" class="control-label"></label>
-                <select asp-for="ServiceTypeId" class="form-control" asp-items="ViewBag.ServiceTypeId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="District.City.CityId" class="control-label"></label>
-                <select asp-for="District.City.CityId" class="form-control" asp-items="ViewBag.CityId" id="cityId" name="cityId" onchange="getDistrict('#DistrictId')"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="DistrictId" class="control-label"></label>
-                <select asp-for="DistrictId" class="form-control" asp-items="ViewBag.DistrictId" id="DistrictId" name="DistrictId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Address" class="control-label"></label>
-                <input asp-for="Address" class="form-control" id="Address" name="Address" />
-                <span asp-validation-for="Address" class="text-danger"></span>
-            </div>
-            @*<div class="form-group">
-            <label asp-for="StartTime" class="control-label"></label>
-            <input asp-for="StartTime" class="form-control" />
-            <span asp-validation-for="StartTime" class="text-danger"></span>
-        </div>*@
-            <div class="form-group">
-                <label asp-for="EndTime" class="control-label"></label>
-                <input asp-for="EndTime" class="form-control" id="EndTime" name="EndTime" />
-                <span asp-validation-for="EndTime" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="CanGo" /> @Html.DisplayNameFor(model => model.CanGo)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="GoRangeId" class="control-label"></label>
-                <select asp-for="GoRangeId" class="form-control" asp-items="ViewBag.GoRangeId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="L3maxCount" class="control-label"></label>
-                <input asp-for="L3maxCount" class="form-control" id="L3maxCount" name="L3maxCount" />
-                <span asp-validation-for="L3maxCount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="L5maxCount" class="control-label"></label>
-                <input asp-for="L5maxCount" class="form-control" id="L5maxCount" name="L5maxCount" />
-                <span asp-validation-for="L5maxCount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="L14maxCount" class="control-label"></label>
-                <input asp-for="L14maxCount" class="form-control" id="L14maxCount" name="L14maxCount" />
-                <span asp-validation-for="L14maxCount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="L25maxCount" class="control-label"></label>
-                <input asp-for="L25maxCount" class="form-control" id="L25maxCount" name="L25maxCount" />
-                <span asp-validation-for="L25maxCount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="L33maxCount" class="control-label"></label>
-                <input asp-for="L33maxCount" class="form-control" id="L33maxCount" name="L33maxCount" />
-                <span asp-validation-for="L33maxCount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="L75maxCount" class="control-label"></label>
-                <input asp-for="L75maxCount" class="form-control" id="L75maxCount" name="L75maxCount" />
-                <span asp-validation-for="L75maxCount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="L120maxCount" class="control-label"></label>
-                <input asp-for="L120maxCount" class="form-control" id="L120maxCount" name="L120maxCount" />
-                <span asp-validation-for="L120maxCount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-                <input type="button" value="Demo" class="btn btn-primary" onclick="CreateDemo()" />
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-group">
+                        <label asp-for="ServiceTypeId" class="control-label"></label>
+                        <select asp-for="ServiceTypeId" class="form-control" asp-items="ViewBag.ServiceTypeId"></select>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label asp-for="District.City.CityId" class="control-label"></label>
+                        <select asp-for="District.City.CityId" class="form-control" asp-items="ViewBag.CityId" id="cityId" name="cityId" onchange="getDistrict('#DistrictId')"></select>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label asp-for="DistrictId" class="control-label"></label>
+                        <select asp-for="DistrictId" class="form-control" asp-items="ViewBag.DistrictId" id="DistrictId" name="DistrictId"></select>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-group">
+                        <label asp-for="Address" class="control-label"></label>
+                        <input asp-for="Address" class="form-control" id="Address" name="Address" />
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label asp-for="EndTime" class="control-label"></label>
+                        <input asp-for="EndTime" class="form-control" id="EndTime" name="EndTime" />
+                        <span asp-validation-for="EndTime" class="text-danger"></span>
+                    </div>
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="CanGo" /> @Html.DisplayNameFor(model => model.CanGo)
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="GoRangeId" class="control-label"></label>
+                        <select asp-for="GoRangeId" class="form-control" asp-items="ViewBag.GoRangeId"></select>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="L3maxCount" class="control-label"></label>
+                        <input asp-for="L3maxCount" class="form-control" id="L3maxCount" name="L3maxCount" />
+                        <span asp-validation-for="L3maxCount" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="L5maxCount" class="control-label"></label>
+                        <input asp-for="L5maxCount" class="form-control" id="L5maxCount" name="L5maxCount" />
+                        <span asp-validation-for="L5maxCount" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="L14maxCount" class="control-label"></label>
+                        <input asp-for="L14maxCount" class="form-control" id="L14maxCount" name="L14maxCount" />
+                        <span asp-validation-for="L14maxCount" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="L25maxCount" class="control-label"></label>
+                        <input asp-for="L25maxCount" class="form-control" id="L25maxCount" name="L25maxCount" />
+                        <span asp-validation-for="L25maxCount" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="L33maxCount" class="control-label"></label>
+                        <input asp-for="L33maxCount" class="form-control" id="L33maxCount" name="L33maxCount" />
+                        <span asp-validation-for="L33maxCount" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="L75maxCount" class="control-label"></label>
+                        <input asp-for="L75maxCount" class="form-control" id="L75maxCount" name="L75maxCount" />
+                        <span asp-validation-for="L75maxCount" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="L120maxCount" class="control-label"></label>
+                        <input asp-for="L120maxCount" class="form-control" id="L120maxCount" name="L120maxCount" />
+                        <span asp-validation-for="L120maxCount" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Create" class="btn btn-primary" />
+                        <input type="button" value="Demo" class="btn btn-primary" onclick="CreateDemo()" />
+                    </div>
+                </div>
             </div>
         </form>
     </div>
