@@ -33,7 +33,7 @@
                     <div class="col-6">
                         <div class="form-group">
                             <label>@sizeNumber[i]公升袋數</label>
-                            <input class="form-control" id="@("l"+sizeNumber[i]+"Count")" type="number" value="0" min="0"/>
+                            <input class="form-control" id="@("l"+sizeNumber[i]+"Count")" type="number" value="0" min="0" />
                         </div>
                     </div>
                 }
@@ -50,9 +50,21 @@
         </div>
     </div>
     <div class="col-4" id="searchResult">
-
+        <div class="search-item border-bottom" onclick="test()">
+            <h3>this will be address</h3>
+            <p>endtime:2021/05/20 distance:532 meter</p>
+        </div>
+        <div class="search-item border-bottom" onclick="test()">
+            <h3>this will be address</h3>
+            <p>endtime:2021/05/20 distance:532 meter</p>
+        </div>
+        <div class="search-item border-bottom" onclick="test()">
+            <h3>this will be address</h3>
+            <p>endtime:2021/05/20 distance:532 meter</p>
+        </div>
     </div>
     <div class="col-4" id="detailView">
+        <div id="map" style="height: 40%;width: 100%;"></div>
         <div>地點</div>
         <p>台北市大安區</p>
         <div>截止時間</div>
@@ -65,11 +77,11 @@
             <input hidden name="ComeAddress" value="" />
             <div class="form-group">
                 <label for="L3count">3公升</label>
-                <input class="form-control" id="L3count" name="L3count" type="number" min="0" value="" />
+                <input class="form-control" name="L3count" type="number" min="0" value="" />
             </div>
             <div class="form-group">
                 <label for="L5count">5公升</label>
-                <input class="form-control" id="L5count" name="L5count" type="number" min="0" value="" />
+                <input class="form-control" name="L5count" type="number" min="0" value="" />
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
@@ -85,7 +97,10 @@
 </div>
 
 @section Scripts {
-<script>
+    <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBircB99P_RvzxWdQT-hk40-h3Ofzlb_vQ&callback=initMap&libraries=&v=weekly"
+            async></script>
+    <script>
     let cityS = document.querySelector("#CityId");
     let distS = document.querySelector("#DistrictId");
     let addressIn = document.querySelector("#addressInput");
@@ -99,19 +114,20 @@
     let distanceS = document.querySelector("#distance");
     let result = document.querySelector("#searchResult");
     let detailView = document.querySelector("#detailView");
+    let mapDiv = document.querySelector("#map");
     let lastAddress = "";
     let lastDistrict = 0;
     let queryList = [];
     let filterList = [];
+    
     window.onload = function () {
         cityS.value = @ViewData["CityId"];
         fillDistrict(@ViewData["CityId"], "#DistrictId", function () {
             distS.value = @ViewData["DistrictId"];
         });
     }
-
     function test() {
-        console.log(queryList);
+        showMap(25.03, 121.54);
     }
     function fillDemo() {
         addressIn.value = "信義路四段2號";
@@ -179,10 +195,30 @@
                 if (status == "success") {
                     console.log(data);
                     let detail = JSON.parse(data);
-                    
+
                 }
             }
         )
     }
-</script>
+    function showMap(lat, lng) {
+        let coor = new google.maps.LatLng(lat, lng);
+        let mbr = new google.maps.LatLng(25.0339400, 121.5435000);  //fixed for now
+        map = new google.maps.Map(mapDiv,
+            {
+                center: coor,
+                zoom: 17,
+            });
+        new google.maps.Marker({
+            position: mbr,
+            map,
+            title: "YOU",
+        });
+        new google.maps.Marker({
+            position: coor,
+            map,
+            title: "collect spot",
+            icon: "https://crd-rubbish.epd.ntpc.gov.tw/maps/images/icon/Icon_LegendD.png",
+        });
+    }
+    </script>
 }

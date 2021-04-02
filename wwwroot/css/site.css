@@ -105,3 +105,10 @@ body {
     font-size: .75rem
 }
 
+.search-item{
+    background-color:#fff;
+    cursor:pointer;
+}
+.search-item:hover{
+    background-color:#f3f3f3
+}
