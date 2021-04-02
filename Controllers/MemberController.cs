@@ -28,20 +28,22 @@ namespace LeSheTuanGo.Controllers
             db = context;
         }
 
-        public IActionResult Login()
+        public IActionResult Login(string from = "Home/Index")
         {
+            ViewData["from"] = from;
             return View();
         }
         [HttpPost]
-        public IActionResult Login(Member member)
+        public IActionResult Login(string Email,string Password,string from)
         {
-            string check = checkLogin(member.Email, member.Password);
+            string check = checkLogin(Email, Password);
             check = JsonConvert.DeserializeObject(check).ToString();
             if (check == "not User" || check == "incorrect")
             {
                 return RedirectToAction("Login");
             }
-            return RedirectToAction("Index","Home");
+            string[] path = from.Split('/');
+            return RedirectToAction(path[1], path[0]);
         }
         public IActionResult Create()
         {

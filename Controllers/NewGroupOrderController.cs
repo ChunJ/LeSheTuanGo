@@ -18,7 +18,7 @@ namespace LeSheTuanGo.Controllers {
             db = context;
         }
         public IActionResult Index() {
-            if (HttpContext.Session.GetInt32(cUtility.Current_User_Id) == null) return RedirectToAction("Login", "Member");
+            if (HttpContext.Session.GetInt32(cUtility.Current_User_Id) == null) return RedirectToAction("Login", "Member",new {from = "NewGroupOrder/Index" });
             int userId = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
             //使用使用者的地址
             var user = db.Members.Where(m => m.MemberId == userId).Include(m=>m.District).First();

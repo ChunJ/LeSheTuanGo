@@ -42,7 +42,7 @@ namespace LeSheTuanGo.Controllers
         // GET: GarbageServiceOffers/Create
         public IActionResult Create()
         {
-            if (HttpContext.Session.GetInt32(cUtility.Current_User_Id) == null) return RedirectToAction("Login", "Member");
+            if (HttpContext.Session.GetInt32(cUtility.Current_User_Id) == null) return RedirectToAction("Login", "Member", new { from = "GarbageServiceOffers/Create" });
             int userId = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
             ViewData["DistrictId"] = new SelectList(_context.DistrictRefs, "DistrictId", "DistrictName");
             ViewData["GoRangeId"] = new SelectList(_context.RangeRefs, "RangeId", "RangeInMeters");

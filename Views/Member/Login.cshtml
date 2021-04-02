@@ -10,6 +10,7 @@
     <div class="col-md-4">
         <form asp-action="Login" id="form">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input hidden name="from" value="@ViewData["from"]"/>
             <div class="form-group">
                 <label asp-for="Email" class="control-label" id="labelEmail"></label>
                 <input asp-for="Email" class="form-control" id="txtEmail"/>
