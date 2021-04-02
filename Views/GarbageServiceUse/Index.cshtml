@@ -26,7 +26,7 @@
             <div class="col-12">
                 <div class="form-group">
                     <label>地址</label>
-                    <input class="form-control" id="addressInput" type="text" value=@ViewData["Address"]/>
+                    <input class="form-control" id="addressInput" type="text" value=@ViewData["Address"] />
                 </div>
             </div>
             @{
@@ -34,7 +34,7 @@
                     <div class="col-6">
                         <div class="form-group">
                             <label>@sizeNumber[i]公升袋數</label>
-                            <input class="form-control" id="@("l"+sizeNumber[i]+"Count")" type="number" />
+                            <input class="form-control" id="@("l"+sizeNumber[i]+"Count")" type="number" value="0" />
                         </div>
                     </div>
                 }
@@ -42,11 +42,12 @@
             <div class="col-6">
                 <div class="form-group">
                     <label for="distance" class="control-label">距離</label>
-                    <select class="form-control" asp-items="ViewBag.GoRange" id="distance" onchange="str_distanceChange()"></select>
+                    <select class="form-control" asp-items="ViewBag.GoRange" id="distance"></select>
                 </div>
             </div>
-            <button class="btn btn-primary" onclick="queryByAddress()">搜尋</button>
-            <button class="btn btn-primary">test</button>
+            <button class="btn btn-primary" onclick="SearchStart()">搜尋</button>
+            <button class="btn btn-primary" onclick="test()">測試</button>
+            <button class="btn btn-primary" onclick="fillDemo()">DEMO</button>
         </div>
     </div>
     <div class="col-6" id="searchResult">
@@ -66,9 +67,12 @@
     let l33Count = document.querySelector("#l33Count");
     let l75Count = document.querySelector("#l75Count");
     let l120Count = document.querySelector("#l120Count");
+    let distanceS = document.querySelector("#distance");
     let result = document.querySelector("#searchResult");
     let lastAddress = "";
-    let resultList;
+    let lastDistrict = 0;
+    let queryList = [];
+    let filterList = [];
     window.onload = function () {
         cityS.value = @ViewData["CityId"];
         fillDistrict(@ViewData["CityId"], "#DistrictId", function () {
@@ -77,27 +81,62 @@
     }
 
     function test() {
-
+        console.log(queryList);
     }
-    function queryByAddress() {
-        $.get(
-            "/GarbageServiceUse/Search",
-            {
-                DistrictInput: distS.value,
-                addressInput: addressIn.value
-            },
-            function (data, status) {
-                if (status == "success") {
-                    resultList = JSON.parse(data);
-                    console.log(resultList);
-                    let htmlString = "";
-                    for (let i = 0; i < resultList.length; i ++) {
-                        htmlString += `<h3>${resultList[i].Address}</h3>`;
+    function fillDemo() {
+        addressIn.value = "信義路四段2號";
+        distS.value = 5;
+    }
+    function SearchStart() {
+        //send new request if address is changed
+        if (distS.value == lastDistrict && addressIn.value == lastAddress) {
+            filterResult();
+        } else {
+            lastDistrict = distS.value;
+            lastAddress = addressIn;
+            $.get(
+                "/GarbageServiceUse/Search",
+                {
+                    DistrictInput: distS.value,
+                    addressInput: addressIn.value
+                },
+                function (data, status) {
+                    if (status == "success") {
+                        //console.log(data);
+                        queryList = JSON.parse(data);
+                        filterResult();
                     }
-                    result.innerHTML = htmlString;
                 }
+            )
+        }
+    }
+    function filterResult() {
+        ////add cango filter test
+        filterList = [];
+        for (let r of queryList) {
+            if (r.Distance <= distanceS.options[distanceS.selectedIndex].text
+                && r.L3available >= l3Count.value
+                && r.L5available >= l5Count.value
+                && r.L14available >= l14Count.value
+                && r.L25available >= l25Count.value
+                && r.L33available >= l33Count.value
+                && r.L75available >= l75Count.value
+                && r.L120available >= l120Count.value
+            ) {
+                filterList.push(r);
             }
-        )
+        }
+        showResult();
+    }
+    function showResult() {
+        //console.log("filter = "+filterList)
+        //implemente page count here
+        //show no result if length == 0
+        let htmlString = "";
+        for (let i = 0; i < filterList.length; i++) {
+            htmlString += `<h3>${filterList[i].Address}</h3>`;
+        }
+        result.innerHTML = htmlString;
     }
 </script>
 }
