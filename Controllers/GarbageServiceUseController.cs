@@ -16,7 +16,7 @@ namespace LeSheTuanGo.Controllers{
         public GarbageServiceUseController(MidtermContext context){
             db = context;
         }
-        public IActionResult Index(){
+        public IActionResult Index() {
             if (HttpContext.Session.GetInt32(cUtility.Current_User_Id) != null) {
                 int Memberid = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
                 var user = db.Members.Where(m => m.MemberId == Memberid).Include(m => m.District).First();
@@ -70,63 +70,31 @@ namespace LeSheTuanGo.Controllers{
                                 Distance = userLocation.GetDistanceTo(new GeoCoordinate((double)o.Latitude, (double)o.Longitude)),
                             };
             var offerList = newObject.AsEnumerable().Where(o => o.Distance <= distanceMax).ToList();
-            string jsonString = JsonConvert.SerializeObject(offerList);
-            return jsonString;
+            return JsonConvert.SerializeObject(offerList);
         }
 
-        public IActionResult Join(int id)
-        {
-            var q = db.GarbageServiceOffers.Where(m => m.GarbageServiceId == id);
-            var q2 = q.FirstOrDefault();
-
-            ViewData["L3count"] = q2.L3maxCount;
-            ViewData["L5count"] = q2.L5maxCount;
-            ViewData["L14count"] = q2.L14maxCount;
-            ViewData["L25count"] = q2.L25maxCount;
-            ViewData["L33count"] = q2.L33maxCount;
-            ViewData["L75count"] = q2.L75maxCount;
-            ViewData["L120count"] = q2.L120maxCount;
-
-            return View(q);
-            //var q = from n in (new MidtermContext()).GarbageServiceOffers
-            //        where n.GarbageServiceId == id
-            //        select n;
-            //return View(q);
-
+        public string getOfferDetail(int id) {
+            var offer = db.GarbageServiceOffers.Where(o => o.GarbageServiceId == id).First();
+            return JsonConvert.SerializeObject(offer);
         }
 
         [HttpPost]
-        public IActionResult Join(int id2,int garbageserviceofferid, int L3, int L5, int L14, int L25, int L33, int L75, int L120, bool needcome, int comedistrictid, string comeaddress)
-        {
-            GarbageServiceUseRecord GB = new GarbageServiceUseRecord();
-            GB.L3count = (Byte)L3;
-            GB.L5count = (Byte)L5;
-            GB.L14count = (Byte)L14;
-            GB.L25count = (Byte)L25;
-            GB.L33count = (Byte)L33;
-            GB.L75count = (Byte)L75;
-            GB.L120count = (Byte)L120;
-            GB.MemberId = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
-            GB.ComeAddress = comeaddress;
-            GB.NeedCome = needcome;
-            GB.ComeDistrictId = (short)comedistrictid;
-            GB.GarbageServiceOfferId = garbageserviceofferid;
+        public IActionResult Join(GarbageServiceUseRecord rec) {
+            rec.MemberId = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
 
-            db.Add(GB);
-            var q = db.GarbageServiceOffers.Where(m => m.GarbageServiceId == id2).FirstOrDefault();
-            q.L3available =(byte)(q.L3maxCount - GB.L3count);
-            q.L5available = (byte)(q.L5maxCount - GB.L5count);
-            q.L14available = (byte)(q.L14maxCount - GB.L14count);
-            q.L25available = (byte)(q.L25maxCount - GB.L25count);
-            q.L33available = (byte)(q.L33maxCount - GB.L33count);
-            q.L75available = (byte)(q.L75maxCount - GB.L75count);
-            q.L120available = (byte)(q.L120maxCount - GB.L120count);
+            var offer = db.GarbageServiceOffers.Where(o => o.GarbageServiceId == rec.GarbageServiceOfferId).First();
+            //some testing here need to be done
+            offer.L3available -= rec.L3count;
+            offer.L5available -= rec.L5count;
+            offer.L14available -= rec.L14count;
+            offer.L25available -= rec.L25count;
+            offer.L33available -= rec.L33count;
+            offer.L75available -= rec.L75count;
+            offer.L120available -= rec.L120count;
+            db.Add(rec);
             db.SaveChanges();
 
-            //var q = db.GarbageServiceUseRecords.Where(m => m.ServiceUseRecordId == id);
-            //return View(q);
-
-         
+            //redirect to history
             return RedirectToAction("Index");
         }
 
@@ -144,15 +112,6 @@ namespace LeSheTuanGo.Controllers{
 
             db.SaveChanges();
             return RedirectToAction("HistoryList");
-        }
-        public IActionResult HistoryList()
-        {
-            var q = db.GarbageServiceUseRecords.Include(m=>m.GarbageServiceOffer).Where(m => m.MemberId == HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value);
-            //var q = from n in (new MidtermContext()).GarbageServiceUseRecords
-            //        where n.MemberId == Memberid
-            //        select n;
-
-            return View(q);
         }
     }
 }

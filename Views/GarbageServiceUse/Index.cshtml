@@ -9,7 +9,7 @@
 <h1>搜尋倒垃圾服務</h1>
 <a asp-action="HistoryList">歷史訂單</a>
 <div class="row">
-    <div class="col-6">
+    <div class="col-4">
         <div class="row">
             <div class="col-6">
                 <div class="form-group">
@@ -34,7 +34,7 @@
                     <div class="col-6">
                         <div class="form-group">
                             <label>@sizeNumber[i]公升袋數</label>
-                            <input class="form-control" id="@("l"+sizeNumber[i]+"Count")" type="number" value="0" />
+                            <input class="form-control" id="@("l"+sizeNumber[i]+"Count")" type="number" value="0" min="0"/>
                         </div>
                     </div>
                 }
@@ -50,8 +50,38 @@
             <button class="btn btn-primary" onclick="fillDemo()">DEMO</button>
         </div>
     </div>
-    <div class="col-6" id="searchResult">
+    <div class="col-4" id="searchResult">
 
+    </div>
+    <div class="col-4" id="detailView">
+        <div>地點</div>
+        <p>台北市大安區</p>
+        <div>截止時間</div>
+        <p>2021/5/2</p>
+        <div>距離</div>
+        <p>2955公尺</p>
+        <form>
+            <input hidden name="GarbageServiceOfferId" value="" />
+            <input hidden name="ComeDistrictId" value="" />
+            <input hidden name="ComeAddress" value="" />
+            <div class="form-group">
+                <label for="L3count">3公升</label>
+                <input class="form-control" id="L3count" name="L3count" type="number" min="0" value="" />
+            </div>
+            <div class="form-group">
+                <label for="L5count">5公升</label>
+                <input class="form-control" id="L5count" name="L5count" type="number" min="0" value="" />
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox" id="NeedCome" name="NeedCome" />
+                    是否提供外送服務?
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="加入" class="btn btn-primary" />
+            </div>
+        </form>
     </div>
 </div>
 
@@ -69,6 +99,7 @@
     let l120Count = document.querySelector("#l120Count");
     let distanceS = document.querySelector("#distance");
     let result = document.querySelector("#searchResult");
+    let detailView = document.querySelector("#detailView");
     let lastAddress = "";
     let lastDistrict = 0;
     let queryList = [];
@@ -135,8 +166,24 @@
         let htmlString = "";
         for (let i = 0; i < filterList.length; i++) {
             htmlString += `<h3>${filterList[i].Address}</h3>`;
+            htmlString += `<button class="btn btn-primary" onclick="getDetail(${filterList[i].GarbageServiceId})">加入</button>`
         }
         result.innerHTML = htmlString;
+    }
+    function getDetail(idInput) {
+        $.get(
+            "/GarbageServiceUse/getOfferDetail",
+            {
+                id:idInput
+            },
+            function (data, status) {
+                if (status == "success") {
+                    console.log(data);
+                    let detail = JSON.parse(data);
+                    
+                }
+            }
+        )
     }
 </script>
 }
