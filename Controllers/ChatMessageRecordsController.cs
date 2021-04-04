@@ -29,11 +29,14 @@ namespace LeSheTuanGo.Controllers
                 return RedirectToAction("Login", "Member");
             }
             memberID = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
+            var memberName =await _context.Members.Where(n => n.MemberId == memberID).Select(n => n.FirstName + n.LastName).ToListAsync();
             var orderQuery = _context.Orders.Where(n => n.HostMemberId == memberID).Select(n=>n.OrderId) ;
-            var orderBuyRQuery =  _context.OrderBuyRecords.Where(n => n.MemberId == memberID).Select(n => n.OrderId);
+            var orderBuyRQuery =_context.OrderBuyRecords.Where(n => n.MemberId == memberID).Select(n => n.OrderId);
             List<int> ls1 = await orderQuery.ToListAsync();
             ViewBag.order =(await orderQuery.ToListAsync()).Union(await orderBuyRQuery.ToListAsync());
+            ViewBag.username = memberName[0];
             ViewBag.memberid = memberID;
+
             return View();
         }
 
@@ -49,7 +52,12 @@ namespace LeSheTuanGo.Controllers
         //取得聊天紀錄
         public string chatGetChat(int orderId)
         {
-            var chatMessages = _context.ChatMessageRecords.Where(n=>n.GroupId==orderId).ToList();
+            var chatMessages = _context.ChatMessageRecords.Where(n=>n.GroupId==orderId).Select(n=>new { 
+                n.Message,
+                n.SentMemberId,
+                SentTime= n.SentTime.ToString("yyyy/MM/dd, HH:mm"),
+                username = n.SentMember.FirstName+n.SentMember.LastName}
+            ).ToList();
             return JsonConvert.SerializeObject(chatMessages);
         }
 

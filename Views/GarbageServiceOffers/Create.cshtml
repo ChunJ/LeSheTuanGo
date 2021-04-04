@@ -18,7 +18,7 @@
                 </div>
                 <div class="col-6">
                     <div class="form-group">
-                        <label asp-for="District.City.CityId" class="control-label"></label>
+                        <label class="control-label">縣市</label>
                         <select asp-for="District.City.CityId" class="form-control" asp-items="ViewBag.CityId" id="cityId" name="cityId" onchange="getDistrict('#DistrictId')"></select>
                     </div>
                 </div>
@@ -104,8 +104,11 @@
         var t = new Date();
         t.setSeconds(0, 0);
         var month = (""+(t.getMonth() + 1)).length == 2 ? "" + (t.getMonth() + 1) : "0" + (t.getMonth() + 1);
-        var date = (""+(t.getDate() + 1)).length == 2 ? "" + (t.getDate() + 1) : "0" + (t.getDate() + 1);
-        $("#EndTime").val(t.getFullYear() + "-" + month + "-" + date + "T" + t.getHours() + ":" + t.getMinutes());
+        var date = ("" + (t.getDate() + 1)).length == 2 ? "" + (t.getDate() + 1) : "0" + (t.getDate() + 1);
+        var hours = ("" + t.getHours()).length == 2 ? "" + t.getHours() : "0" + t.getHours();
+        var mins = ("" + t.getMinutes()).length == 2 ? ("" + t.getMinutes()) : ("0" + t.getMinutes());
+        console.log((""+t.getMinutes()).length);
+        $("#EndTime").val(t.getFullYear() + "-" + month + "-" + date + "T" + hours + ":" + mins);
         $("#L3maxCount").val(0);
         $("#L5maxCount").val(0);
         $("#L14maxCount").val(0);
