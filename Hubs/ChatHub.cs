@@ -8,10 +8,10 @@ namespace LeSheTuanGo.Hubs
 {
     public class ChatHub : Hub
     {
-        public async Task SendMessage(string memberid, string message,string orderid)
-        {
-            await Clients.All.SendAsync("ReceiveMessage", memberid, message,orderid);
-        }
+        //public async Task SendMessage(string memberid, string message,string orderid)
+        //{
+        //    await Clients.All.SendAsync("ReceiveMessage", memberid, message,orderid);
+        //}
 
         public async Task AddToGroup(string groupName)
         {
@@ -30,7 +30,5 @@ namespace LeSheTuanGo.Hubs
         {
             await Clients.Group(groupName).SendAsync("ReceiveGroupMessage", groupName,memberid, username, message);
         }
-
-
     }
 }

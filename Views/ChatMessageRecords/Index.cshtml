@@ -10,12 +10,35 @@
         height: 80vh;
     }
 
-    .chat {
-        position: relative;
+    #link {
+        border: 5px solid red;
+        background-color: green;
+        flex: 1 1 25%;
     }
 
-    ul {
-        list-style-type: none;
+    #chatroom {
+        position: relative;
+        border: 5px solid red;
+        background-color: aqua;
+        flex: 1 1 50%;
+    }
+
+    #chat {
+        position: relative;
+        width: 100%;
+        height: 95%;
+        overflow: auto;
+    }
+
+    #inputbox {
+        position: absolute;
+        bottom: 0;
+    }
+
+    #detail {
+        border: 5px solid red;
+        background-color: yellow;
+        flex: 1 1 25%;
     }
 
     .self {
@@ -32,7 +55,6 @@
             margin: 0;
             color: #fff;
             padding: 5px 10px 5px 12px;
-            /*width: 100%;*/
         }
 
     .other {
@@ -41,7 +63,7 @@
         width: 60%;
     }
 
-        .other >div span {
+        .other > div span {
             word-break: break-all;
             background: #e4e8fb none repeat scroll 0 0;
             border-radius: 3px;
@@ -49,22 +71,25 @@
             font-size: 14px;
             margin: 0;
             padding: 5px 10px 5px 12px;
-            /*width: 100%;*/
         }
 </style>
 <div id="wrap">
-    <div id="link" style="border:5px solid red;background-color:green;flex: 1 1 25%">
+    <div id="link">
+        <select id="grouptype" onchange="getOrderList()">
+            <option value="1">團購團</option>
+            <option value="2">垃圾團</option>
+        </select>
     </div>
-    <div style="position: relative; border: 5px solid red; background-color: aqua; flex: 1 1 50%">
-        <div id="chat" class="chat" style="width:100%;height:95%;overflow:auto;">
+    <div id="chatroom">
+        <div id="chat">
         </div>
-        <span style="position: absolute;bottom:0 ">
+        <span id="inputbox">
             <input type="hidden" id="roomid" value="0" />
             <input type="text" id="message" />
             <button id="btnSend" disabled='disabled'>Send</button>
         </span>
     </div>
-    <div id="detail" style="border:5px solid red;background-color:yellow;flex: 1 1 25%">
+    <div id="detail">
 
     </div>
 </div>
@@ -80,7 +105,8 @@
         var groupName = $("#roomid").val().toString();
         //ready事件，查詢已參加的團產生清單
         $(function () {
-        var txt = "";
+            var txt = "";
+
         @{
             foreach (var i in ViewBag.order)
                 {
@@ -88,17 +114,10 @@
                 }
         }
         $("#link").html(txt);
+            /*$("#groupid").prop('selectedIndex', 1);*/
         })
 
         //建立SignalR連線，接收訊息用事件
-        //connection.on("ReceiveMessage", function (memberid, message, orderid) {
-        //    if ($("#OrderId").val() == orderid) {
-        //        let msgclass = (gmemberid == memberid) ? 'self' : 'other';
-        //        $("#chat").append("<div class='" + msgclass + "'>" + memberid + "說：<div>" + message + "</div></div>")
-        //    }
-        //    //$("#chat").scrollTop($('#chat').prop("scrollHeight"));
-        //    $("#chat").animate({ scrollTop: $('#chat').prop("scrollHeight") }, 500);
-        //});
         connection.on("ReceiveGroupMessage", function (groupName, memberid,username, message) {
               let msgclass = (gmemberid == memberid) ? 'self' : 'other';
              $("#chat").append("<div class='" + msgclass + "'>" + username + "說：<div>" + message + "</div></div>")
@@ -119,7 +138,6 @@
                     connection.invoke("AddToGroup", group).then(function () { $("#roomid").val(group) }).catch(function (err) {
                         return console.error(err.toString());
                     });
-                    document.getElementById("btnSend").disabled = false;
                 }).catch(function (err) {
                     return console.error(err.toString());
                 })
@@ -168,14 +186,31 @@
                 },
             })
         }
+        //選團型
+        function getOrderList() {
+            let e = document.getElementById("grouptype")
+            let i = e.options[e.selectedIndex].value
+            $.ajax({
+                url: "/ChatMessageRecords/getOrderList?groupType=" + i,
+                type: "GET",
+                success: function (data) {
+                    var s = JSON.parse(data);
+                    var txt = "";
+                    for (let i = 0; i < s.length; i++) {
+                      /*  txt += "<button onclick='chatGetOrder("+s[i].ord+")'>" +  + "</button>"*/
+                    }
+                    $("#detail").html(txt);
+                },
+            })
+        }
+
+
             //發訊息
-
         $('#btnSend').click(function () {
-
             var message = $("#message").val();
             $("#message").val('');
             var orderid = $("#OrderId").val();
-            
+
             connection.invoke("SendMessageToGroup", $("#roomid").val(), gmemberid, username, message).catch(function (err) {
 
                 return console.error(err.toString());
