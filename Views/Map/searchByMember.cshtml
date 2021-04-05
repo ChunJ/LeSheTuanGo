@@ -102,13 +102,33 @@
 <body onload="init100M()">
     @*<button onclick="init100M()">100M</button>*@
     <div id="map" style="height: 50%;width: 100%;"></div>
-    <button onclick="clearContent()">100M</button>
+    @*<button onclick="clearContent()">100M</button>*@
+    <br />
+
+    <label id="labelAddress">搜尋新地址：</label>
+    <select id="selectCity" onchange="getDistrict('#selectDistric')" asp-items="ViewBag.CityId">
+        <option hidden id="optionCity">請選擇</option>
+    </select>
+    <select id="selectDistric">
+        <option hidden id="optionCity">請選擇</option>
+    </select>
+    <input id="txtAddress" />
+
+    <button onclick="captureSelect(),clearContent()">get new location's json</button>
+
+    <select id="rangeLevel" onchange="">
+        <option hidden>請選擇</option>
+        <option>300公尺內</option>
+        <option>200公尺內</option>
+        <option>100公尺內</option>
+    </select>
+
     <table class="table" id="table100m">
         <tbody id="header">
             <tr>
                 <th>收集地點</th>
-                <th>到達時間</th>
-                <th>距離（公尺）</th>
+                <th onclick="orderByTime()" id="thOrderTime">到達時間</th>
+                <th onclick="orderByDistance()" id="thOrderDistance">距離（公尺）</th>
                 @*<th style="display:none">lat</th>
                     <th style="display:none">lng</th>*@
             </tr>
@@ -128,6 +148,9 @@
         let tbodycont = document.getElementById("content");
 
         var js;  //store material from backend
+
+        var timeOrder = -1;
+        var distanceOrder = -1;
 
         function init100M() {
             $.ajax({
@@ -157,6 +180,70 @@
             document.getElementById("content").remove();
             console.log(js);
             //todo: test if global-var content still available after refresh/F5
+        }
+
+        function orderByTime() {
+            document.getElementById("content").remove();
+            var ele = document.createElement("tbody");
+            ele.id = "content";
+            js = js.sort(function (a, b) {
+                return a.ArrivalTime < b.ArrivalTime ? timeOrder : -1 * timeOrder;
+            });
+            for (let i = 0; i < js.length; i++) {
+                ele.innerHTML +=
+                    '<tr onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ')">'
+                    + '<th>' + js[i]["Address"] + '</th>'
+                    + '<th>' + js[i]["ArrivalTime"] + '</th>'
+                    + '<th>' + js[i]["distance"] + '</th>'
+                    + '</tr>';
+            }
+
+            table100m.appendChild(ele);
+
+            if (timeOrder == -1) {
+                document.getElementById("thOrderTime").innerText = "到達時間（遞增↑）";
+            }
+            else {
+                document.getElementById("thOrderTime").innerText = "到達時間（遞減↓）";
+            }
+
+            document.getElementById("thOrderDistance").innerText = "距離（公尺）";
+            timeOrder = timeOrder * -1;
+        }
+
+        function orderByDistance() {
+            document.getElementById("content").remove();
+            var ele = document.createElement("tbody");
+            ele.id = "content";
+            js = js.sort(function (a, b) {
+                return a.distance < b.distance ? distanceOrder : -1 * distanceOrder;
+            });
+            for (let i = 0; i < js.length; i++) {
+                ele.innerHTML +=
+                    '<tr onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ')">'
+                    + '<th>' + js[i]["Address"] + '</th>'
+                    + '<th>' + js[i]["ArrivalTime"] + '</th>'
+                    + '<th>' + js[i]["distance"] + '</th>'
+                    + '</tr>';
+            }
+
+            table100m.appendChild(ele);
+
+            if (distanceOrder == -1) {
+                document.getElementById("thOrderDistance").innerText = "距離（公尺）（遞增↑）";
+            }
+            else {
+                document.getElementById("thOrderDistance").innerText = "距離（公尺）（遞減↓）";
+            }
+
+            document.getElementById("thOrderTime").innerText = "到達時間";
+            distanceOrder = distanceOrder * -1;
+        }
+
+        function captureSelect() {
+            console.log($('#selectCity :selected').text());
+            console.log($('#selectDistric :selected').text());
+            console.log($('#txtAddress').val());
         }
     </script>
 </body>

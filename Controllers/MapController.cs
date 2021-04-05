@@ -73,6 +73,7 @@ namespace LeSheTuanGo.Controllers
             }
 
             //return View(garbageTruckSpotViewModels);
+            ViewData["CityId"] = new SelectList(iv_context.CityRefs, "CityId", "CityName");
             return View();
         }
 
