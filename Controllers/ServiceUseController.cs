@@ -67,31 +67,27 @@ namespace LeSheTuanGo.Controllers{
                                 o.L33available,
                                 o.L75available,
                                 o.L120available,
+                                o.Latitude,
+                                o.Longitude,
                                 Distance = userLocation.GetDistanceTo(new GeoCoordinate((double)o.Latitude, (double)o.Longitude)),
                             };
             var offerList = newObject.AsEnumerable().Where(o => o.Distance <= distanceMax).ToList();
             return JsonConvert.SerializeObject(offerList);
         }
-
-        public string getOfferDetail(int id) {
-            var offer = db.GarbageServiceOffers.Where(o => o.GarbageServiceId == id).First();
-            return JsonConvert.SerializeObject(offer);
-        }
-
         [HttpPost]
-        public IActionResult Join(GarbageServiceUseRecord rec) {
-            rec.MemberId = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
+        public IActionResult Join(GarbageServiceUseRecord r) {
+            r.MemberId = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
 
-            var offer = db.GarbageServiceOffers.Where(o => o.GarbageServiceId == rec.GarbageServiceOfferId).First();
+            var offer = db.GarbageServiceOffers.Where(o => o.GarbageServiceId == r.GarbageServiceOfferId).First();
             //some testing here need to be done
-            offer.L3available -= rec.L3count;
-            offer.L5available -= rec.L5count;
-            offer.L14available -= rec.L14count;
-            offer.L25available -= rec.L25count;
-            offer.L33available -= rec.L33count;
-            offer.L75available -= rec.L75count;
-            offer.L120available -= rec.L120count;
-            db.Add(rec);
+            offer.L3available -= r.L3count;
+            offer.L5available -= r.L5count;
+            offer.L14available -= r.L14count;
+            offer.L25available -= r.L25count;
+            offer.L33available -= r.L33count;
+            offer.L75available -= r.L75count;
+            offer.L120available -= r.L120count;
+            db.Add(r);
             db.SaveChanges();
 
             //redirect to history
