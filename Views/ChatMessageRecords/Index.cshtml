@@ -19,6 +19,17 @@
         border-bottom:dashed 1px;
     }
 
+    #link_btn{
+        display:flex;
+        padding:3px;
+        flex-direction:column;
+    }
+
+    #link_btn button{
+        display:block;
+        margin-top:5px;
+    }
+
     #chatroom {
         position: relative;
         border: 5px solid red;
@@ -239,14 +250,11 @@
                     var txt = "";
                     if (gt == 1) {
                         for (let i = 0; i < s.length; i++) {
-                            //txt += "<button onclick='chatGetOrder(" + s[i].OrderId + "," + gt + ",'" + s[i].ProductName + "(編號：" + s[i].OrderId + ")" + "')'>" + s[i].ProductName + "(編號：" + s[i].OrderId + ")</button>"
                             txt += `<button onclick="chatGetOrder(${s[i].OrderId} , ${gt} ,'${ s[i].ProductName}(編號：${s[i].OrderId}  )')"> ${ s[i].ProductName} (編號：${ s[i].OrderId})</button>`
-
                         }
                     }
                     else if (gt == 2) {
                         for (let i = 0; i < s.length; i++) {
-                            //txt += "<button onclick='chatGetOrder(" + s[i].GarbageServiceId + "," + gt + ")'>" + s[i].EndTime + "(編號：" + s[i].GarbageServiceId + ")</button>"
                             txt += `<button onclick="chatGetOrder(${s[i].GarbageServiceId} , ${gt} ,'${s[i].EndTime}(編號：${s[i].GarbageServiceId}  )')"> ${s[i].EndTime} (編號：${s[i].GarbageServiceId})</button>`
                         }
                     }
@@ -262,8 +270,8 @@
             $("#message").val('');
             var orderid = $("#OrderId").val();
             var grouptype = $("#rec_grouptype").val();
-            connection.invoke("SendMessageToGroup", $("#roomid").val(), gmemberid, username, message).catch(function (err) {
-
+            connection.invoke("SendMessageToGroup", $("#roomid").val(), gmemberid, username, message)
+                .catch(function (err) {
                 return console.error(err.toString());
             });
             $.ajax({
