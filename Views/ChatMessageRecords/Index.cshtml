@@ -161,9 +161,9 @@
         });
 
             //選團
-        function chatGetOrder(i, gt,rn) {
+        function chatGetOrder(oid, gt,rn) {
             //加入SignalR聊天室
-            var group = gt.toString()+'_'+i.toString();
+            var group = gt.toString()+'_'+oid.toString();
             if (connection.connectionState != "Connected") {
                 connection.start().then(function () {
                     if ($("#roomid").val() != 0) {
@@ -189,37 +189,38 @@
                 });
             };
             //取得團明細
-            var urlorder = "/ChatMessageRecords/chatGetOrderDetail?orderId=" + i+"&grouptype="+gt;
+            var urlorder = "/ChatMessageRecords/chatGetOrderDetail?orderId=" + oid+"&grouptype="+gt;
             $.ajax({
                 url: urlorder,
                 type: "GET",
                 success: function (data) {
                     var s = JSON.parse(data);
                     var txt = "";
+                    txt += "<input type='hidden' id='OrderId' value='" + oid + "'/>"
                     if (gt == 1) {
                         for (let i = 0; i < s.length; i++) {
-                            txt += "<input type='hidden' id='OrderId' value='" + s[i].OrderId + "'/>"
                             txt += "<label>團編號：" + s[i].OrderId + "</label><br />";
                             txt += "<label>地址：" + s[i].Address + "</label>"
                         }
+                    }
+                    else if (gt == 2) {
+
                     }
 
                     $("#detail").html(txt);
                 },
             })
             //取得聊天紀錄
-            var urlchat = "/ChatMessageRecords/chatGetChat?orderId=" + i + "&grouptype=" + gt;
+            var urlchat = "/ChatMessageRecords/chatGetChat?orderId=" + oid + "&grouptype=" + gt;
             $.ajax({
                 url: urlchat,
                 type: "GET",
                 success: function (data) {
                     var s = JSON.parse(data);
                     var txt = "";
-                    if (gt == 1) {
                         for (let i = 0; i < s.length; i++) {
                             let msgclass = (s[i].SentMemberId == gmemberid) ? 'self' : 'other';
                             txt += "<div class='" + msgclass + "'>" + s[i].username + "說：<div><div>" + s[i].Message + "</div></div></div>"
-                        }
                     }
                     $("#chatheader").text(rn + " 的聊天室").attr('class','chatheader');
                     $("#chat").html(txt);
