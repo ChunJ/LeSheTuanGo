@@ -29,14 +29,12 @@ namespace LeSheTuanGo.Controllers
 
         public IActionResult search()
         {
-            ViewData["DistrictId"] = new SelectList(iv_context.DistrictRefs, "DistrictId", "DistrictName");
-            ViewData["CityId"] = new SelectList(iv_context.CityRefs, "CityId", "CityName");
             return View();
         }
         
-        public string spotLessThan100M()
+        public string spotLessThan300M()
         {
-            //set 100m for now
+            //set 300m for now
             var memberDistrictId = iv_context.Members.Where(m => m.MemberId == MemberId).First().DistrictId;
             var memberLat = iv_context.Members.Where(m => m.MemberId == MemberId).First().Latitude;
             var memberLng = iv_context.Members.Where(m => m.MemberId == MemberId).First().Longitude;
@@ -50,8 +48,24 @@ namespace LeSheTuanGo.Controllers
 
             return listJsonString;
         }
-        
-        
+
+        public string spotLessThan300M2(string address)
+        {
+            var addressLoc = cUtility.addressToLatlong(address);
+
+            var addressLat = addressLoc[0];
+            var addressLng = addressLoc[1];
+
+            var result = iv_context.GarbageTruckSpots.ToList();
+
+            var q = from i in result select new { i.Address, i.ArrivalTime, i.Latitude, i.Longitude, distance = cUtility.distanceBetweenTwoSpots(addressLat, addressLng, i.Latitude, i.Longitude), addLat=addressLat, addLng=addressLng };
+            var qList = q.Where(q => q.distance <= 300 && q.distance >= 0).OrderBy(q => q.distance).ToList();
+
+            string listJsonString = JsonConvert.SerializeObject(qList);
+
+            return listJsonString;
+        }
+
         public IActionResult searchByMember()
         {
             var memberDistrictId = iv_context.Members.Where(m => m.MemberId == MemberId).First().DistrictId;

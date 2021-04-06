@@ -48,11 +48,11 @@
 
             if (lng !== "l") {
                 var coor = new google.maps.LatLng(lat, lng);
-                var mbr = new google.maps.LatLng(25.0339400, 121.5435000);  //fixed for now
+                var mbr = new google.maps.LatLng(latNow, lngNow);  //fixed for now
 
                 map = new google.maps.Map(document.getElementById("map"), {
                     center: coor,
-                    zoom: 18,
+                    zoom: 19,
                 });
 
                 new google.maps.Marker({
@@ -71,11 +71,11 @@
                 });
             }
             else {
-                var mbr = new google.maps.LatLng(25.0339400, 121.5435000);  //fixed for now
+                var mbr = new google.maps.LatLng(latNow, lngNow);
 
                 map = new google.maps.Map(document.getElementById("map"), {
                     center: mbr,
-                    zoom: 17,
+                    zoom: 16,
                 });
 
                 new google.maps.Marker({
@@ -85,21 +85,32 @@
                     icon: "https://crd-rubbish.epd.ntpc.gov.tw/maps/images/icon/Icon_LegendD.png",
                 });
 
+                var markers = [];
                 //console.log(typeof lat);
                 for (let i = 0; i < lat.length; i++) {
-                    new google.maps.Marker({
+                    var marker = new google.maps.Marker({
                         position: { lat: lat[i]["Latitude"], lng: lat[i]["Longitude"] },
                         map,
                         animation: google.maps.Animation.DROP,
                         title: lat[i]["Address"],
+                        label: { text: "marker" + i, color: "transparent" },
+                        zIndex: -1,
                         icon: "https://crd-rubbish.epd.ntpc.gov.tw/maps/images/icon/Icon_LegendC.png",
+                    });
+                    markers.push(marker);
+                    markers[i].addListener("click", () => {
+                        console.log(markers[i].title);
+                        console.log(markers[i].label.text);
+                        document.getElementById(`marker${i}`).scrollIntoView();
+                        $(`#marker${i}`).css("background-color", "gray").css("transition-duration", "2s");
+                        setTimeout(() => { $(`#marker${i}`).css("background-color", "transparent").css("transition-duration", "2s"); }, 2000);
                     });
                 }
             }
         }
     </script>
 </head>
-<body onload="init100M()">
+<body onload="init300M2()">
     @*<button onclick="init100M()">100M</button>*@
     <div id="map" style="height: 50%;width: 100%;"></div>
     @*<button onclick="clearContent()">100M</button>*@
@@ -114,14 +125,72 @@
     </select>
     <input id="txtAddress" />
 
-    <button onclick="captureSelect(),clearContent()">get new location's json</button>
-
+    <button onclick="captureSelect()">get new location's json</button>
+    <br />
     <select id="rangeLevel" onchange="">
         <option hidden>請選擇</option>
-        <option>300公尺內</option>
-        <option>200公尺內</option>
-        <option>100公尺內</option>
+        <option>300</option>
+        <option>200</option>
+        <option>100</option>
     </select>
+    <label>公尺內</label>
+    <select id="selectTimeStart" onchange="">
+        <option hidden>請選擇</option>
+        <option>0</option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+        <option>6</option>
+        <option>7</option>
+        <option>8</option>
+        <option>9</option>
+        <option>10</option>
+        <option>11</option>
+        <option>12</option>
+        <option>13</option>
+        <option>14</option>
+        <option>15</option>
+        <option>16</option>
+        <option>17</option>
+        <option>18</option>
+        <option>19</option>
+        <option>20</option>
+        <option>21</option>
+        <option>22</option>
+        <option>23</option>
+    </select>
+    <label>時起</label>
+    <select id="selectTimeEnd" onchange="">
+        <option hidden>請選擇</option>
+        <option>0</option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+        <option>6</option>
+        <option>7</option>
+        <option>8</option>
+        <option>9</option>
+        <option>10</option>
+        <option>11</option>
+        <option>12</option>
+        <option>13</option>
+        <option>14</option>
+        <option>15</option>
+        <option>16</option>
+        <option>17</option>
+        <option>18</option>
+        <option>19</option>
+        <option>20</option>
+        <option>21</option>
+        <option>22</option>
+        <option>23</option>
+    </select>
+    <label>時迄</label>
+    <button onclick="filter()">filter</button>
 
     <table class="table" id="table100m">
         <tbody id="header">
@@ -147,24 +216,34 @@
         let table100m = document.getElementById("table100m");
         let tbodycont = document.getElementById("content");
 
-        var js;  //store material from backend
+        var latNow;
+        var lngNow;
+        var js;
+        var js0;  //store material from backend
 
         var timeOrder = -1;
         var distanceOrder = -1;
 
-        function init100M() {
+        function init300M(address) {
             $.ajax({
-                url: "/map/spotlessthan100m",
+                url: "/map/spotlessthan300m2?address=" + address,
                 type: "GET",
                 success: function (listJsonString) {
-                    js = JSON.parse(listJsonString);
+                    js0 = JSON.parse(listJsonString);
                     //js = js.sort(function (a, b) {
                     //    return a.ArrivalTime < b.ArrivalTime ? -1 : 1;
                     //});
+                    js = js0;
+                    let tbodycont = document.getElementById("content");
+                    tbodycont.innerHTML = "";
+                    latNow = js[0]["addLat"];
+                    lngNow = js[0]["addLng"];
                     initMap(js, "l");
+                    //console.log(js[0]["addLat"]);
+                    //console.log(js[0]["addLng"]);
                     for (let i = 0; i < js.length; i++) {
                         tbodycont.innerHTML +=
-                            '<tr onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ')">'
+                            '<tr id="marker' + i + '" onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ')">'
                             + '<th>' + js[i]["Address"] + '</th>'
                             + '<th>' + js[i]["ArrivalTime"] + '</th>'
                             + '<th>' + js[i]["distance"] + '</th>'
@@ -174,6 +253,8 @@
                     }
                 }
             })
+            document.getElementById("thOrderTime").innerText = "到達時間";
+            document.getElementById("thOrderDistance").innerText = "距離（公尺）";
         }
 
         function clearContent() {
@@ -244,6 +325,51 @@
             console.log($('#selectCity :selected').text());
             console.log($('#selectDistric :selected').text());
             console.log($('#txtAddress').val());
+
+            console.log(typeof $('#selectCity :selected').text());
+            console.log(typeof $('#selectDistric :selected').text());
+            console.log(typeof $('#txtAddress').val());
+
+            init300M($('#selectCity :selected').text() + $('#selectDistric :selected').text() + $('#txtAddress').val());
+        }
+
+        function filter() {
+            var timeStart = $('#selectTimeStart :selected').text();
+            var timeEnd = $('#selectTimeEnd :selected').text();
+            var distance = $('#rangeLevel :selected').text();
+
+            /*js0 = js;*/
+            js = js0.filter(spot => spot.distance <= (distance)).filter(spot => spot.ArrivalTime >= timeStart).filter(spot => spot.ArrivalTime <= timeEnd);
+            document.getElementById("content").remove();
+            var ele = document.createElement("tbody");
+            ele.id = "content";
+            for (let i = 0; i < js.length; i++) {
+                ele.innerHTML +=
+                    '<tr onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ')">'
+                    + '<th>' + js[i]["Address"] + '</th>'
+                    + '<th>' + js[i]["ArrivalTime"] + '</th>'
+                    + '<th>' + js[i]["distance"] + '</th>'
+                    + '</tr>';
+            }
+
+            table100m.appendChild(ele);
+            document.getElementById("thOrderTime").innerText = "到達時間";
+            document.getElementById("thOrderDistance").innerText = "距離（公尺）";
+
+            console.log(timeStart);
+            console.log(timeEnd);
+            console.log(typeof timeEnd);
+            console.log(distance);
+            console.log(typeof distance);
+            console.log(js);
+            console.log(js0);
+            console.log(js[0]["ArrivalTime"]);
+            console.log(typeof js[0]["ArrivalTime"]);
+        }
+
+        function consoleLog(event) {
+            console.log(event);
+            console.log("click");
         }
     </script>
 </body>
