@@ -1,0 +1,94 @@
+﻿@using Microsoft.AspNetCore.Http;
+@using LeSheTuanGo.Controllers;
+
+@if (Context.Session.GetInt32(cUtility.Current_User_Id) != null){
+    ViewData["userNameToDisplay"] = Context.Session.GetString(cUtility.Current_User_Name);
+    ViewData["userProfileImageToShow"] = Context.Session.GetString(cUtility.Current_User_Profile_Image);
+} else {
+    ViewData["userNameToDisplay"] = "訪客";
+    ViewData["userProfileImageToShow"] = "/images/guestProfile.jpg";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - 樂社團Go</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+        .top-bar {
+            background-color: #4cabb1;
+        }
+    </style>
+</head>
+<body>
+    <header class="top-bar">
+        <div class="container">
+            <nav class="nav navbar-light mb-3">
+                <a class="navbar-brand text-white" asp-area="" asp-controller="Home" asp-action="Index">樂社團GO</a>
+                <a class="nav-link text-white" asp-area="" asp-controller="Map" asp-action="searchByMember">集垃地圖</a>
+                <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="OrderNavi">團購</a>
+                <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="ServiceNavi">倒垃圾</a>
+                <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Privacy">關於</a>
+                <a class="nav-link text-white" asp-area="" asp-controller="ChatMessageRecords" asp-action="Index">聊天測試用</a>
+                <div class="flex-grow-1">
+                        <div class="nav justify-content-end align-items-center h-100">
+                            <div class="nav-item dropdown mx-1">
+                                <button class="border-0 bg-transparent" type="button" id="alertDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <div class="position-relative">
+                                        <img class="align-middle" src="~/images/bell.svg" />
+                                        <span class="indicator">3</span>
+                                    </div>
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="alertsDropdown">
+                                    <div class="dropdown-menu-header">
+                                        3 則新通知
+                                    </div>
+                                    <div class="list-group">
+                                        <a class="dropdown-item" href="#">通知1</a>
+                                        <a class="dropdown-item" href="#">通知2</a>
+                                        <a class="dropdown-item" href="#">通知3</a>
+                                    </div>
+                                    <div class="dropdown-divider"></div>
+                                    <div class="dropdown-menu-footer">
+                                        <a href="#" class="text-muted">查看所有通知</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="nav-item dropdown mx-1">
+                                <button class="border-0 bg-transparent" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <img class="rounded-circle profile" src="@ViewData["userProfileImageToShow"]" />
+                                    @ViewData["userNameToDisplay"]
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                    @if (Context.Session.GetInt32(cUtility.Current_User_Id) == null) {
+                                        <a class="dropdown-item" asp-controller="Member" asp-action="Login">登入</a>
+                                        <a class="dropdown-item" asp-controller="Member" asp-action="Create">註冊</a>
+                                    } else {
+                                        <a class="dropdown-item" asp-controller="Member" asp-action="Detail">我的帳戶</a>
+                                        <a class="dropdown-item" href="#">設定</a>
+                                        <a class="dropdown-item" href="#">購物團紀錄</a>
+                                        <a class="dropdown-item" href="#">服務委託紀錄</a>
+                                        <a class="dropdown-item" asp-action="Logout" asp-controller="Member">登出</a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </nav>
+        </div>
+        
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

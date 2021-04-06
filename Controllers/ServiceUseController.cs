@@ -55,6 +55,7 @@ namespace LeSheTuanGo.Controllers{
             var newObject = from o in bagTypeSearch.Include(o=>o.District).Include(o=>o.District.City)
                             select new {
                                 o.GarbageServiceId,
+                                o.DistrictId,
                                 o.District.DistrictName,
                                 o.District.City.CityName,
                                 o.Address,
@@ -76,6 +77,9 @@ namespace LeSheTuanGo.Controllers{
         }
         [HttpPost]
         public IActionResult Join(GarbageServiceUseRecord r) {
+            if (HttpContext.Session.GetInt32(cUtility.Current_User_Id) == null) {
+                return RedirectToAction("Login", "Member", new { from = "ServiceUse/Index" });
+            }
             r.MemberId = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
 
             var offer = db.GarbageServiceOffers.Where(o => o.GarbageServiceId == r.GarbageServiceOfferId).First();
