@@ -102,7 +102,7 @@
                     <input hidden name="ComeAddress" value="" />
                     <div class="form-group form-check">
                         <label class="form-check-label">
-                            <input class="form-check-input" type="checkbox" id="NeedCome" name="NeedCome" />
+                            <input class="form-check-input" type="checkbox" name="NeedCome" value="true"/>
                             是否需要到府服務?
                         </label>
                     </div>
@@ -141,7 +141,7 @@
         let formFirstHalf = document.querySelectorAll("#formInputHalf input");
         let sizeInputG2 = document.querySelectorAll("#sizeInputGroup2>div");
         let sizeCountG2 = document.querySelectorAll("#sizeInputGroup2>div>input");
-
+        //other variable
         let lastAddress = "";
         let lastDistrict = 0;
         let queryList = [];
@@ -155,22 +155,23 @@
     }
         function test() {
             //showMap(25.03, 121.54);
-            console.log(infoGroup);
+            console.log(formFirstHalf);
         }
-    function fillDemo() {
-        addressIn.value = "信義路四段2號";
-        distS.value = 5;
-    }
-    function sizeInputSwitch1(id) {
-        if (event.target.checked == true) {
-            sizeInputG1[id].classList.remove("d-none");
-            sizeCountG1[id].value = 1;
-        } else {
-            sizeInputG1[id].classList.add("d-none");
-            sizeCountG1[id].value = 0;
+        function fillDemo() {
+            addressIn.value = "信義路四段2號";
+            distS.value = 5;
         }
-    }
-    function searchStart() {
+        function sizeInputSwitch1(id) {
+            if (event.target.checked == true) {
+                sizeInputG1[id].classList.remove("d-none");
+                sizeCountG1[id].value = 1;
+            } else {
+                sizeInputG1[id].classList.add("d-none");
+                sizeCountG1[id].value = 0;
+            }
+        }
+        function searchStart() {
+            detailView.classList.add("invisible");
         //send new request if address is changed
         if (distS.value == lastDistrict && addressIn.value == lastAddress) {
             filterResult();
@@ -193,94 +194,100 @@
             )
         }
     }
-    function filterResult() {
-        ////add cango filter test
-        fList = [];
-        for (let r of queryList) {
-            if (r.Distance <= distanceS.options[distanceS.selectedIndex].text
-                && r.L3available >= sizeCountG1[0].value
-                && r.L5available >= sizeCountG1[1].value
-                && r.L14available >= sizeCountG1[2].value
-                && r.L25available >= sizeCountG1[3].value
-                && r.L33available >= sizeCountG1[4].value
-                && r.L75available >= sizeCountG1[5].value
-                && r.L120available >= sizeCountG1[6].value
-            ) {
-                fList.push(r);
+        function filterResult() {
+            ////add cango filter test
+            fList = [];
+            for (let r of queryList) {
+                if (r.Distance <= distanceS.options[distanceS.selectedIndex].text
+                    && r.L3available >= sizeCountG1[0].value
+                    && r.L5available >= sizeCountG1[1].value
+                    && r.L14available >= sizeCountG1[2].value
+                    && r.L25available >= sizeCountG1[3].value
+                    && r.L33available >= sizeCountG1[4].value
+                    && r.L75available >= sizeCountG1[5].value
+                    && r.L120available >= sizeCountG1[6].value
+                ) {
+                    fList.push(r);
+                }
             }
+            showResult();
         }
-        showResult();
-    }
-    function showResult() {
-        //console.log("filter = "+fList)
-        //implemente page count here
-        //show no result if length == 0
-        let htmlString = "";
-        if (fList.length == 0) {
-            htmlString = `<h4>沒有符合條件的搜尋結果</h4>`;
-        } else {
-            //format datetime and distance
-            for (let i = 0; i < fList.length; i++) {
-                //use the index in filterList as id, so we can just get offer info from filterList later.
-                htmlString += `<div class="p-2 w-100 search-item border-bottom" onclick="getDetail(${i})">`;
-                htmlString += `<h5>${fList[i].CityName}${fList[i].DistrictName}${fList[i].Address}</h5>`;
-                htmlString += `<div class="w-100"><div class="rem-4">截止時間</div><span class="px-1">:</span>${fList[i].EndTime}</div>`;
-                htmlString += `<div class="w-100"><div class="rem-4">距離</div><span class="px-1">:</span>${fList[i].Distance} 公尺</div>`;
-                htmlString += `<div class="w-100"><div class="rem-4">到府服務</div><span class="px-1">:</span>${fList[i].CanGo?"有":"不"}提供</div></div>`;
-            }
-        }
-        result.innerHTML = htmlString;
-    }
-    function getDetail(id) {
-        //fill view + update map + turn visible
-        infoGroup[0].innerText = fList[id].Address;
-        infoGroup[1].innerText = fList[id].Distance;
-        infoGroup[2].innerText = fList[id].EndTime;
-        if (fList[id].CanGo) {
-
-        } else {
-
-        }
-        let avail = [
-            fList[id].L3available,
-            fList[id].L5available,
-            fList[id].L14available,
-            fList[id].L25available,
-            fList[id].L33available,
-            fList[id].L75available,
-            fList[id].L120available
-        ];
-        for (let i = 0; i < avail.length; i++) {
-            if (avail[i] > 0) {
-                sizeInputG2[i].classList.remove("d-none");
-                sizeCountG2[i].value = sizeCountG1[id].value;
+        function showResult() {
+            //console.log("filter = "+fList)
+            //implement page count here
+            let htmlString = "";
+            if (fList.length == 0) {
+                htmlString = `<h4>沒有符合條件的搜尋結果</h4>`;
             } else {
-                sizeInputG2[i].classList.add("d-none");
-                sizeCountG2[i].value = 0;
+                //format datetime and distance
+                for (let i = 0; i < fList.length; i++) {
+                    //use the index in filterList as id, so we can just get offer info from filterList later.
+                    htmlString += `<div class="p-2 w-100 search-item border-bottom" onclick="getDetail(${i})">`;
+                    htmlString += `<h5>${fList[i].CityName}${fList[i].DistrictName}${fList[i].Address}</h5>`;
+                    htmlString += `<div class="w-100"><div class="rem-4">截止時間</div><span class="px-1">:</span>${fList[i].EndTime}</div>`;
+                    htmlString += `<div class="w-100"><div class="rem-4">距離</div><span class="px-1">:</span>${fList[i].Distance} 公尺</div>`;
+                    htmlString += `<div class="w-100"><div class="rem-4">到府服務</div><span class="px-1">:</span>${fList[i].CanGo?"有":"不"}提供</div></div>`;
+                }
             }
+            result.innerHTML = htmlString;
         }
-        showMap(fList[id].Latitude, fList[id].Longitude);
-        detailView.classList.remove("invisible");
-    }
-    function showMap(lat, lng) {
-        let coor = new google.maps.LatLng(lat, lng);
-        let mbr = new google.maps.LatLng(25.0339400, 121.5435000);  //fixed for now
-        map = new google.maps.Map(mapDiv,
-            {
-                center: coor,
-                zoom: 17,
+        function getDetail(id) {
+        //fill view + update map + turn visible
+            infoGroup[0].innerText = fList[id].Address;
+            infoGroup[1].innerText = fList[id].Distance;
+            infoGroup[2].innerText = fList[id].EndTime;
+            formFirstHalf[0].value = fList[id].GarbageServiceId;
+            formFirstHalf[1].value = fList[id].DistrictId;
+            formFirstHalf[2].value = fList[id].Address;
+            if (fList[id].CanGo) {
+                //need to use the filter option
+                formFirstHalf[3].checked = true;
+                formFirstHalf[3].disabled = false;
+            } else {
+                formFirstHalf[3].checked = false;
+                formFirstHalf[3].disabled = true;
+            }
+            let avail = [
+                fList[id].L3available,
+                fList[id].L5available,
+                fList[id].L14available,
+                fList[id].L25available,
+                fList[id].L33available,
+                fList[id].L75available,
+                fList[id].L120available
+            ];
+            for (let i = 0; i < avail.length; i++) {
+                if (avail[i] > 0) {
+                    sizeInputG2[i].classList.remove("d-none");
+                    sizeCountG2[i].max = avail[i];
+                    sizeCountG2[i].value = sizeCountG1[i].value;
+                } else {
+                    sizeInputG2[i].classList.add("d-none");
+                    sizeCountG2[i].value = 0;
+                }
+            }
+            showMap(fList[id].Latitude, fList[id].Longitude);
+            detailView.classList.remove("invisible");
+        }
+        function showMap(lat, lng) {
+            let coor = new google.maps.LatLng(lat, lng);
+            let mbr = new google.maps.LatLng(25.0339400, 121.5435000);  //fixed for now
+            map = new google.maps.Map(mapDiv,
+                {
+                    center: coor,
+                    zoom: 17,
+                });
+            new google.maps.Marker({
+                position: mbr,
+                map,
+                title: "您的位置",
             });
-        new google.maps.Marker({
-            position: mbr,
-            map,
-            title: "您的位置",
-        });
-        new google.maps.Marker({
-            position: coor,
-            map,
-            title: "服務位置",
-            icon: "https://crd-rubbish.epd.ntpc.gov.tw/maps/images/icon/Icon_LegendD.png",
-        });
-    }
+            new google.maps.Marker({
+                position: coor,
+                map,
+                title: "服務位置",
+                icon: "https://crd-rubbish.epd.ntpc.gov.tw/maps/images/icon/Icon_LegendD.png",
+            });
+        }
     </script>
 }
