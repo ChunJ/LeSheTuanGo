@@ -15,12 +15,19 @@
         background-color: green;
         flex: 1 1 25%;
     }
+    #link_select div{
+        border-bottom:dashed 1px;
+    }
 
     #chatroom {
         position: relative;
         border: 5px solid red;
         background-color: aqua;
         flex: 1 1 50%;
+    }
+    .chatheader{
+        text-align:center;
+        border-bottom:solid;
     }
 
     #chat {
@@ -45,9 +52,11 @@
         float: right;
         width: 60%;
         text-align: right;
+        position: relative;
     }
 
-        .self > div span {
+        .self > div div {
+            display: inline-block;
             word-break: break-all;
             background: #3F51B5 none repeat scroll 0 0;
             border-radius: 3px;
@@ -63,7 +72,8 @@
         width: 60%;
     }
 
-        .other > div span {
+        .other > div div {
+            display: inline-block;
             word-break: break-all;
             background: #e4e8fb none repeat scroll 0 0;
             border-radius: 3px;
@@ -73,14 +83,38 @@
             padding: 5px 10px 5px 12px;
         }
 </style>
+
+<h2>會員中心</h2>
 <div id="wrap">
     <div id="link">
-        <select id="grouptype" onchange="getOrderList()">
-            <option value="1">團購團</option>
-            <option value="2">垃圾團</option>
-        </select>
+        <div id="link_select">
+            <div>
+                <label>選擇團別：</label>
+                <label><input type="radio" name="grouptype" value="1">團購團</label>
+                <label><input type="radio" name="grouptype" value="2">垃圾團</label>
+                <input type="hidden" id="rec_grouptype" value="0" />
+            </div>
+            <div>
+                <label>發起人：</label>
+                <label><input type="radio" name="selfother" value="0" checked>全部顯示</label>
+                <label><input type="radio" name="selfother" value="1">我發起的</label>
+                <label><input type="radio" name="selfother" value="2">我加入的</label>
+                <input type="hidden" id="rec_selfother" value="0" />
+            </div>
+            <div>
+                <label>案件狀態：</label>
+                <label><input type="radio" name="onoff" value="0" checked>全部顯示</label>
+                <label><input type="radio" name="onoff" value="1">進行中</label>
+                <label><input type="radio" name="onoff" value="2">已結束</label>
+                <input type="hidden" id="rec_onoff" value="0" />
+            </div>
+        </div>
+        <div id="link_btn">
+
+        </div>
     </div>
     <div id="chatroom">
+        <h5 id="chatheader"></h5>
         <div id="chat">
         </div>
         <span id="inputbox">
@@ -103,32 +137,34 @@
         var gmemberid = '@ViewBag.memberid';
         var username = '@ViewBag.username';
         var groupName = $("#roomid").val().toString();
-        //ready事件，查詢已參加的團產生清單
+        //ready事件，給radioBTN掛事件
         $(function () {
-            var txt = "";
-
-        @{
-            foreach (var i in ViewBag.order)
-                {
-                @: txt += "<button onclick='chatGetOrder("+@i+")'>" + @i + "</button>"
-                }
-        }
-        $("#link").html(txt);
-            /*$("#groupid").prop('selectedIndex', 1);*/
+            $('input[type=radio][name="grouptype"]').change(function () {
+                $("#rec_grouptype").val($(this).val());
+                getOrderList($("#rec_grouptype").val(), $("#rec_selfother").val(), $("#rec_onoff").val())
+            });
+            $('input[type=radio][name="selfother"]').change(function () {
+                $("#rec_selfother").val($(this).val());
+                getOrderList($("#rec_grouptype").val(), $("#rec_selfother").val(), $("#rec_onoff").val())
+            });
+            $('input[type=radio][name="onoff"]').change(function () {
+                $("#rec_onoff").val($(this).val());
+                getOrderList($("#rec_grouptype").val(), $("#rec_selfother").val(), $("#rec_onoff").val())
+            });
         })
 
         //建立SignalR連線，接收訊息用事件
         connection.on("ReceiveGroupMessage", function (groupName, memberid,username, message) {
               let msgclass = (gmemberid == memberid) ? 'self' : 'other';
-             $("#chat").append("<div class='" + msgclass + "'>" + username + "說：<div>" + message + "</div></div>")
+            $("#chat").append("<div class='" + msgclass + "'>" + username + "說：<div><div>" + message + "</div></div></div>")
             $("#chat").animate({ scrollTop: $('#chat').prop("scrollHeight") }, 500);
         });
 
             //選團
-        function chatGetOrder(i) {
-            var group = i.toString();
+        function chatGetOrder(i, gt,rn) {
+            //加入SignalR聊天室
+            var group = gt.toString()+'_'+i.toString();
             if (connection.connectionState != "Connected") {
-                console.log(group);
                 connection.start().then(function () {
                     if ($("#roomid").val() != 0) {
                         connection.invoke("RemoveFromGroup", $("#roomid").val()).catch(function (err) {
@@ -153,33 +189,40 @@
                 });
             };
             //取得團明細
-            var urlorder = "/ChatMessageRecords/chatGetOrderDetail?orderId=" + i;
+            var urlorder = "/ChatMessageRecords/chatGetOrderDetail?orderId=" + i+"&grouptype="+gt;
             $.ajax({
                 url: urlorder,
                 type: "GET",
                 success: function (data) {
                     var s = JSON.parse(data);
                     var txt = "";
-                    for (let i = 0; i < s.length; i++) {
-                        txt += "<input type='hidden' id='OrderId' value='" + s[i].OrderId+"'/>"
-                        txt += "<label>團編號：" + s[i].OrderId + "</label><br />";
-                        txt += "<label>地址：" + s[i].Address + "</label>"
+                    if (gt == 1) {
+                        for (let i = 0; i < s.length; i++) {
+                            txt += "<input type='hidden' id='OrderId' value='" + s[i].OrderId + "'/>"
+                            txt += "<label>團編號：" + s[i].OrderId + "</label><br />";
+                            txt += "<label>地址：" + s[i].Address + "</label>"
+                        }
                     }
+
                     $("#detail").html(txt);
                 },
             })
             //取得聊天紀錄
-            var urlchat = "/ChatMessageRecords/chatGetChat?orderId=" + i;
+            var urlchat = "/ChatMessageRecords/chatGetChat?orderId=" + i + "&grouptype=" + gt;
             $.ajax({
                 url: urlchat,
                 type: "GET",
                 success: function (data) {
                     var s = JSON.parse(data);
                     var txt = "";
-                    for (let i = 0; i < s.length; i++) {
-                        let msgclass = (s[i].SentMemberId == gmemberid) ? 'self' : 'other';
-                        txt += "<div class='" + msgclass + "'>" + s[i].username + "說：<div><span>" + s[i].Message + "</span></div></div>"
+                    if (gt == 1) {
+                        for (let i = 0; i < s.length; i++) {
+                            let msgclass = (s[i].SentMemberId == gmemberid) ? 'self' : 'other';
+                            txt += "<div class='" + msgclass + "'>" + s[i].username + "說：<div><div>" + s[i].Message + "</div></div></div>"
+                        }
                     }
+                    $("#chatheader").text(rn + " 的聊天室").attr('class','chatheader');
+                    console.log(rn)
                     $("#chat").html(txt);
                     $("#chat").scrollTop($('#chat').prop("scrollHeight"));
                     document.getElementById("btnSend").disabled = false;
@@ -187,30 +230,37 @@
             })
         }
         //選團型
-        function getOrderList() {
-            let e = document.getElementById("grouptype")
-            let i = e.options[e.selectedIndex].value
+        function getOrderList(gt,so,of) {
             $.ajax({
-                url: "/ChatMessageRecords/getOrderList?groupType=" + i,
+                url: "/ChatMessageRecords/getOrderList?groupType=" + gt + "&selfother=" + so + "&onoff=" + of,
                 type: "GET",
                 success: function (data) {
                     var s = JSON.parse(data);
                     var txt = "";
-                    for (let i = 0; i < s.length; i++) {
-                      /*  txt += "<button onclick='chatGetOrder("+s[i].ord+")'>" +  + "</button>"*/
+                    if (gt == 1) {
+                        for (let i = 0; i < s.length; i++) {
+                            //txt += "<button onclick='chatGetOrder(" + s[i].OrderId + "," + gt + ",'" + s[i].ProductName + "(編號：" + s[i].OrderId + ")" + "')'>" + s[i].ProductName + "(編號：" + s[i].OrderId + ")</button>"
+                            txt += `<button onclick="chatGetOrder(${s[i].OrderId} , ${gt} ,'${ s[i].ProductName}(編號： ${s[i].OrderId}  )')"> ${ s[i].ProductName} (編號：${ s[i].OrderId})</button>`
+
+                        }
                     }
-                    $("#detail").html(txt);
+                    else if (gt == 2) {
+                        for (let i = 0; i < s.length; i++) {
+                            txt += "<button onclick='chatGetOrder(" + s[i].GarbageServiceId + "," + gt + ")'>" + s[i].EndTime + "(編號：" + s[i].GarbageServiceId + ")</button>"
+                        }
+                    }
+                    $("#link_btn").html(txt);
+
                 },
             })
         }
-
 
             //發訊息
         $('#btnSend').click(function () {
             var message = $("#message").val();
             $("#message").val('');
             var orderid = $("#OrderId").val();
-
+            var grouptype = $("#rec_grouptype").val();
             connection.invoke("SendMessageToGroup", $("#roomid").val(), gmemberid, username, message).catch(function (err) {
 
                 return console.error(err.toString());
@@ -218,7 +268,7 @@
             $.ajax({
                 type: "POST",
                 url: "/ChatMessageRecords/Create",
-                data: { message: message, orderid: orderid, memberid: gmemberid },
+                data: { message: message, orderid: orderid, memberid: gmemberid, grouptype: grouptype },
             });
         })
 
