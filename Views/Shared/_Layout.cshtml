@@ -20,9 +20,23 @@
     <style>
         .top-bar {
             background-color: #4cabb1;
+/*            position: fixed;*/
+        }
+
+        .white {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            background-image: url(~/images/bell.svg), linear-gradient( #FFFFFF, #FFFFFF);
+            background-blend-mode: lighten;
+            background-size: 100%;
+           
         }
     </style>
+    
+
 </head>
+
 <body>
     <header class="top-bar">
         <div class="container">
@@ -37,8 +51,10 @@
                         <div class="nav justify-content-end align-items-center h-100">
                             <div class="nav-item dropdown mx-1">
                                 <button class="border-0 bg-transparent" type="button" id="alertDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    @*<div class="position-relative">*@
+                                    @*<img class="align-middle" src="~/images/bell.svg" />*@
                                     <div class="position-relative">
-                                        <img class="align-middle" src="~/images/bell.svg" />
+                                        <img class="white" src="~/images/bell.svg" />
                                         <span class="indicator">3</span>
                                     </div>
                                 </button>
@@ -57,23 +73,28 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="nav-item dropdown mx-1">
-                                <button class="border-0 bg-transparent" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <div class="nav-item dropdown mx-1">       
+                                @*<font color="blue">文字顏色為藍色</font>*@
+                                <button  class="border-0 bg-transparent" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">                                    
                                     <img class="rounded-circle profile" src="@ViewData["userProfileImageToShow"]" />
-                                    @ViewData["userNameToDisplay"]
-                                </button>
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                                    @if (Context.Session.GetInt32(cUtility.Current_User_Id) == null) {
-                                        <a class="dropdown-item" asp-controller="Member" asp-action="Login">登入</a>
-                                        <a class="dropdown-item" asp-controller="Member" asp-action="Create">註冊</a>
-                                    } else {
-                                        <a class="dropdown-item" asp-controller="Member" asp-action="Detail">我的帳戶</a>
-                                        <a class="dropdown-item" href="#">設定</a>
-                                        <a class="dropdown-item" href="#">購物團紀錄</a>
-                                        <a class="dropdown-item" href="#">服務委託紀錄</a>
-                                        <a class="dropdown-item" asp-action="Logout" asp-controller="Member">登出</a>
-                                    }
-                                </div>
+                                    <font color="#ffffff">@ViewData["userNameToDisplay"]</font>  
+                                        
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                        @if (Context.Session.GetInt32(cUtility.Current_User_Id) == null)
+                                        {
+                                            <a class="dropdown-item" asp-controller="Member" asp-action="Login">登入</a>
+                                            <a class="dropdown-item" asp-controller="Member" asp-action="Create">註冊</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="dropdown-item" asp-controller="Member" asp-action="Detail">我的帳戶</a>
+                                            <a class="dropdown-item" href="#">設定</a>
+                                            <a class="dropdown-item" href="#">購物團紀錄</a>
+                                            <a class="dropdown-item" href="#">服務委託紀錄</a>
+                                            <a class="dropdown-item" asp-action="Logout" asp-controller="Member">登出</a>
+                                        }
+                                    </div>
                             </div>
                         </div>
                 </div>
