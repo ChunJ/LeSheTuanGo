@@ -21,7 +21,6 @@ namespace LeSheTuanGo.Controllers
     {
         private readonly MidtermContext db;
         private IWebHostEnvironment iv_host;
-
         public MemberController(IWebHostEnvironment host,MidtermContext context)
         {
             iv_host = host;
@@ -45,12 +44,12 @@ namespace LeSheTuanGo.Controllers
             string[] path = from.Split('/');
             return RedirectToAction(path[1], path[0]);
         }
+
         public IActionResult Create()
         {
             ViewData["City"] = new SelectList(db.CityRefs, "CityId", "CityName");
             return View();
         }
-
         [HttpPost]
         public IActionResult Create(MemberViewModel memberData)
         {
@@ -92,9 +91,10 @@ namespace LeSheTuanGo.Controllers
             #endregion
             db.Members.Add(memberData.member);
             db.SaveChanges();
-            sendEmail(memberData.Email , memberData.MemberId);
+            sendEmail(memberData.Email , memberData.MemberId ,"openMember");
             return RedirectToAction("Login");
-        }//todo 要發送Email開通信 3/30
+        }
+
         public IActionResult Detail()
         {
             int userId = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
@@ -131,6 +131,7 @@ namespace LeSheTuanGo.Controllers
             }
             return View();
         }
+
         public IActionResult EditAddress(int? memberId)
         {
             if (memberId == null)
@@ -202,15 +203,61 @@ namespace LeSheTuanGo.Controllers
             }
             return RedirectToAction("Detail");
         }
+
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
             return RedirectToAction("Index", "Home");
         }
+
         public IActionResult forgetPassword()
         {
-            return View(); 
-        }//todo 忘記密碼 要寄Email驗證 3/30
+             return View(); 
+        }
+        [HttpPost]
+        public IActionResult forgetPassword(string Email)
+        {
+            var memberData = db.Members.Where(n => n.Email == Email).FirstOrDefault();
+            if(memberData != null)
+            {
+                sendEmail(memberData.Email, memberData.MemberId , "resetPassword");
+                return RedirectToAction("Index", "Home");
+            }
+            return View();
+        }//ok 差中間跳轉頁面
+
+        public IActionResult resetPassword(string memberId)
+        {
+            var member = db.Members.Where(n => n.MemberId.ToString() == memberId).FirstOrDefault();
+            return View(member);
+        }
+        [HttpPost]
+        public IActionResult resetPassword(Member member)
+        {
+            if(member != null)
+            {
+                var q = db.Members.Where(n => n.MemberId == member.MemberId).FirstOrDefault();
+                if (q == null)
+                    return RedirectToAction("resetPassword");
+                q.Password = sha256(member.Password, q.PasswordSalt);
+                db.SaveChanges();
+            }
+            return RedirectToAction("Login");
+        }//ok  差中間跳轉頁面
+
+        public IActionResult openMember(string memberId)
+        {
+            var q = db.Members.Where(n => n.MemberId.ToString() == memberId).FirstOrDefault();
+            if (!q.Validate)
+            {
+                q.Validate = true;
+                db.SaveChanges();
+            }
+            else
+                return RedirectToAction("Index", "Home");
+            
+            return RedirectToAction("Login", "Member");
+        }//ok  差中間跳轉頁面
 
         private string sha256(string inputPwd ,string salt)
         {
@@ -242,7 +289,6 @@ namespace LeSheTuanGo.Controllers
                 return flag;
             }
         }
-
         public string checkLogin(string inputEmail , string inputPassword)
         {
             string returnMessage = "";
@@ -257,12 +303,21 @@ namespace LeSheTuanGo.Controllers
             string saltedPwd = sha256(inputPassword, salt);
             if (saltedPwd == selected.Password)
             {
-                HttpContext.Session.SetInt32(cUtility.Current_User_Id, Convert.ToInt32(selected.MemberId));
-                HttpContext.Session.SetString(cUtility.Current_User_Name, selected.FirstName + " " + selected.LastName);
-                HttpContext.Session.SetString(cUtility.Current_User_Profile_Image, selected.ProfileImagePath);
-                returnMessage = selected.MemberId.ToString();
-                returnMessage = JsonConvert.SerializeObject(returnMessage);
-                return returnMessage;
+                if (selected.Validate)
+                {
+                    HttpContext.Session.SetInt32(cUtility.Current_User_Id, Convert.ToInt32(selected.MemberId));
+                    HttpContext.Session.SetString(cUtility.Current_User_Name, selected.FirstName + " " + selected.LastName);
+                    HttpContext.Session.SetString(cUtility.Current_User_Profile_Image, selected.ProfileImagePath);
+                    returnMessage = selected.MemberId.ToString();
+                    returnMessage = JsonConvert.SerializeObject(returnMessage);
+                    return returnMessage;
+                }
+                else
+                {
+                    returnMessage = "not Validate";
+                    returnMessage = JsonConvert.SerializeObject(returnMessage);
+                    return returnMessage;
+                }
             }
             else
             {
@@ -288,32 +343,33 @@ namespace LeSheTuanGo.Controllers
             returnMessage = JsonConvert.SerializeObject(returnMessage);
             return returnMessage;
         }
-        public IActionResult openMember(string memberId)
+        public IActionResult reSendEmail(string Email)
         {
-            var q = db.Members.Where(n => n.MemberId.ToString() == memberId).FirstOrDefault();
-            if (!q.Validate)
-            {
-                q.Validate = true;
-                db.SaveChanges();
-            }
-            else
-                return RedirectToAction("Index", "Home");
-            
+            var q = db.Members.Where(n => n.Email == Email).FirstOrDefault();
+            sendEmail(q.Email, q.MemberId, "openMember");
             return RedirectToAction("Login", "Member");
-        }//todo引導頁面
-        public void sendEmail(string inputEmail , int inputId)
+        }//ok 差中間跳轉頁面
+        public void sendEmail(string inputEmail , int inputId , string controllerName)
         {
-            string bodyEmail = "https://localhost:5001/Member/openMember?memberId="+inputId;
+            string bodyEmail = "";
+            if (controllerName == "openMember")
+                bodyEmail = "https://localhost:5001/Member/openMember?memberId=" + inputId;
+            else if (controllerName == "resetPassword")
+                bodyEmail = "https://localhost:5001/Member/resetPassword?memberId=" + inputId;
             SmtpClient MySmtp = new SmtpClient("smtp.gmail.com", 587);
             MySmtp.Credentials = new System.Net.NetworkCredential("msit129GarbageCar@gmail.com", "@msit129GarbageCar@");
 
             MySmtp.EnableSsl = true;
             MailMessage mail = new MailMessage();
-            mail.From = new MailAddress(inputEmail, "樂圾團GO驗證信");
+            mail.From = new MailAddress(inputEmail, "樂圾團GO");
             mail.To.Add(inputEmail);
             mail.Priority = MailPriority.Normal;
             mail.Subject = "樂圾團GO驗證信";
-            mail.Body = "點選網址，啟動會員 :\r\n" + bodyEmail; //todo 可能可以在裡面加a標籤 看情形
+            if(controllerName == "openMember")
+                mail.Body = "點選網址，啟動會員 :\r\n" + bodyEmail; //todo 可能可以在裡面加a標籤 看情形
+            if(controllerName == "resetPassword")
+                mail.Body = "點選網址，重新設定密碼 :\r\n" + bodyEmail; //todo 可能可以在裡面加a標籤 看情形
+
             MySmtp.Send(mail);
         }
     }

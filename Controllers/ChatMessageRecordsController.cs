@@ -22,7 +22,7 @@ namespace LeSheTuanGo.Controllers
         int memberID = 0;
 
         //聊天室主頁
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int grouptype = 0)
         {
             if (HttpContext.Session.GetInt32(cUtility.Current_User_Id) == null)
             {
@@ -30,47 +30,94 @@ namespace LeSheTuanGo.Controllers
             }
             memberID = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
             var memberName = await _context.Members.Where(n => n.MemberId == memberID).Select(n => n.FirstName + n.LastName).ToListAsync();
-            //var orderQuery = _context.Orders.Where(n => n.HostMemberId == memberID) ;
-            //var orderBuyRQuery =_context.OrderBuyRecords.Where(n => n.MemberId == memberID);
             var orderQuery = _context.Orders.Where(n => n.HostMemberId == memberID).Select(n => n.OrderId);
             var orderBuyRQuery = _context.OrderBuyRecords.Where(n => n.MemberId == memberID).Select(n => n.OrderId);
             ViewBag.order = (await orderQuery.ToListAsync()).Union(await orderBuyRQuery.ToListAsync());
-            //ViewBag.order =await orderQuery.ToListAsync();
-            //ViewBag.orderbuy = await orderBuyRQuery.ToListAsync();
             ViewBag.username = memberName[0];
             ViewBag.memberid = memberID;
             return View();
         }
 
-        public string getOrderList(int groupType)
+        public string getOrderList(int groupType, int selfother, int onoff)
         {
             memberID = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
             string s = "";
+            bool of = onoff == 1 ? true : false;
             switch (groupType)
-            {                
-                case 1:
-                    var i = _context.Orders.Where(n => n.HostMemberId == memberID).ToList();
-                    s = JsonConvert.SerializeObject(i);
+            {
+                case 1: //團購團
+                    var i = _context.Orders.Where(n => n.HostMemberId == memberID);
+                    var j = _context.OrderBuyRecords.Where(n => n.MemberId == memberID);
+                    //案件狀態是否有效
+                    if (onoff != 0)
+                    {
+                        i = i.Where(n => n.IsActive == of);
+                        j = j.Where(n => n.Order.IsActive == of);
+                    }
+                    //自己團or別人團
+                    if (selfother == 1)
+                    {
+                        s = JsonConvert.SerializeObject(i.Select(n => new { n.OrderId, n.Product.ProductName }).ToList());
+                    }
+                    else if (selfother == 2)
+                    {
+                        s = JsonConvert.SerializeObject(j.Select(n => new { n.Order.OrderId, n.Order.Product.ProductName }).ToList());
+                    }
+                    else
+                    {
+                        var ls1 = (i.Select(n => new { n.OrderId, n.Product.ProductName }).ToList()).Union((j.Select(n => new { n.Order.OrderId, n.Order.Product.ProductName }).ToList()));
+                        s = JsonConvert.SerializeObject(ls1);
+                    }
                     break;
-                case 2:
-                    var j = _context.OrderBuyRecords.Where(n => n.MemberId == memberID).ToList();
-                    s = JsonConvert.SerializeObject(j);
+
+                case 2: //垃圾團
+                    var q1 = _context.GarbageServiceOffers.Where(n => n.HostMemberId == memberID);
+                    var q2 = _context.GarbageServiceUseRecords.Where(n => n.MemberId == memberID);
+                    //案件狀態是否有效
+                    if (onoff != 0)
+                    {
+                        q1 = q1.Where(n => n.IsActive == of);
+                        q2 = q2.Where(n => n.GarbageServiceOffer.IsActive == of);
+                    }
+                    //自己團or別人團
+                    if (selfother == 1)
+                    {
+                        s = JsonConvert.SerializeObject(q1.Select(n => new { n.GarbageServiceId, EndTime = n.EndTime.ToShortDateString() }).ToList());
+                    }
+                    else if (selfother == 2)
+                    {
+                        s = JsonConvert.SerializeObject(q2.Select(n => new { n.GarbageServiceOffer.GarbageServiceId, EndTime = n.GarbageServiceOffer.EndTime.ToShortDateString() }).ToList());
+                    }
+                    else
+                    {
+                        var ls1 = (q1.Select(n => new { n.GarbageServiceId, EndTime = n.EndTime.ToShortDateString() }).ToList()).Union((q2.Select(n => new { n.GarbageServiceOffer.GarbageServiceId, EndTime = n.GarbageServiceOffer.EndTime.ToShortDateString() }).ToList()));
+                        s = JsonConvert.SerializeObject(ls1);
+                    }
                     break;
             }
             return s;
         }
 
         //取得團明細
-        public string chatGetOrderDetail(int orderId)
+        public string chatGetOrderDetail(int orderId, int grouptype)
         {
-            var order = _context.Orders.Where(n => n.OrderId == orderId);
-            var i = order.ToList();
-            //var s = JsonConvert.SerializeObject(order.ToList());
-            return JsonConvert.SerializeObject(order.ToList());
+            if (grouptype == 1)
+            {
+                var order = _context.Orders.Where(n => n.OrderId == orderId);
+                var i = order.ToList();
+                return JsonConvert.SerializeObject(order.ToList());
+            }
+            else
+            {
+                var garbage = _context.GarbageServiceOffers.Where(n => n.GarbageServiceId == orderId);
+                var i = garbage.ToList();
+                return JsonConvert.SerializeObject(garbage.ToList());
+            }
+
         }
 
         //取得聊天紀錄
-        public string chatGetChat(int orderId)
+        public string chatGetChat(int orderId, int grouptype)
         {
             var chatMessages = _context.ChatMessageRecords.Where(n => n.GroupId == orderId).Select(n => new
             {
@@ -85,11 +132,11 @@ namespace LeSheTuanGo.Controllers
 
         //寫入聊天紀錄
         [HttpPost]
-        public void Create(string message, int orderid, int memberid)
+        public void Create(string message, int orderid, int memberid, byte grouptype)
         {
             ChatMessageRecord chatMessageRecord = new ChatMessageRecord
             {
-                GroupType = 1,
+                GroupType = grouptype,
                 GroupId = orderid,
                 SentTime = DateTime.Now,
                 SentMemberId = memberid,
