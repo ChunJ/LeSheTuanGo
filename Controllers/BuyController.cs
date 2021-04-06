@@ -84,10 +84,7 @@ namespace LeSheTuanGo.Controllers {
             return RedirectToAction("Index");
         }
         public IActionResult HistoryList() {
-            var q = from n in (new MidtermContext()).OrderBuyRecords
-                    where n.MemberId == HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value
-                    select n;
-            return View(q);
+            return View();
         }
     }
 }
