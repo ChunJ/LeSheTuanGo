@@ -1,25 +1,22 @@
 ﻿@model LeSheTuanGo.Models.Order
-
 @{
     ViewData["Title"] = "新增購物團";
 }
-
 <h1>新增購物團</h1>
 <hr />
-
 <div class="row">
     <div class="col-6">
         <form asp-action="Index">
             <div class="row">
                 <div class="col-6">
                     <div class="form-group">
-                        <label>產品類別</label>
+                        <label>商品類別</label>
                         <select id="CategoryId" class="form-control" onchange="getProduct('#ProductId')" asp-items="ViewBag.Category"></select>
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="form-group">
-                        <label for="ProductId">產品名稱</label>
+                        <label for="ProductId">商品名稱</label>
                         <select asp-for="ProductId" class="form-control"></select>
                     </div>
                 </div>
@@ -65,18 +62,18 @@
                     <div class="form-group form-check">
                         <label class="form-check-label">
                             <input class="form-check-input" asp-for="CanGo" />
-                            是否提供外送服務
+                            是否提供外送服務?
                         </label>
                     </div>
                     <div class="form-group">
                         <label asp-for="GoRangeId">外送距離限制</label>
-                        <select asp-for="GoRangeId" class="form-control" asp-items="ViewBag.GoRangeId"></select>
+                        <select asp-for="GoRangeId" class="form-control" asp-items="ViewBag.GoRange"></select>
                     </div>
                 </div>
                 <div class="col-12">
                     <div class="form-group">
                         <label asp-for="OrderDescription">團購說明</label>
-                        <textarea id="OrderDescription" name="OrderDescription" rows="7" class="form-control"></textarea>
+                        <textarea id="OrderDescription" name="OrderDescription" rows="7" class="form-control" value=""></textarea>
                         <span asp-validation-for="OrderDescription" class="text-danger"></span>
                     </div>
                 </div>

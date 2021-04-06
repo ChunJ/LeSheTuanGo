@@ -1,34 +1,264 @@
-﻿@*@model IEnumerable<prj0305.Models.Order>*@
-@model IEnumerable<LeSheTuanGo.ViewModels.JoinGroupViewModel>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
+﻿@{
+    ViewData["Title"] = "搜尋團購";
+}
+<style>
+    .rem-4 {
+        width: 4rem;
+        text-align: justify;
+        text-align-last: justify;
+        display: inline-block;
+    }
+</style>
+<div class="row">
+    @*search column*@
+    <div class="col-4">
+        <div class="row">
+            <div class="border-bottom w-100">
+                <h4>搜尋團購</h4>
+                <a asp-action="HistoryList">歷史訂單</a>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label>商品類型</label>
+                    <select id="CategotyId" class="form-control" onchange="getProduct('#ProductId')" asp-items="ViewBag.Category"></select>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label>商品名稱</label>
+                    <select id="ProductId" class="form-control"></select>
+                </div>
+            </div>
+            <div class="col-12">
+                image location
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label>城市</label>
+                    <select id="CityId" class="form-control" onchange="getDistrict('#DistrictId')" asp-items="ViewBag.City"></select>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label>鄉鎮市區</label>
+                    <select name="DistrictId" id="DistrictId" class="form-control"></select>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group">
+                    <label>地址</label>
+                    <input class="form-control" id="addressInput" type="text" value=@ViewData["Address"] />
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="distance" class="control-label">距離</label>
+                    <select class="form-control" asp-items="ViewBag.GoRange" id="distance"></select>
+                </div>
+                <div class="form-group">
+                    <label>購買個數</label>
+                    <input class="form-control" id ="count" type="number" value="0" min="0" />
+                </div>
+            </div>
+            <div class="col-12">
+                <button class="btn btn-primary" onclick="searchStart()">搜尋</button>
+                <button class="btn btn-primary" onclick="fillDemo()">DEMO</button>
+                <button class="btn btn-primary" onclick="test()">測試</button>
+            </div>
+        </div>
+    </div>
+    @*result column*@
+    <div class="col-4">
+        <div class="border-bottom">
+            <h4>搜尋結果</h4>
+        </div>
+        <div class=" w-100" id="searchResult">
+            @*@for (int i = 0; i < 5; i++) {
+                <div class="p-2 w-100 search-item border-bottom" onclick="test()">
+                    <h5>台北市大安區信義路四段2號</h5>
+                    <div class="w-100"><div class="rem-4">截止時間</div><span class="px-1">:</span>2021年05月20號</div>
+                    <div class="w-100"><div class="rem-4">距離</div><span class="px-1">:</span>532 公尺</div>
+                </div>
+                }*@
+        </div>
+    </div>
+    @*detail column*@
+    <div class="col-4">
+        <div class="border-bottom">
+            <h4>詳細資訊</h4>
+        </div>
+        <div id="detailView" class="invisible">
+            <div id="map" style="height: 16rem;width: 100%;"></div>
+            <div id="detailInfo">
+                <div class="w-100"><div class="rem-4">地點</div><span class="px-1">:</span><span id="info">台北市大安區</span></div>
+                <div class="w-100"><div class="rem-4">距離</div><span class="px-1">:</span><span id="info">532</span> 公尺</div>
+                <div class="w-100"><div class="rem-4">截止時間</div><span class="px-1">:</span><span id="info">2021年05月20號</span></div>
+            </div>
+            <form method="post" action="/Buy/Join">
+                <div id="formInput">
+                    <input hidden=hidden name="GarbageServiceOfferId" value="" />
+                    <input hidden=hidden name="ComeDistrictId" value="" />
+                    <input hidden=hidden name="ComeAddress" value="" />
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" name="NeedCome" value="true" />
+                            是否需要宅配服務?
+                        </label>
+                    </div>
+                    <div class="w-50">
+                        <div class="form-group">
+                            <label>購買量</label>
+                            <input class="form-control" name="Count" type="number" min="0" value="" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="加入" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
-
-    <title>minimalistica</title>
-    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
-    <link rel="stylesheet" href="~/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="~/css/tooplate-style.css" />
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-
-
-    <style type="text/css">
-        /* Always set the map height explicitly to define the size of the div
-        * element that contains the map. */
-        #map {
-            height: 100%;
-        }
-    </style>
-
+@section Scripts {
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBircB99P_RvzxWdQT-hk40-h3Ofzlb_vQ&callback=initMap&libraries=&v=weekly" async=async></script>
     <script>
+        let cityS = document.querySelector("#CityId");
+        let distS = document.querySelector("#DistrictId");
+        let cateS = document.querySelector("#CategotyId");
+        let prodS = document.querySelector("#ProductId");
+        let prodImage;
+        let addressIn = document.querySelector("#addressInput");
+        let distanceS = document.querySelector("#distance");
+        let count = document.querySelector("#count");
+        //for search result
+        let result = document.querySelector("#searchResult");
+        //for detail and submit
+        let detailView = document.querySelector("#detailView");
+        let mapDiv = document.querySelector("#map");
+        let infoGroup = document.querySelectorAll("#detailInfo span#info");
+        let formInputs = document.querySelectorAll("#formInput input");
+        //other variable
+        let lastAddress = "";
+        let lastDistrict = 0;
+        let queryList = [];
+        let fList = [];
 
+        window.onload = function () {
+            cityS.value = @ViewData["CityId"];
+            fillDistrict(@ViewData["CityId"], "#DistrictId", function () {
+                distS.value = @ViewData["DistrictId"];
+            });
+            cateS.value = @ViewData["CategoryId"];
+            fillProduct(@ViewData["CategoryId"], "#ProductId", function () {
+            distS.value = @ViewData["ProductId"];
+        });
+        }
+        function test() {
+
+        }
+        function fillDemo() {
+            addressIn.value = "信義路四段2號";
+            distS.value = 5;
+        }
+        function searchStart() {
+            detailView.classList.add("invisible");
+            //send new request if address is changed
+            if (distS.value == lastDistrict && addressIn.value == lastAddress) {
+                filterResult();
+            } else {
+                lastDistrict = distS.value;
+                lastAddress = addressIn;
+                $.get(
+                    "/Buy/Search",
+                    {
+                        DistrictInput: distS.value,
+                        addressInput: addressIn.value
+                    },
+                    function (data, status) {
+                        if (status == "success") {
+                            queryList = JSON.parse(data);
+                            filterResult();
+                        }
+                    }
+                )
+            }
+        }
+        function filterResult() {
+            ////add cango filter test
+            fList = [];
+            for (let r of queryList) {
+                if (r.Distance <= distanceS.options[distanceS.selectedIndex].text
+                    && r.ProductId == prodS.value
+                    && r.AvailableCount >= count.value
+                ) {
+                    fList.push(r);
+                }
+            }
+            showResult();
+        }
+        function showResult() {
+            //implement page count here
+            let htmlString = "";
+            if (fList.length == 0) {
+                htmlString = `<h4>沒有符合條件的搜尋結果</h4>`;
+            } else {
+                //format datetime and distance
+                for (let i = 0; i < fList.length; i++) {
+                    //use the index in filterList as id, so we can just get offer info from filterList later.
+                    htmlString += `<div class="p-2 w-100 search-item border-bottom" onclick="getDetail(${i})">`;
+                    htmlString += `<h5>${fList[i].CityName}${fList[i].DistrictName}${fList[i].Address}</h5>`;
+                    htmlString += `<div class="w-100"><div class="rem-4">截止時間</div><span class="px-1">:</span>${fList[i].EndTime}</div>`;
+                    htmlString += `<div class="w-100"><div class="rem-4">距離</div><span class="px-1">:</span>${fList[i].Distance} 公尺</div>`;
+                    htmlString += `<div class="w-100"><div class="rem-4">宅配服務</div><span class="px-1">:</span>${fList[i].CanGo?"有":"不"}提供</div></div>`;
+                }
+            }
+            result.innerHTML = htmlString;
+        }
+        function getDetail(id) {
+        //fill view + update map + turn visible
+            infoGroup[0].innerText = fList[id].Address;
+            infoGroup[1].innerText = fList[id].Distance;
+            infoGroup[2].innerText = fList[id].EndTime;
+            formInputs[0].value = fList[id].OrderId;
+            formInputs[1].value = fList[id].DistrictId;
+            formInputs[2].value = fList[id].Address;
+            if (fList[id].CanGo) {
+                //need to use the filter option
+                formInputs[3].checked = true;
+                formInputs[3].disabled = false;
+            } else {
+                formInputs[3].checked = false;
+                formInputs[3].disabled = true;
+            }
+            formInputs[4].value = count.value;
+            showMap(fList[id].Latitude, fList[id].Longitude);
+            detailView.classList.remove("invisible");
+        }
+        function showMap(lat, lng) {
+            let coor = new google.maps.LatLng(lat, lng);
+            let mbr = new google.maps.LatLng(25.0339400, 121.5435000);  //fixed for now
+            map = new google.maps.Map(mapDiv,
+                {
+                    center: coor,
+                    zoom: 17,
+                });
+            new google.maps.Marker({
+                position: mbr,
+                map,
+                title: "您的位置",
+            });
+            new google.maps.Marker({
+                position: coor,
+                map,
+                title: "服務位置",
+                icon: "https://crd-rubbish.epd.ntpc.gov.tw/maps/images/icon/Icon_LegendD.png",
+            });
+        }
 
         let map;
-
         function initMap() {
-
             map = new google.maps.Map(document.getElementById("map"), {
-
                 zoom: 2,
                 center: new google.maps.LatLng(2.8, -187.3),
                 mapTypeId: "terrain",
@@ -41,7 +271,6 @@
                 "https://developers.google.com/maps/documentation/javascript/examples/json/earthquake_GeoJSONP.js";
             document.getElementsByTagName("head")[0].appendChild(script);
         }
-
         // Loop through the results array and place a marker for each
         // set of coordinates.
         const eqfeed_callback = function (results) {
@@ -55,135 +284,9 @@
             }
         };
     </script>
-</head>
-<body>
+}
 
 
-
-    @*@{int orderCount = 0; string orderN = "productName"; List<int> ProductIds = new List<int>();}*@
-
-    <div class="col-md-4">
-        <label for="distance" class="control-label">距離</label>
-        <select class="form-control" asp-items="ViewBag.GoRange" id="distance" onchange="str_distanceChange()"></select>
-    </div>
-    @Html.ActionLink("訂單紀錄", "HistoryList")
-    <div id="content" name="content">
-
-        @foreach (var item in Model)
-        {
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="tm-bg-circle-white tm-flex-center-v">
-                        <header class="text-center">
-                            <h4 name="" id=""><span>@Html.DisplayNameFor(model => model.VProduct.ProductName): @Html.DisplayFor(modelItem => item.JOrder.Product.ProductName)</span></h4>
-                        </header>
-                        <p><span>@Html.DisplayNameFor(model => model.Address):</span>@item.JOrder.Address</p>
-                        <p><span>@Html.DisplayNameFor(model => model.MaxCount):</span>@item.JOrder.MaxCount</p>
-                        <p><span>@Html.DisplayNameFor(model => model.EndTime):</span>@item.JOrder.EndTime</p>
-                        <p><span>@Html.DisplayNameFor(model => model.OrderDescription):</span>@item.JOrder.OrderDescription</p>
-                        <p><span>@Html.DisplayNameFor(model => model.UnitPrice):</span>@item.JOrder.UnitPrice</p>
-                        <p><span>@Html.DisplayNameFor(model => model.CanGo):</span>@item.JOrder.CanGo</p>
-
-                        <p class="text-center mt-4 mb-0"><a href="/Buy/JoinGroup/ @item.JOrder.OrderId" class="btn tm-btn-secondary">加入</a></p>
-
-                    </div>
-                    </div>
-                </div>
-            </div>
-            }
-
-            @*<div class="col last">
-            <h3><a href="#">Quisque consectetur odio</a></h3>
-            <p>Quisque consectetur odio ut sem semper commodo. Maecenas iaculis leo a ligula euismod condimentum. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Ut enim risus, rhoncus sit amet ultricies vel, aliquet ut dolor. Duis iaculis urna vel massa ultricies suscipit. Phasellus diam sapien, fermentum a eleifend non, luctus non augue. Quisque scelerisque purus quis eros sollicitudin gravida. Aliquam erat volutpat. Donec a sem consequat tortor posuere dignissim sit amet at.</p>
-            <p>&not; <a href="#">read more</a></p>
-        </div>*@
-            <div id="footer">
-                <p>Copyright &copy; <em>minimalistica</em> &middot; Design: Luka Cvrk, <a href="http://www.solucija.com/">Solucija</a></p>
-            </div>
-        </div>
-    <div id="map"></div>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBircB99P_RvzxWdQT-hk40-h3Ofzlb_vQ&callback=initMap&libraries=&v=weekly"
-            async=async></script>
-
-
-
-    <script>
-
-        var groupCount   =0                                                             //查詢到的團購總數
-        function str_distanceChange()                                      //下拉式選單選擇項目改變
-        {
-            @*@{ orderCount = 0; }*@
-            $.ajax({
-                url: "/Buy/Refresh?re=" + distance.value,
-                type: "GET",
-
-                success: function (ls)
-                {
-                    let s = JSON.parse(ls);
-                    let txt = "";
-                    console.log(s);
-                    var productName = ""
-                    for (var i = 0; i < s.length; i++) {
-                        productName = "productName" + groupCount
-                        txt += "<div class='container'>";
-                        txt += "<div class='row'>";
-                        txt += "<div class='col-sm-12'>";
-                        txt += "<div class='tm - bg - circle - white tm - flex - center - v'>";
-                        txt += "<header class='text - center'>";
-                        txt += "<h4 name='" + productName + "' id='" + productName + "'value='" + s[i].ProductId + "'></h3>";
-                        txt +="</header>"
-                        txt += "<p>" +"地址:" + s[i].Address + "</p>";
-                        txt += "<p>" +"結束時間:"+ s[i].EndTime + "</p>";
-                        txt += "<p>" +"訂單描述:"+ s[i].OrderDescription + "</p>";
-                        txt += "<p>" +"單位價格:"+ s[i].UnitPrice + "</p>";
-                        txt += "<p>" + "是否接受外送" + s[i].CanGo + "</p>";
-                        txt += "<p class='text - center mt - 4 mb - 0'><a href='/Buy/JoinGroup/" + s[i].OrderId + "'  class='btn tm - btn - secondary'>加入</a></p>";
-                        txt += "</div>";
-                        txt += "</div>";
-                        txt += "</div>";
-                        txt += "</div>";
-
-                        groupCount = groupCount + 1
-                    }
-                    $("#content").html(txt);
-                    insertProductName();
-                }
-            });
-
-        }
-        function insertProductName()                       //新增商品名稱到對應標籤
-        {
-            var insertCount=0                                     //商品名稱計數
-            for (var i = 0; i < groupCount; i++)
-            {
-                var tempLabelID = "productName" + i
-                var tempProductID = document.getElementById(tempLabelID).getAttribute('value')
-                console.log(tempProductID)
-                tempProductID
-                $.ajax({
-                    url: "/Buy/InsertProductName?Pid=" + tempProductID,
-                    type: "GET",
-                    success: function (ls) {
-                        let s = JSON.parse(ls);
-                        let txt = "";
-                        console.log(s);
-                        var v = "productName" + insertCount
-                        console.log(v);
-                        document.getElementById(v).innerHTML ="商品名稱:"+s[0]
-                        insertCount++
-                        }
-                });
-
-            }
-            insertCount = 0
-            groupCount = 0;
-        }
-
-    </script>
-
-</body>
-</html>
 
 
 
