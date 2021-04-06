@@ -30,7 +30,7 @@ namespace LeSheTuanGo.Controllers {
             ViewData["ProductId"] = 1;
             ViewData["Category"] = new SelectList(db.CategoryRefs, "CategoryId", "CategoryName");
             ViewData["City"] = new SelectList(db.CityRefs, "CityId", "CityName");
-            ViewData["GoRangeId"] = new SelectList(db.RangeRefs, "RangeId", "RangeInMeters");
+            ViewData["GoRange"] = new SelectList(db.RangeRefs, "RangeId", "RangeInMeters");
             return View();
         }
 
@@ -50,7 +50,7 @@ namespace LeSheTuanGo.Controllers {
             order.Longitude = latlong[1];
             order.AvailableCount = order.MaxCount;
             order.IsActive = true;
-            
+            if (order.OrderDescription == null) order.OrderDescription = "";
             db.Add(order);
             await db.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

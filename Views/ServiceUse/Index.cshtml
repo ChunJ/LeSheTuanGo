@@ -1,5 +1,4 @@
 ﻿@using System;
-
 @{
     ViewData["Title"] = "搜尋倒垃圾服務";
     int[] sizeNumber = new int[7] { 3, 5, 14, 25, 33, 75, 120 };
@@ -148,11 +147,11 @@
         let fList = [];
     
         window.onload = function () {
-        cityS.value = @ViewData["CityId"];
-        fillDistrict(@ViewData["CityId"], "#DistrictId", function () {
-            distS.value = @ViewData["DistrictId"];
-        });
-    }
+            cityS.value = @ViewData["CityId"];
+            fillDistrict(@ViewData["CityId"], "#DistrictId", function () {
+                distS.value = @ViewData["DistrictId"];
+            });
+        }
         function test() {
             //showMap(25.03, 121.54);
             console.log(formFirstHalf);

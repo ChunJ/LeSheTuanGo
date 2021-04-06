@@ -1,168 +1,92 @@
-﻿
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using LeSheTuanGo.Models;
 using System;
 using System.Collections.Generic;
-//using System.Device.Location;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-
 using Microsoft.AspNetCore.Http;
 using LeSheTuanGo.ViewModels;
 using GeoCoordinatePortable;
 
-namespace LeSheTuanGo.Controllers
-{
-
-    public class BuyController : Controller
-    {
-        private readonly MidtermContext _context;
-
-
-        int MemberID = 2;
-       readonly GeoCoordinate Geo = null;
-        public BuyController(MidtermContext context)
-        {
-            var q = from n in (new MidtermContext()).Members
-                    where n.MemberId == MemberID
-                    select n;
-            double userLatitude = (double)q.ToList()[0].Latitude;
-            double userLongitude = (double)q.ToList()[0].Longitude;
-            Geo = new GeoCoordinate(userLatitude, userLongitude);
-            _context = context;
-            
+namespace LeSheTuanGo.Controllers {
+    public class BuyController : Controller {
+        private readonly MidtermContext db;
+        public BuyController(MidtermContext context) {
+            db = context;
         }
-
-
-        public IActionResult Index()
-        {
-            var q = _context.Orders.Include(g => g.GoRange).Include(g=>g.Product).Where(g=>g.AvailableCount !=0).ToList();
-            var q2 = from n in (new MidtermContext()).Products
-                     select n;
-            
-            ViewData["GoRange"] = new SelectList(_context.RangeRefs, "RangeId", "RangeInMeters");
-            ViewData["Category"] = new SelectList(_context.CategoryRefs, "CategoryId", "CategoryName");
-            ViewBag.ProductName = q2.ToList();
-            List<JoinGroupViewModel> list = new List<JoinGroupViewModel>();
-            foreach (var item in q)
-            {
-            list.Add(new JoinGroupViewModel(item));
+        public IActionResult Index() {
+            if (HttpContext.Session.GetInt32(cUtility.Current_User_Id) != null) {
+                int Memberid = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
+                var user = db.Members.Where(m => m.MemberId == Memberid).Include(m => m.District).First();
+                ViewData["Address"] = user.Address;
+                ViewData["DistrictId"] = user.DistrictId;
+                ViewData["CityId"] = user.District.CityId;
+            } else {
+                ViewData["DistrictId"] = 1;
+                ViewData["CityId"] = 1;
             }
+            ViewData["CategoryId"] = 1;
+            ViewData["ProductId"] = 1;
+            ViewData["GoRange"] = new SelectList(db.RangeRefs, "RangeId", "RangeInMeters");
+            ViewData["City"] = new SelectList(db.CityRefs, "CityId", "CityName");
+            ViewData["Category"] = new SelectList(db.CategoryRefs, "CategoryId", "CategoryName");
+            return View();
+        }
+        public string Search(int DistrictInput, string addressInput) {
+            //search by endtime & price ?
+            //add gorange in sent data
 
-            return View(list);
+            //var distantMax = db.RangeRefs.Last().RangeInMeters;
+            int distanceMax = 3000;
+            //disable query and use the first user's location for testing
+            //DistrictRef dist = db.DistrictRefs.Where(d => d.DistrictId == DistrictInput)
+            //    .Include(d => d.City).First();
+            //string address = dist.City.CityName + dist.DistrictName + addressInput;
+            //var latlong = cUtility.addressToLatlong(address);
+            //GeoCoordinate userLocation = new GeoCoordinate((double)latlong[0], (double)latlong[1]);
+            var tempUser = db.Members.First();
+            GeoCoordinate userLocation = new GeoCoordinate((double)tempUser.Latitude, (double)tempUser.Longitude);
+            var newObject = from o in db.Orders.Include(o => o.District).Include(o => o.District.City)
+                            select new {
+                                o.OrderId,
+                                o.ProductId,
+                                o.DistrictId,
+                                o.District.DistrictName,
+                                o.District.City.CityName,
+                                o.Address,
+                                o.EndTime,
+                                o.CanGo,
+                                o.AvailableCount,
+                                o.Latitude,
+                                o.Longitude,
+                                Distance = userLocation.GetDistanceTo(new GeoCoordinate((double)o.Latitude, (double)o.Longitude)),
+                            };
+            var offerList = newObject.AsEnumerable().Where(o => o.Distance <= distanceMax).ToList();
+            return JsonConvert.SerializeObject(offerList);
         }
         [HttpPost]
-        public IActionResult Index(int distance)
-        {
-            var q = from n in (new MidtermContext()).Orders
-                    where Geo.GetDistanceTo(new GeoCoordinate((double)n.Latitude, (double)n.Longitude))<distance 
-                  select n;
-
-            return View(q);
-        }
-        public string Refresh(string re)
-        {
-            var q = from n in (new MidtermContext()).RangeRefs
-                    where n.RangeId.ToString()==re
-                    select n;
-           var 距離= q.ToList().First().RangeInMeters;
-            var q2 = from n in (new MidtermContext()).Orders.AsEnumerable()
-                     where Geo.GetDistanceTo(new GeoCoordinate((double)n.Latitude, (double)n.Longitude))/1000 <= (double)距離
-                     select n;
-            var A = q2.ToList();
-            string ls = JsonConvert.SerializeObject(A);
-
-            return ls;
-        }
- 
-        public string InsertProductName(string Pid)
-        {
-            var q = from n in (new MidtermContext()).Products
-                    where n.ProductId ==int.Parse(Pid)
-                    select n.ProductName;
-            var A = q.ToList();
-            string ls = JsonConvert.SerializeObject(A);
-
-            return ls;
-        }
-        public IActionResult JoinGroup(int id)
-        {
-           
-            var order = (new MidtermContext()).Orders
-                .Include(g => g.GoRange)
-                .Where(m => m.OrderId == id);
-            List<JoinGroupViewModel> list = new List<JoinGroupViewModel>();
-            list.Add(new JoinGroupViewModel(order.FirstOrDefault()));
-
-            //var orderHistory = _context.OrderBuyRecords
-            //    .Include(g => g.Member)
-            //    .Include(g => g.Order)
-            //    .Where(m => m.OrderId == id);
-
-            var countMax = from n in _context.Orders
-                           where n.OrderId==id
-                           select n;
-            var member = _context.Members.Include(n => n.District).Where(n => n.MemberId == MemberID);
-            ViewData["City"] = new SelectList(_context.CityRefs, "CityId", "CityName");
-            ViewBag.DistrictId = member.FirstOrDefault().DistrictId;
-            ViewBag.CityId = member.FirstOrDefault().District.CityId;
-            ViewBag.total = countMax.FirstOrDefault().AvailableCount;
-            return View(list);
-        }
-        [HttpPost]
-        public IActionResult JoinGroup(int id, int count,bool NeedCome,int ComeDistrictID,string ComeAddress)
-        {
-            //todo 地址更改
-            //MidtermContext mid = new MidtermContext();
-            MemberID = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
-            var q = from n in _context.Orders
-                    where n.OrderId == id
-                    select n;
-            var newOrder = q.ToList()[0];
-            if (newOrder.AvailableCount - (byte)count > 0)
-            {
-                newOrder.AvailableCount = (byte)(newOrder.AvailableCount - (byte)count);  
-                OrderBuyRecord ob = new OrderBuyRecord();
-                ob.OrderId = id;
-                ob.Count = (byte)count;
-                ob.MemberId = MemberID;
-                ob.NeedCome = NeedCome;
-                ob.ComeDistrictId = (short)ComeDistrictID;
-                ob.ComeAddress = ComeAddress;
-                _context.Add(ob);
-                _context.SaveChanges();
+        public IActionResult Join(OrderBuyRecord r) {
+            if (HttpContext.Session.GetInt32(cUtility.Current_User_Id) == null) {
+                return RedirectToAction("Login", "Member", new { from = "Buy/Index" });
             }
-
-            else
-            {
-                var order =_context.Orders
-                .Include(g => g.GoRange)
-                .Where(m => m.OrderId == id);
-                List<JoinGroupViewModel> list = new List<JoinGroupViewModel>();
-
-                list.Add(new JoinGroupViewModel(order.FirstOrDefault()));
-
-                return View(list);
-            }
-            return RedirectToAction("Index");
+            int MemberID = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
+            //need server side validation
+            var order = db.Orders.Where(o => o.OrderId == r.OrderId).First();
+            order.AvailableCount -= r.Count;
+            db.Add(r);
+            db.SaveChanges();
+            //if server side validation is not passed, return view with user's filter option
+            //if successed, redirect to history
             //todo 修改max總數
+            return RedirectToAction("Index");
         }
-        public IActionResult HistoryList()
-        {
-               var q = from n in (new MidtermContext()).OrderBuyRecords
-                    where n.MemberId == MemberID
-                    select n;
-            return View(q);
-        }
-        public IActionResult Edit(int id)
-        {
+        public IActionResult HistoryList() {
             var q = from n in (new MidtermContext()).OrderBuyRecords
-                    where n.OrderBuyRecordId == id
+                    where n.MemberId == HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value
                     select n;
-
             return View(q);
         }
     }

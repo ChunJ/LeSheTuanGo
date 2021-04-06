@@ -93,7 +93,6 @@ namespace LeSheTuanGo.Controllers{
             offer.L120available -= r.L120count;
             db.Add(r);
             db.SaveChanges();
-
             //redirect to history
             return RedirectToAction("Index");
         }
