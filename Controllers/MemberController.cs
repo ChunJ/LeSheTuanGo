@@ -21,7 +21,6 @@ namespace LeSheTuanGo.Controllers
     {
         private readonly MidtermContext db;
         private IWebHostEnvironment iv_host;
-
         public MemberController(IWebHostEnvironment host,MidtermContext context)
         {
             iv_host = host;
