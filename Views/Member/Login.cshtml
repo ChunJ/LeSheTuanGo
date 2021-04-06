@@ -22,12 +22,11 @@
                 <span asp-validation-for="Password" class="text-danger" id="spanPassword"></span>
             </div>
             <div class="form-group">
-                <input type="button" value="登入" class="btn btn-primary" onclick="checkLogin()"/>
-                <input type="button" value="忘記密碼" class="btn btn-primary" />
-                <input type="button" value="註冊" class="btn btn-primary" asp-action="Create"/>
+                <input type="button" value="登入" class="btn btn-primary" onclick="checkLogin()" />
+                <a asp-action="forgetPassword" type="button" class="btn btn-primary" >忘記密碼</a>
+                <a asp-action="Create" type="button" class="btn btn-primary" >註冊</a>
             </div>
             @*<div class="g-recaptcha" data-sitekey="6LdLl4UaAAAAAJHIzFhcfwmN2Gui1oNs9L-3lEJM"></div>*@
-
             <div class="form-group">
                 <input type="button" value="Demo" class="btn btn-primary" onclick="demo()" />
             </div>
@@ -56,7 +55,7 @@
             type: "Get",
             success: function (returnMessage) {
                 let js = JSON.parse(returnMessage);
-                if (js != "not User" && js != "incorrect") {
+                if (js != "not User" && js != "incorrect" && js != "not Validate") {
                     labelEmail.style.color = "green";
                     txtEmail.style.borderColor = "green";
                     labelPassword.style.color = "green";
@@ -72,7 +71,12 @@
                     spanPassword.innerHTML = "密碼錯誤";
                     labelPassword.style.color = "red";
                     txtPassword.style.borderColor = "red";
-                } 
+                } else if (js == "not Validate") {
+                    spanEmail.innerHTML = "Email驗證尚未通過,或<a href='/Member/reSendEmail?Email=" + Email.value+"'> 重新發送驗證信</a >? ";
+                    spanPassword.innerHTML = "";
+                    labelEmail.style.color = "red";
+                    txtEmail.style.borderColor = "red";
+                }
             }
         });
     }//ok
