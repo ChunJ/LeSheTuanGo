@@ -42,7 +42,7 @@ function fillProduct(cateId, prodTagId, callBack) {
             }
         }
     )
-} 
+}
 function getDistrict2(distTagId) {
     fillDistrict(event.target.value, distTagId, null);
     changeDist();
@@ -50,6 +50,11 @@ function getDistrict2(distTagId) {
 function changeDist() {
     let distV = $('#DistrictId').val();
     $('#ComeDistrictID').val(distV);
+}
+
+function formatDatetime(inputString) {
+    let list = inputString.split(/-|T|:/);
+    return `${list[1]}月${list[2]}日${list[3]}點${list[4]}分`;
 }
 
 //function getLatLng(addressInput, callBack) {
