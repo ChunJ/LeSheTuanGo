@@ -143,7 +143,7 @@
         }
     })()">
 
-    <div style="height:100%;width:40%;float:left;">
+    <div style="height:100%;width:60%;float:left;">
         <button id="find-me" onclick="geoFindMe()">查詢目前位置</button>
         <p id="status"></p>
         <a id="map-link" href="" target="_blank"></a>  @*target=_blank will open a new tab*@
@@ -158,7 +158,7 @@
         </select>
         <input id="txtAddress" />
 
-        <button onclick="captureSelect()">get new location's json</button>
+        <button onclick="captureSelect()">搜尋</button>
         <br />
         <select id="rangeLevel" onchange="">
             <option hidden>請選擇</option>
@@ -223,7 +223,7 @@
             <option>23</option>
         </select>
         <label>時迄</label>
-        <button onclick="filter()">filter</button>
+        <button onclick="filter()">篩選</button>
 
         <table class="table" id="table100m" style="float:left;">
             <tbody id="header">
@@ -240,7 +240,7 @@
     </div>
 
     @*<button onclick="init100M()">100M</button>*@
-    <div id="map" style="height:100%;width:60%;float:left;"></div>
+    <div id="map" style="height:100%;width:40%;float:left;"></div>
     @*<button onclick="clearContent()">100M</button>*@
     <br />
 
