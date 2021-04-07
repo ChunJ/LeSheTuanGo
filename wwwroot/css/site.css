@@ -116,6 +116,7 @@ body {
     width: 100%;
     padding-right: 15px;
     padding-left: 15px;
-    margin-right: auto;
-    margin-left: auto;
+}
+.vh-80 {
+    height: 80vh !important;
 }
