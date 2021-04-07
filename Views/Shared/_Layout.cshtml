@@ -30,6 +30,12 @@
         .mainPT{
             padding-top:2.5rem;
         }
+        .rem-4 {
+            width: 4rem;
+            text-align: justify;
+            text-align-last: justify;
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
@@ -90,8 +96,8 @@
             </nav>
         </div>
     </header>
-    <div class="main-frame mainPT">
-        <main role="main" class="pb-3">
+    <div class="main-frame mainPT vh-100">
+        <main role="main" class="h-100 pb-3 pt-1">
             @RenderBody()
         </main>
     </div>
