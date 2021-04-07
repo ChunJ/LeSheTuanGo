@@ -112,3 +112,10 @@ body {
 .search-item:hover{
     background-color:#f3f3f3
 }
+.main-frame {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
