@@ -8,12 +8,14 @@ img {
 }
 
 .inbox_people {
-    background: #f8f8f8 none repeat scroll 0 0;
+    background: #e5e8ef;
     float: left;
     overflow: hidden;
     width: 100%;
     border-right: 1px solid #c4c4c4;
-    height:100%;
+    border-left: 1px solid #c4c4c4;
+    height: 100%;
+    padding:0;
 }
 
 .inbox_msg {
@@ -39,9 +41,10 @@ img {
 }
 
 .headind_srch {
-    padding: 10px 29px 10px 20px;
+    padding: 10px 20px 10px 20px;
     overflow: hidden;
     border-bottom: 1px solid #c4c4c4;
+    margin-bottom:10px;
 }
 
 .recent_heading h4 {
@@ -154,9 +157,10 @@ img {
 
 .mesgs {
     /*float: left;*/
-    padding:10px 0px 10px 0px;
-    width: 60%;
+    padding: 0px 0px 10px 0px;
+    /*width: 60%;*/
     height: 100%;
+    
 }
 
 .sent_msg p {
@@ -180,17 +184,20 @@ img {
 }
 
 .input_msg_write {
+    padding-top:2px;
+    border-top:1px solid gray;
     position: relative;
     width:100%;
 }
 
     .input_msg_write input {
+        margin-left:10px;
         background: #ddd;
         border: medium none;
         color: #4c4c4c;
         font-size: 15px;
         min-height: 48px;
-        width: 88%;
+        width: 86%;
     }
 
 .type_msg {
@@ -202,13 +209,12 @@ img {
 .msg_send_btn {
     background: #05728f none repeat scroll 0 0;
     border: medium none;
-/*    border-radius: 50%;*/
     color: #fff;
     cursor: pointer;
     font-size: 17px;
     height: 33px;
     position: absolute;
-    right: 0;
+    right: 10px;
     top: 11px;
     width: 10%;
 }
