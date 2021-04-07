@@ -4,8 +4,8 @@
 }
 <form asp-action="Index">
     <div class="column-main">
-    <h1>新增購物團</h1>
-    <hr />
+        <h1>新增購物團</h1>
+        <hr />
         <div class="row w-50">
             <div class="col-6">
                 <div class="form-group">
@@ -89,24 +89,25 @@
 
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-<script>
+    <script>
     let cityS = document.querySelector("#CityId");
-    let distS = document.querySelector("#DistrictId"); 
+    let distS = document.querySelector("#DistrictId");
     let cateS = document.querySelector("#CategoryId");
     let prodS = document.querySelector("#ProductId");
-    window.onload = function () {
-        cityS.value = @ViewData["CityId"];
-        fillDistrict(@ViewData["CityId"], "#DistrictId", function () {
-            distS.value = @ViewData["DistrictId"];
-        });
+        window.onload = function () {
         cateS.value = @ViewData["CategoryId"];
         fillProduct(@ViewData["CategoryId"], "#ProductId", function () {
             distS.value = @ViewData["ProductId"];
         });
+        cityS.value = @ViewData["CityId"];
+        fillDistrict(@ViewData["CityId"], "#DistrictId", function () {
+            distS.value = @ViewData["DistrictId"];
+        });
     }
     function test() {
-
+        console.log(distS.value);
+        console.log(distS);
     }
-</script>
+    </script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
