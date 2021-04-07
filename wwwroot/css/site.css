@@ -60,7 +60,7 @@ html {
 
 body {
     /* Margin bottom by footer height */
-    background-color: #ebebe9
+    background-color: #f1f1f1
 }
 .footer {
   position: absolute;
@@ -110,7 +110,7 @@ body {
     cursor:pointer;
 }
 .search-item:hover{
-    background-color:#f3f3f3
+    background-color:#dbf2ff
 }
 .main-frame {
     width: 100%;
@@ -146,6 +146,10 @@ body {
 .column-btn {
     position: fixed;
     bottom: 0;
+    background-color: #f1f1f1;
     /*height: 3.5rem;*/
     width: 100%;
+}
+.border-bottom-dark {
+    border-bottom: 1px solid #c0c4c8 !important;
 }
