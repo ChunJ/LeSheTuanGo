@@ -1,36 +1,33 @@
 ﻿@model LeSheTuanGo.ViewModels.MemberViewModel
 
-<h1>變更地址</h1>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+<div style="border:hidden 5px black; margin:0px 200px; ">
+    <h1 style="text-align: center">變更地址</h1>
+    <hr />
+    <div class="col-md-6 col-md-offset-3" style="margin:0 auto">
         <form asp-action="EditAddress" onsubmit="checkValue()">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="MemberId" />
-            <div class="form-group">
+            <div @*class="form-group"*@>
                 <label asp-for="Address" class="control-label" id="labelAddress"></label>
                 <br />
-                <select id="selectCity" onchange="getDistrict('#selectDistric')" asp-items="ViewBag.City">
+                <select class="form-select form-select-sm" id="selectCity" onchange="getDistrict('#selectDistric')" asp-items="ViewBag.City">
                     <option hidden id="optionCity">請選擇</option>
                 </select>
-                <select id="selectDistric" asp-for="DistrictId">
+                <select id="selectDistric" asp-for="DistrictId" class="form-select" style="margin-left:3px">
                     <option hidden id="optionCity">請選擇</option>
                 </select>
-                <input asp-for="Address" value="" class="form-control" id="txtAddress" onblur="checkAddress()" />
-                <span asp-validation-for="Address" style="color:red" id="spanAddress"></span>
+                <div style="margin-top:3px">
+                    <input asp-for="Address" value="" class="form-control" id="txtAddress" onblur="checkAddress()" />
+                    <span asp-validation-for="Address" style="color:red" id="spanAddress"></span>
+                </div>
             </div><!--Address-->
+            <br />
             <div class="form-group">
                 <input type="submit" value="送出" class="btn btn-primary" />
             </div>
-            <a href="google.com">Hello</a>
         </form>
     </div>
 </div>
-
-<div>
-    <a asp-action="Detail">回上一頁</a>
-</div>
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

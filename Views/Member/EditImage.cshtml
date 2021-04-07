@@ -1,29 +1,25 @@
 ﻿@model LeSheTuanGo.ViewModels.MemberViewModel
 
-<h1>變更照片</h1>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+<div style="border:hidden 5px black; margin:0px 200px; ">
+    <h1 style="text-align: center">變更照片</h1>
+    <hr />
+    <div class="col-md-6 col-md-offset-3" style="margin:0 auto">
         <form asp-action="EditImage" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="MemberId" />
             <div class="form-group">
-                <label asp-for="image" class="control-label" id="labelImage"></label>
                 <input type="file" asp-for="image" id="txtImage" accept=".png, .jpg, .jpeg" onchange="imageShow()" />
                 <span asp-validation-for="image" style="color:red" id="spanImage"></span>
             </div><!--image-->
-            <img src="@Model.ProfileImagePath" width="200" id="uploadPreview" />
+            <img src="@Model.ProfileImagePath" width="300" id="uploadPreview" />
+            <br />
             <div class="form-group">
-                <input type="submit" value="送出" class="btn btn-primary" />
+                <input type="submit" value="送出" class="btn btn-primary" style="width:25%"/>
             </div>
 
 
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Detail">回上一頁</a>
 </div>
 
 @section Scripts {

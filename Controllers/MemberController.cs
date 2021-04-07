@@ -49,7 +49,7 @@ namespace LeSheTuanGo.Controllers
         {
             ViewData["City"] = new SelectList(db.CityRefs, "CityId", "CityName");
             return View();
-        }
+        }//todo 0407 css排版
         [HttpPost]
         public IActionResult Create(MemberViewModel memberData)
         {
@@ -181,17 +181,16 @@ namespace LeSheTuanGo.Controllers
                 {
                     string photoName = Guid.NewGuid().ToString() + ".jpg";
                     using (var photo = new FileStream(
-                        iv_host.WebRootPath + @"\profileImages\" + photoName,
+                        iv_host.WebRootPath + @"\images\ProfileImages\" + photoName,
                         FileMode.Create))
                     {
                         memberEdit.image.CopyTo(photo);
                     }
-                    memberEdit.ProfileImagePath = "/profileImages/" + photoName;
+                    memberEdit.ProfileImagePath = "/images/ProfileImages/" + photoName;
                 }
                 else
                 {
-                    string imageDefalt = "profilePic.jpg";
-                    memberEdit.ProfileImagePath = "/profileImages/" + imageDefalt;
+                    return RedirectToAction("Detail");
                 }
                 #endregion
 
@@ -334,6 +333,7 @@ namespace LeSheTuanGo.Controllers
             if (q == null)
             {
                 returnMessage = "fail";
+                returnMessage = JsonConvert.SerializeObject(returnMessage);
                 return returnMessage;
             }
             if (q.Password == sha256(inputPassword, q.PasswordSalt))
@@ -343,12 +343,22 @@ namespace LeSheTuanGo.Controllers
             returnMessage = JsonConvert.SerializeObject(returnMessage);
             return returnMessage;
         }
-        public IActionResult reSendEmail(string Email)
+        public string reSendEmail(string Email)
         {
+            string message = "";
             var q = db.Members.Where(n => n.Email == Email).FirstOrDefault();
+            if (q == null)
+            {
+                message = "not find";
+                message = JsonConvert.SerializeObject(message);
+                return message;
+            }
             sendEmail(q.Email, q.MemberId, "openMember");
-            return RedirectToAction("Login", "Member");
-        }//ok 差中間跳轉頁面
+            message = "success";
+            message = JsonConvert.SerializeObject(message);
+            return message;
+
+        }
         public void sendEmail(string inputEmail , int inputId , string controllerName)
         {
             string bodyEmail = "";
