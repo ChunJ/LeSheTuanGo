@@ -70,17 +70,17 @@ namespace LeSheTuanGo.Controllers
             {
                 string photoName = Guid.NewGuid().ToString() + ".jpg";
                 using (var photo = new FileStream(
-                    iv_host.WebRootPath + @"\profileImages\" + photoName,
+                    iv_host.WebRootPath + @"\images\ProfileImages\" + photoName,
                     FileMode.Create))
                 {
                     memberData.image.CopyTo(photo);
                 }
-                memberData.ProfileImagePath = "/profileImages/" + photoName;
+                memberData.ProfileImagePath = "/images/ProfileImages/" + photoName;
             }
             else
             {
-                string imageDefalt = "profilePic.jpg";
-                memberData.ProfileImagePath = "/profileImages/" + imageDefalt;
+                string imageDefalt = "guestProfile.jpg";
+                memberData.ProfileImagePath = "/images/ProfileImages/" + imageDefalt;
             }
             #endregion
             #region 地址轉經緯
