@@ -4,16 +4,33 @@
 @{
 }
 <div>
-    商品種類:<input type="text" id="CategoryName" name="CategoryName" />
-     <button onclick="insertCategory()">新增</button>
+    <div class="col-md-4">
+        <label for="CategoryName" class="control-label">商品種類:</label>
+        <input  class="form-control" type="text" id="CategoryName" name="CategoryName" />
+        <button  onclick="insertCategory()" class="btn btn-primary">新增</button>
+    </div>
 </div>
 <div>
     <div class="col-md-4">
-        <label for="distance" class="control-label">商品種類:</label>
-        <select class="form-control" asp-items="ViewBag.Category" id="CategoryID" ></select>
+        <label for="CategoryID" class="control-label">商品種類:</label>
+        <select class="form-control" asp-items="ViewBag.Category" id="CategoryID"></select>
     </div>
-    <div>商品名稱:<input type="text" id="ProductName" name="ProductName" /></div>
-    <div>商品描述:<input type="text" id="ProductDescription" name="ProductDescription" /></div>
+    <div class="col-md-4">
+        <label for="ProductName" class="control-label">商品名稱:</label>
+        <input class="form-control" type="text" id="ProductName" name="ProductName" />
+    </div>
+    <div class="col-md-4">
+        <label for="ProductDescription" class="control-label">商品描述:</label>
+        <input class="form-control" type="text" id="ProductDescription" name="ProductDescription" />
+    </div>
+    <div class="col-md-4">
+        <label for="ProductDescription" class="control-label">圖片:</label>
+        <input class="form-control" type="file" id="path" name="path" accept=".png, .jpg, .jpeg" onchange="imageShow()" />
+    </div>
+    <img width="200" id="uploadPreview" />
+    <div>
+        <button onclick="insertProduct()" class="btn btn-primary">新增商品</button>
+    </div>
 </div>
 <script>
     function insertCategory() {
@@ -21,5 +38,21 @@
             alert(result);
         });
     }
-
+    function insertProduct() {
+        $.get("/Background/InsertProduct", {
+            id: CategoryID.value, name: ProductName.value, des: ProductDescription.value, path: path.value
+            }).done(function (result) {
+            alert(result);
+        });
+    }
+    function imageShow() {
+        var file = document.querySelector("#path").files[0]
+        var newfile = new File([file], new Date().getTime() + ".jpg", { type: "image/jpeg" });
+        var reader = new FileReader();
+        reader.onload = function (oFREvent) {
+            document.querySelector("#uploadPreview").src = oFREvent.target.result;
+        };
+        reader.readAsDataURL(newfile);
+        console.log(reader);
+    }//ok
 </script>
