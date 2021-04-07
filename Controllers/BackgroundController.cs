@@ -1,4 +1,6 @@
 ﻿using LeSheTuanGo.Models;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -11,9 +13,11 @@ namespace LeSheTuanGo.Controllers
     public class BackgroundController : Controller
     {
         private readonly MidtermContext _context;
-        public BackgroundController(MidtermContext context)
+        private IWebHostEnvironment iv_host;
+        public BackgroundController(MidtermContext context, IWebHostEnvironment iv)
         {
             _context = context;
+            iv_host = iv;
 
         }
         public IActionResult Index()
@@ -38,6 +42,17 @@ namespace LeSheTuanGo.Controllers
                 return Content("儲存成功");
             }
 
+        }
+        public ActionResult InsertProduct(string id,string name,string des, IFormFile path)
+        {
+            if (name != "" & des != "")
+            {
+                return Content("請輸入完整的商品資訊");
+            }
+            else
+            {
+                return Content("新增成功");
+            }
         }
     }
 }
