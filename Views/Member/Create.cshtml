@@ -209,14 +209,12 @@
             type: "Get",
             success: function (flag) {
                 let js = JSON.parse(flag);
-                console.log(js);
                 if (js == "Yes") {
                     spanEmail.innerHTML = "此Email已註冊過,或嘗試<a href='/Member/Login'>登入</a>";
                     labelEmail.style.color = "red";
                     spanEmail.style.color = "red";
                     txtEmail.style.borderColor = "red";
                     flagEmail = false;
-
                 } else {
                     spanEmail.innerHTML = "可用";
                     labelEmail.style.color = "green";

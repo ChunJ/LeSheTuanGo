@@ -112,3 +112,22 @@ body {
 .search-item:hover{
     background-color:#f3f3f3
 }
+.main-frame {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+.vh-80 {
+    height: 80vh !important;
+}
+.column-main {
+    height:80%;
+    padding-bottom: 3rem;
+    overflow: auto;
+}
+.column-btn {
+    position: fixed;
+    bottom: 0;
+    height: 3rem;
+    width: 100%;
+}

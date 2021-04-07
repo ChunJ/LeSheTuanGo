@@ -1,21 +1,14 @@
 ﻿@using System;
 @{
+    Layout = "_layoutWide";
     ViewData["Title"] = "搜尋倒垃圾服務";
     int[] sizeNumber = new int[7] { 3, 5, 14, 25, 33, 75, 120 };
 }
-<style>
-    .rem-4{
-        width:4rem;
-        text-align:justify;
-        text-align-last:justify;
-        display:inline-block;
-    }
-</style>
 <div class="row">
     @*search column*@
     <div class="col-4">
         <div class="row">
-            <div class="border-bottom w-100">
+            <div class="border-bottom col-12">
                 <h4>搜尋倒垃圾服務</h4>
                 <a asp-action="HistoryList">歷史訂單</a>
             </div>
@@ -69,7 +62,7 @@
     </div>
     @*result column*@
     <div class="col-4">
-        <div class="border-bottom">
+        <div class="border-bottom col-12">
             <h4>搜尋結果</h4>
         </div>
         <div class=" w-100" id="searchResult">
@@ -84,7 +77,7 @@
     </div>
     @*detail column*@
     <div class="col-4">
-        <div class="border-bottom">
+        <div class="border-bottom col-12">
             <h4>詳細資訊</h4>
         </div>
         <div id="detailView" class="invisible">
