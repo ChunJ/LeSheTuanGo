@@ -120,3 +120,14 @@ body {
 .vh-80 {
     height: 80vh !important;
 }
+.column-main {
+    height:80%;
+    padding-bottom: 3rem;
+    overflow: auto;
+}
+.column-btn {
+    position: fixed;
+    bottom: 0;
+    height: 3rem;
+    width: 100%;
+}
