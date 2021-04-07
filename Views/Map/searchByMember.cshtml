@@ -1,12 +1,25 @@
-﻿@*
+﻿@using Microsoft.AspNetCore.Http;
+@using LeSheTuanGo.Controllers;
+
+@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
+    if (Context.Session.GetInt32(cUtility.Current_User_Id) != null)
+    {
+        ViewData["currentUserId"] = Context.Session.GetInt32(cUtility.Current_User_Id);
+    }
+    else
+    {
+        ViewData["currentUserId"] = 0;
+    }
 }
+
+
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Simple Map</title>
+    @*<title>Simple Map</title>*@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <style type="text/css">
         /* Always set the map height explicitly to define the size of the div
@@ -44,7 +57,7 @@
     <script>
         let map;
 
-        function initMap(lat, lng) {
+        function initMap(lat, lng, add, spotId) {
 
             if (lng !== "l") {
                 var coor = new google.maps.LatLng(lat, lng);
@@ -62,12 +75,22 @@
                     icon: "https://crd-rubbish.epd.ntpc.gov.tw/maps/images/icon/Icon_LegendD.png",
                 });
 
-                new google.maps.Marker({
+                let marker = new google.maps.Marker({
                     position: coor,
                     map,
                     animation: google.maps.Animation.DROP,
-                    title: "collect spot",
+                    title: add,
+                    label: { text: spotId + "", color: "transparent" },
+                    zIndex: 999999999,
                     icon: "https://crd-rubbish.epd.ntpc.gov.tw/maps/images/icon/Icon_LegendC.png",
+                });
+
+                marker.addListener("click", () => {
+                    console.log(marker.title);
+                    console.log(marker.label.text);
+                    document.getElementById(marker.label.text).scrollIntoView();
+                    $(`#${marker.label.text}`).css("background-color", "gray").css("transition-duration", "2s");
+                    setTimeout(() => { $(`#${marker.label.text}`).css("background-color", "transparent").css("transition-duration", "2s"); }, 2000);
                 });
             }
             else {
@@ -88,29 +111,43 @@
                 var markers = [];
                 //console.log(typeof lat);
                 for (let i = 0; i < lat.length; i++) {
-                    var marker = new google.maps.Marker({
+                    let marker = new google.maps.Marker({
                         position: { lat: lat[i]["Latitude"], lng: lat[i]["Longitude"] },
                         map,
                         animation: google.maps.Animation.DROP,
                         title: lat[i]["Address"],
-                        label: { text: "marker" + i, color: "transparent" },
-                        zIndex: -1,
+                        label: { text: lat[i]["GarbageTruckSpotId"] + "", color: "transparent" },
+                        zIndex: 999999999,
                         icon: "https://crd-rubbish.epd.ntpc.gov.tw/maps/images/icon/Icon_LegendC.png",
                     });
                     markers.push(marker);
                     markers[i].addListener("click", () => {
                         console.log(markers[i].title);
                         console.log(markers[i].label.text);
-                        document.getElementById(`marker${i}`).scrollIntoView();
-                        $(`#marker${i}`).css("background-color", "gray").css("transition-duration", "2s");
-                        setTimeout(() => { $(`#marker${i}`).css("background-color", "transparent").css("transition-duration", "2s"); }, 2000);
+                        document.getElementById(lat[i]["GarbageTruckSpotId"]).scrollIntoView();
+                        $(`#${lat[i]["GarbageTruckSpotId"]}`).css("background-color", "gray").css("transition-duration", "2s");
+                        setTimeout(() => { $(`#${lat[i]["GarbageTruckSpotId"]}`).css("background-color", "transparent").css("transition-duration", "2s"); }, 2000);
                     });
                 }
             }
         }
     </script>
 </head>
-<body onload="init300M2()">
+<body onload="(() => {
+        if (currentUser == 0) {
+            geoFindMe();
+            console.log('geoFindMe()');
+        } else {
+            init300M('', 'mem');
+            console.log('init300M(, mem)');
+        }
+    })()">
+    @*init300M2()*@
+
+    <button id="find-me" onclick="geoFindMe()">查詢目前位置</button>
+    <p id="status"></p>
+    <a id="map-link" href="" target="_blank"></a>  @*target=_blank will open a new tab*@
+
     @*<button onclick="init100M()">100M</button>*@
     <div id="map" style="height: 50%;width: 100%;"></div>
     @*<button onclick="clearContent()">100M</button>*@
@@ -216,19 +253,21 @@
         let table100m = document.getElementById("table100m");
         let tbodycont = document.getElementById("content");
 
-        var latNow;
-        var lngNow;
+        var currentUser = @ViewData["currentUserId"];
+        var latNow = 0;
+        var lngNow = 0;
         var js;
         var js0;  //store material from backend
 
         var timeOrder = -1;
         var distanceOrder = -1;
 
-        function init300M(address) {
+        function init300M(address, source) {
             $.ajax({
-                url: "/map/spotlessthan300m2?address=" + address,
+                url: "/map/spotlessthan300m2?address=" + address + "&lat=" + latNow + "&lng=" + lngNow + "&memId=" + currentUser + "&type=" + source,
                 type: "GET",
                 success: function (listJsonString) {
+                    console.log(this.url);
                     js0 = JSON.parse(listJsonString);
                     //js = js.sort(function (a, b) {
                     //    return a.ArrivalTime < b.ArrivalTime ? -1 : 1;
@@ -243,7 +282,7 @@
                     //console.log(js[0]["addLng"]);
                     for (let i = 0; i < js.length; i++) {
                         tbodycont.innerHTML +=
-                            '<tr id="marker' + i + '" onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ')">'
+                            '<tr id="' + js[i]["GarbageTruckSpotId"] + '" onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + ')">'
                             + '<th>' + js[i]["Address"] + '</th>'
                             + '<th>' + js[i]["ArrivalTime"] + '</th>'
                             + '<th>' + js[i]["distance"] + '</th>'
@@ -272,7 +311,7 @@
             });
             for (let i = 0; i < js.length; i++) {
                 ele.innerHTML +=
-                    '<tr onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ')">'
+                    '<tr id="' + js[i]["GarbageTruckSpotId"] + '" onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + ')">'
                     + '<th>' + js[i]["Address"] + '</th>'
                     + '<th>' + js[i]["ArrivalTime"] + '</th>'
                     + '<th>' + js[i]["distance"] + '</th>'
@@ -301,7 +340,7 @@
             });
             for (let i = 0; i < js.length; i++) {
                 ele.innerHTML +=
-                    '<tr onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ')">'
+                    '<tr id="' + js[i]["GarbageTruckSpotId"] + '" onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + ')">'
                     + '<th>' + js[i]["Address"] + '</th>'
                     + '<th>' + js[i]["ArrivalTime"] + '</th>'
                     + '<th>' + js[i]["distance"] + '</th>'
@@ -330,7 +369,7 @@
             console.log(typeof $('#selectDistric :selected').text());
             console.log(typeof $('#txtAddress').val());
 
-            init300M($('#selectCity :selected').text() + $('#selectDistric :selected').text() + $('#txtAddress').val());
+            init300M($('#selectCity :selected').text() + $('#selectDistric :selected').text() + $('#txtAddress').val(),'add');
         }
 
         function filter() {
@@ -343,9 +382,12 @@
             document.getElementById("content").remove();
             var ele = document.createElement("tbody");
             ele.id = "content";
+            initMap(js, "l");
+            console.log('filterinit');
             for (let i = 0; i < js.length; i++) {
                 ele.innerHTML +=
-                    '<tr onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ')">'
+                    '<tr id="' + js[i]["GarbageTruckSpotId"] + '" onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + ')">'
+                    //'<tr onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ')">'
                     + '<th>' + js[i]["Address"] + '</th>'
                     + '<th>' + js[i]["ArrivalTime"] + '</th>'
                     + '<th>' + js[i]["distance"] + '</th>'
@@ -355,6 +397,8 @@
             table100m.appendChild(ele);
             document.getElementById("thOrderTime").innerText = "到達時間";
             document.getElementById("thOrderDistance").innerText = "距離（公尺）";
+
+
 
             console.log(timeStart);
             console.log(timeEnd);
@@ -371,6 +415,43 @@
             console.log(event);
             console.log("click");
         }
+
+        function geoFindMe() {
+
+            const status = document.querySelector('#status');
+            const mapLink = document.querySelector('#map-link');
+
+            mapLink.href = '';
+            mapLink.textContent = '';
+
+            function success(position) {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+
+                latNow = latitude;
+                lngNow = longitude;
+
+                status.textContent = '定位完成';
+                mapLink.href = `https://www.openstreetmap.org/#map=18/${latitude}/${longitude}`;
+                mapLink.textContent = `緯度: ${latitude.toFixed(7)}°, 經度: ${longitude.toFixed(7)}°`;
+
+                init300M('','nav');
+            }
+
+            function error() {
+                status.textContent = '無法取得位置';
+            }
+
+            if (!navigator.geolocation) {
+                status.textContent = '您的瀏覽器不支援定位功能';
+            } else {
+                status.textContent = '定位中...';
+                navigator.geolocation.getCurrentPosition(success, error);
+            }
+
+        }
+
+                            //document.querySelector('#find-me').addEventListener('click', geoFindMe);
     </script>
 </body>
 </html>

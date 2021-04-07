@@ -29,6 +29,7 @@ namespace LeSheTuanGo.Controllers
 
         public IActionResult search()
         {
+            ViewData["CityId"] = new SelectList(iv_context.CityRefs, "CityId", "CityName");
             return View();
         }
         
@@ -49,16 +50,34 @@ namespace LeSheTuanGo.Controllers
             return listJsonString;
         }
 
-        public string spotLessThan300M2(string address)
+        public string spotLessThan300M2(string address, decimal lat = 0, decimal lng = 0, int memId = 0, string type = "")
         {
-            var addressLoc = cUtility.addressToLatlong(address);
+            decimal addressLat;
+            decimal addressLng;
 
-            var addressLat = addressLoc[0];
-            var addressLng = addressLoc[1];
+            if (type == "mem")
+            {
+                addressLat = iv_context.Members.Where(m => m.MemberId == memId).First().Latitude;
+                addressLng = iv_context.Members.Where(m => m.MemberId == memId).First().Longitude;
+
+            }
+            else if (type == "nav")
+            {
+                addressLat = lat;
+                addressLng = lng;
+            }
+            else  //type=="add"
+            {
+                var addressLoc = cUtility.addressToLatlong(address);
+
+                addressLat = addressLoc[0];
+                addressLng = addressLoc[1];
+            }
+            
 
             var result = iv_context.GarbageTruckSpots.ToList();
 
-            var q = from i in result select new { i.Address, i.ArrivalTime, i.Latitude, i.Longitude, distance = cUtility.distanceBetweenTwoSpots(addressLat, addressLng, i.Latitude, i.Longitude), addLat=addressLat, addLng=addressLng };
+            var q = from i in result select new { i.Address, i.ArrivalTime, i.Latitude, i.Longitude, distance = cUtility.distanceBetweenTwoSpots(addressLat, addressLng, i.Latitude, i.Longitude), addLat=addressLat, addLng=addressLng, i.GarbageTruckSpotId };
             var qList = q.Where(q => q.distance <= 300 && q.distance >= 0).OrderBy(q => q.distance).ToList();
 
             string listJsonString = JsonConvert.SerializeObject(qList);
