@@ -7,57 +7,60 @@
 <div class="row">
     @*search column*@
     <div class="col-4">
-        <div class="row">
-            <div class="border-bottom col-12">
-                <h4>搜尋倒垃圾服務</h4>
-                <a asp-action="HistoryList">歷史訂單</a>
-            </div>
-            <div class="col-6">
-                <div class="form-group">
-                    <label>城市</label>
-                    <select id="CityId" class="form-control" onchange="getDistrict('#DistrictId')" asp-items="ViewBag.City"></select>
-                </div>
-            </div>
-            <div class="col-6">
-                <div class="form-group">
-                    <label>鄉鎮市區</label>
-                    <select name="DistrictId" id="DistrictId" class="form-control"></select>
-                </div>
-            </div>
-            <div class="col-12">
-                <div class="form-group">
-                    <label>地址</label>
-                    <input class="form-control" id="addressInput" type="text" value=@ViewData["Address"] />
-                </div>
-            </div>
-            <div class="col-6">
-                <div class="form-group">
-                    <label for="distance" class="control-label">距離</label>
-                    <select class="form-control" asp-items="ViewBag.GoRange" id="distance"></select>
-                </div>
-            </div>
-            <div class="col-12">
-                <label class="w-100">垃圾袋尺寸</label>
-                @for (int i = 0; i < sizeNumber.Length; i++) {
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" onchange="sizeInputSwitch1(@i)">
-                        <label class="form-check-label">@sizeNumber[i]</label>
+        <div class="border-bottom">
+            <h4>搜尋倒垃圾服務</h4>
+        </div>
+        <div class="column-main">
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>城市</label>
+                        <select id="CityId" class="form-control" onchange="getDistrict('#DistrictId')" asp-items="ViewBag.City"></select>
                     </div>
-                }
-            </div>
-            <div class="col-6" id="sizeInputGroup1">
-                @for (int i = 0; i < sizeNumber.Length; i++) {
-                    <div class="form-group d-none">
-                        <label>@sizeNumber[i]公升袋數</label>
-                        <input class="form-control" type="number" value="0" min="0" />
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>鄉鎮市區</label>
+                        <select name="DistrictId" id="DistrictId" class="form-control"></select>
                     </div>
-                }
+                </div>
+                <div class="col-12">
+                    <div class="form-group">
+                        <label>地址</label>
+                        <input class="form-control" id="addressInput" type="text" value=@ViewData["Address"] />
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label for="distance" class="control-label">距離</label>
+                        <select class="form-control" asp-items="ViewBag.GoRange" id="distance"></select>
+                    </div>
+                    <label>垃圾袋尺寸及袋數</label>
+                    <div id="sizeInputGroup1">
+                        @for (int i = 0; i < sizeNumber.Length; i++) {
+                            <div class="form-group">
+                                <label>@sizeNumber[i]公升</label>
+                                <input class="form-control" type="number" value="0" min="0" />
+                            </div>
+                        }
+                    </div>
+                </div>
+                @*<div class="col-12">
+                    <label class="w-100">垃圾袋尺寸</label>
+                    @for (int i = 0; i < sizeNumber.Length; i++) {
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" onchange="sizeInputSwitch1(@i)">
+                            <label class="form-check-label">@sizeNumber[i]</label>
+                        </div>
+                    }
+                </div>*@
             </div>
-            <div class="col-12">
-                <button class="btn btn-primary" onclick="searchStart()">搜尋</button>
-                <button class="btn btn-primary" onclick="test()">測試</button>
-                <button class="btn btn-primary" onclick="fillDemo()">DEMO</button>
-            </div>
+        </div>
+        <div class="column-btn">
+            <button class="btn btn-primary" onclick="searchStart()">搜尋</button>
+            <a class="btn btn-primary" href="/ChatMessageRecords/Index">查看紀錄</a>
+            <button class="btn btn-primary" onclick="test()">測試</button>
+            <button class="btn btn-primary" onclick="fillDemo()">DEMO</button>
         </div>
     </div>
     @*result column*@
@@ -77,41 +80,46 @@
     </div>
     @*detail column*@
     <div class="col-4">
-        <div class="border-bottom col-12">
-            <h4>詳細資訊</h4>
-        </div>
-        <div id="detailView" class="invisible">
-            <div id="map" style="height: 16rem;width: 100%;"></div>
-            <div id="detailInfo">
-                <div class="w-100"><div class="rem-4">地點</div><span class="px-1">:</span><span id="info">台北市大安區</span></div>
-                <div class="w-100"><div class="rem-4">距離</div><span class="px-1">:</span><span id="info">532</span> 公尺</div>
-                <div class="w-100"><div class="rem-4">截止時間</div><span class="px-1">:</span><span id="info">2021年05月20號</span></div>
+        <form method="post" action="/ServiceUse/Join">
+            <div class="border-bottom">
+                <h4>詳細資訊</h4>
             </div>
-            <form method="post" action="/ServiceUse/Join">
-                <div id="formInputHalf">
-                    <input hidden name="GarbageServiceOfferId" value="" />
-                    <input hidden name="ComeDistrictId" value="" />
-                    <input hidden name="ComeAddress" value="" />
-                    <div class="form-group form-check">
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="checkbox" name="NeedCome" value="true"/>
-                            是否需要到府服務?
-                        </label>
+            <div id="detailView" class="invisible">
+                <div class="column-main">
+                    <div id="map" style="height: 16rem;width: 100%;"></div>
+                    <div id="detailInfo">
+                        <div class="w-100"><div class="rem-4">地點</div><span class="px-1">:</span><span id="info">台北市大安區</span></div>
+                        <div class="w-100"><div class="rem-4">距離</div><span class="px-1">:</span><span id="info">532</span> 公尺</div>
+                        <div class="w-100"><div class="rem-4">截止時間</div><span class="px-1">:</span><span id="info">2021年05月20號</span></div>
+                    </div>
+
+                    <div id="formInputHalf">
+                        <input hidden name="GarbageServiceOfferId" value="" />
+                        <input hidden name="ComeDistrictId" value="" />
+                        <input hidden name="ComeAddress" value="" />
+                        <div class="form-group form-check">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="checkbox" name="NeedCome" value="true" />
+                                是否需要到府服務?
+                            </label>
+                        </div>
+                    </div>
+                    <div class="w-50" id="sizeInputGroup2">
+                        @for (int i = 0; i < sizeNumber.Length; i++) {
+                            <div class="form-group d-none">
+                                <label>@sizeNumber[i] 公升</label>
+                                <input class="form-control" name="@("L"+sizeNumber[i]+"count")" type="number" min="0" value="" />
+                            </div>
+                        }
                     </div>
                 </div>
-                <div class="w-50" id="sizeInputGroup2">
-                    @for (int i = 0; i < sizeNumber.Length; i++) {
-                        <div class="form-group d-none">
-                            <label>@sizeNumber[i] 公升</label>
-                            <input class="form-control" name="@("L"+sizeNumber[i]+"count")" type="number" min="0" value="" />
-                        </div>
-                    }
+                <div class="column-btn">
+                    <div class="form-group">
+                        <input type="submit" value="加入" class="btn btn-primary" />
+                    </div>
                 </div>
-                <div class="form-group">
-                    <input type="submit" value="加入" class="btn btn-primary" />
-                </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -153,15 +161,15 @@
             addressIn.value = "信義路四段2號";
             distS.value = 5;
         }
-        function sizeInputSwitch1(id) {
-            if (event.target.checked == true) {
-                sizeInputG1[id].classList.remove("d-none");
-                sizeCountG1[id].value = 1;
-            } else {
-                sizeInputG1[id].classList.add("d-none");
-                sizeCountG1[id].value = 0;
-            }
-        }
+        //function sizeInputSwitch1(id) {
+        //    if (event.target.checked == true) {
+        //        sizeInputG1[id].classList.remove("d-none");
+        //        sizeCountG1[id].value = 1;
+        //    } else {
+        //        sizeInputG1[id].classList.add("d-none");
+        //        sizeCountG1[id].value = 0;
+        //    }
+        //}
         function searchStart() {
             detailView.classList.add("invisible");
         //send new request if address is changed

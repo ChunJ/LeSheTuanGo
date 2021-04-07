@@ -1,18 +1,17 @@
 ﻿@model IEnumerable<LeSheTuanGo.Models.ChatMessageRecord>
 
 @{
+    Layout = "_layoutWide";
     ViewData["Title"] = "Index";
 }
 
 <style>
-
     #chat {
         position: relative;
         width: 100%;
         height: 95%;
         overflow: auto;
     }
-
     #inputbox {
         position: absolute;
         bottom: 0;
@@ -25,16 +24,16 @@
         position: relative;
     }
 
-        .self > div div {
-            display: inline-block;
-            word-break: break-all;
-            background: #3F51B5 none repeat scroll 0 0;
-            border-radius: 3px;
-            font-size: 14px;
-            margin: 0;
-            color: #fff;
-            padding: 5px 10px 5px 12px;
-        }
+    .self > div div {
+        display: inline-block;
+        word-break: break-all;
+        background: #3F51B5 none repeat scroll 0 0;
+        border-radius: 3px;
+        font-size: 14px;
+        margin: 0;
+        color: #fff;
+        padding: 5px 10px 5px 12px;
+    }
 
     .other {
         float: left;
@@ -42,16 +41,16 @@
         width: 60%;
     }
 
-        .other > div div {
-            display: inline-block;
-            word-break: break-all;
-            background: #e4e8fb none repeat scroll 0 0;
-            border-radius: 3px;
-            color: #646464;
-            font-size: 14px;
-            margin: 0;
-            padding: 5px 10px 5px 12px;
-        }
+    .other > div div {
+        display: inline-block;
+        word-break: break-all;
+        background: #e4e8fb none repeat scroll 0 0;
+        border-radius: 3px;
+        color: #646464;
+        font-size: 14px;
+        margin: 0;
+        padding: 5px 10px 5px 12px;
+    }
 </style>
 <link href="~/css/chat.css" rel="stylesheet" />
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" type="text/css" rel="stylesheet" />

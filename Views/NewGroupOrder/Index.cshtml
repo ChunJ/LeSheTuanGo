@@ -3,90 +3,86 @@
     ViewData["Title"] = "新增購物團";
 }
 <form asp-action="Index">
-    <div class="row column-main">
+    <div class="column-main">
+    <h1>新增購物團</h1>
+    <hr />
+        <div class="row w-50">
+            <div class="col-6">
+                <div class="form-group">
+                    <label>商品類別</label>
+                    <select id="CategoryId" class="form-control" onchange="getProduct('#ProductId')" asp-items="ViewBag.Category"></select>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="ProductId">商品名稱</label>
+                    <select asp-for="ProductId" class="form-control"></select>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label>城市</label>
+                    <select id="CityId" class="form-control" onchange="getDistrict('#DistrictId')" asp-items="ViewBag.City"></select>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="DistrictId">鄉鎮市區</label>
+                    <select asp-for="DistrictId" class="form-control"></select>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group">
+                    <label asp-for="Address">地址</label>
+                    <input asp-for="Address" value=@ViewData["Address"] class="form-control" />
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label asp-for="MaxCount">目標購買數量</label>
+                    <input asp-for="MaxCount" class="form-control" />
+                    <span asp-validation-for="MaxCount" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label asp-for="UnitPrice">每單位價格</label>
+                    <input asp-for="UnitPrice" class="form-control" />
+                    <span asp-validation-for="UnitPrice" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label asp-for="EndTime">截止時間</label>
+                    <input asp-for="EndTime" class="form-control" />
+                    <span asp-validation-for="EndTime" class="text-danger"></span>
+                </div>
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="CanGo" />
+                        是否提供外送服務?
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label asp-for="GoRangeId">外送距離限制</label>
+                    <select asp-for="GoRangeId" class="form-control" asp-items="ViewBag.GoRange"></select>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group">
+                    <label asp-for="OrderDescription">團購說明</label>
+                    <textarea id="OrderDescription" name="OrderDescription" rows="7" class="form-control" value=""></textarea>
+                    <span asp-validation-for="OrderDescription" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row column-btn">
         <div class="col-12">
-            <h1>新增購物團</h1>
-            <hr />
-
-            <div class="row">
-                <div class="col-6">
-                    <div class="form-group">
-                        <label>商品類別</label>
-                        <select id="CategoryId" class="form-control" onchange="getProduct('#ProductId')" asp-items="ViewBag.Category"></select>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                        <label for="ProductId">商品名稱</label>
-                        <select asp-for="ProductId" class="form-control"></select>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                        <label>城市</label>
-                        <select id="CityId" class="form-control" onchange="getDistrict('#DistrictId')" asp-items="ViewBag.City"></select>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                        <label for="DistrictId">鄉鎮市區</label>
-                        <select asp-for="DistrictId" class="form-control"></select>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <div class="form-group">
-                        <label asp-for="Address">地址</label>
-                        <input asp-for="Address" value=@ViewData["Address"] class="form-control" />
-                        <span asp-validation-for="Address" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                        <label asp-for="MaxCount">目標購買數量</label>
-                        <input asp-for="MaxCount" class="form-control" />
-                        <span asp-validation-for="MaxCount" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                        <label asp-for="UnitPrice">每單位價格</label>
-                        <input asp-for="UnitPrice" class="form-control" />
-                        <span asp-validation-for="UnitPrice" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                        <label asp-for="EndTime">截止時間</label>
-                        <input asp-for="EndTime" class="form-control" />
-                        <span asp-validation-for="EndTime" class="text-danger"></span>
-                    </div>
-                    <div class="form-group form-check">
-                        <label class="form-check-label">
-                            <input class="form-check-input" asp-for="CanGo" />
-                            是否提供外送服務?
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="GoRangeId">外送距離限制</label>
-                        <select asp-for="GoRangeId" class="form-control" asp-items="ViewBag.GoRange"></select>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <div class="form-group">
-                        <label asp-for="OrderDescription">團購說明</label>
-                        <textarea id="OrderDescription" name="OrderDescription" rows="7" class="form-control" value=""></textarea>
-                        <span asp-validation-for="OrderDescription" class="text-danger"></span>
-                    </div>
-                </div>
-            </div>
-            <div class="row column-btn">
-                <div class="col-12">
-                    <div class="form-group">
-                        <input type="submit" value="Create" class="btn btn-primary" />
-                        <input type="button" value="test" class="btn btn-primary" onclick="test();" />
-                    </div>
-                </div>
-            </div>
+            <input type="submit" value="新增" class="btn btn-primary" />
+            <a class="btn btn-primary" href="/ChatMessageRecords/Index">查看紀錄</a>
+            <input type="button" value="test" class="btn btn-primary" onclick="test();" />
         </div>
     </div>
 </form>

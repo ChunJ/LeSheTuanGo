@@ -18,24 +18,6 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <style>
-        .top-bar {
-            background-color: #4cabb1;
-            position:fixed;
-            top:0;
-            left:0;
-            right:0;
-            height:2.5rem;
-            z-index:500;
-        }
-        .mainPT{
-            padding-top:2.5rem;
-        }
-        .rem-4 {
-            width: 4rem;
-            text-align: justify;
-            text-align-last: justify;
-            display: inline-block;
-        }
     </style>
 </head>
 <body>
@@ -44,10 +26,24 @@
             <nav class="nav navbar-light mb-3">
                 <a class="navbar-brand text-white" asp-area="" asp-controller="Home" asp-action="Index">樂社團GO</a>
                 <a class="nav-link text-white" asp-area="" asp-controller="Map" asp-action="searchByMember">集垃地圖</a>
-                <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="OrderNavi">團購</a>
-                <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="ServiceNavi">倒垃圾</a>
-                <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Privacy">關於</a>
-                <a class="nav-link text-white" asp-area="" asp-controller="ChatMessageRecords" asp-action="Index">聊天測試用</a>
+                <div class="dropdown">
+                    <a class="nav-link text-white" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        團購
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <a class="dropdown-item" href="/NewGroupOrder/Index">開新團購</a>
+                        <a class="dropdown-item" href="/Buy/Index">加入團購</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <a class="nav-link text-white" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        倒垃圾
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <a class="dropdown-item" href="/GarbageServiceOffers/Create">幫人倒垃圾</a>
+                        <a class="dropdown-item" href="/ServiceUse/Index">請人倒垃圾</a>
+                    </div>
+                </div>
                 <div class="flex-grow-1">
                     <div class="nav justify-content-end align-items-center h-100">
                         <div class="nav-item dropdown mx-1">
@@ -83,9 +79,7 @@
                                     <a class="dropdown-item" asp-controller="Member" asp-action="Create">註冊</a>
                                 } else {
                                     <a class="dropdown-item" asp-controller="Member" asp-action="Detail">我的帳戶</a>
-                                    <a class="dropdown-item" href="#">設定</a>
-                                    <a class="dropdown-item" href="#">購物團紀錄</a>
-                                    <a class="dropdown-item" href="#">服務委託紀錄</a>
+                                    <a class="dropdown-item" href="/ChatMessageRecords/Index">歷史紀錄</a>
                                     <a class="dropdown-item" asp-controller="Background" asp-action="Index">後臺管理</a>
                                     <a class="dropdown-item" asp-action="Logout" asp-controller="Member">登出</a>
                                 }
