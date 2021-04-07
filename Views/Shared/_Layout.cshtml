@@ -20,12 +20,21 @@
     <style>
         .top-bar {
             background-color: #4cabb1;
+            position:fixed;
+            top:0;
+            left:0;
+            right:0;
+            height:2.5rem;
+            z-index:500;
+        }
+        .mainPT{
+            padding-top:2.5rem;
         }
     </style>
 </head>
 <body>
     <header class="top-bar">
-        <div class="container">
+        <div class="main-frame">
             <nav class="nav navbar-light mb-3">
                 <a class="navbar-brand text-white" asp-area="" asp-controller="Home" asp-action="Index">樂社團GO</a>
                 <a class="nav-link text-white" asp-area="" asp-controller="Map" asp-action="searchByMember">集垃地圖</a>
@@ -38,7 +47,7 @@
                         <div class="nav-item dropdown mx-1">
                             <button class="border-0 bg-transparent" type="button" id="alertDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <div class="position-relative">
-                                    <img class="align-middle" src="~/images/bell.svg" />
+                                    <img class="align-middle" src="~/images/Others/bell.svg" />
                                     <span class="indicator">3</span>
                                 </div>
                             </button>
@@ -60,8 +69,7 @@
                         <div class="nav-item dropdown mx-1">
                             <button class="border-0 bg-transparent" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <img class="rounded-circle profile" src="@ViewData["userProfileImageToShow"]" />
-                                <font color="#ffffff">@ViewData["userNameToDisplay"]</font>
-                                
+                                <span class="text-white">@ViewData["userNameToDisplay"]</span>
                             </button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
                                 @if (Context.Session.GetInt32(cUtility.Current_User_Id) == null) {
@@ -81,9 +89,8 @@
                 </div>
             </nav>
         </div>
-
     </header>
-    <div class="main-frame">
+    <div class="main-frame mainPT">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
