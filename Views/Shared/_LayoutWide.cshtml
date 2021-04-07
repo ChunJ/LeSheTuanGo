@@ -18,12 +18,11 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <style>
-        
     </style>
 </head>
 <body>
     <header class="top-bar">
-        <div class="container">
+        <div class="main-frame">
             <nav class="nav navbar-light mb-3">
                 <a class="navbar-brand text-white" asp-area="" asp-controller="Home" asp-action="Index">樂社團GO</a>
                 <a class="nav-link text-white" asp-area="" asp-controller="Map" asp-action="searchByMember">集垃地圖</a>
@@ -91,7 +90,7 @@
             </nav>
         </div>
     </header>
-    <div class="container mainPT vh-100">
+    <div class="main-frame mainPT vh-100">
         <main role="main" class="h-100 pb-3 pt-1">
             @RenderBody()
         </main>

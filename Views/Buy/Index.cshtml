@@ -1,19 +1,12 @@
 ﻿@{
+    Layout = "_layoutWide";
     ViewData["Title"] = "搜尋團購";
 }
-<style>
-    .rem-4 {
-        width: 4rem;
-        text-align: justify;
-        text-align-last: justify;
-        display: inline-block;
-    }
-</style>
 <div class="row">
     @*search column*@
     <div class="col-4">
         <div class="row">
-            <div class="border-bottom w-100">
+            <div class="border-bottom col-12">
                 <h4>搜尋團購</h4>
                 <a asp-action="HistoryList">歷史訂單</a>
             </div>
@@ -62,14 +55,15 @@
             </div>
             <div class="col-12">
                 <button class="btn btn-primary" onclick="searchStart()">搜尋</button>
+                <a class="btn btn-primary" href="/ChatMessageRecords/Index">查看紀錄</a>
                 <button class="btn btn-primary" onclick="fillDemo()">DEMO</button>
                 <button class="btn btn-primary" onclick="test()">測試</button>
             </div>
         </div>
     </div>
     @*result column*@
-    <div class="col-4">
-        <div class="border-bottom">
+    <div class="col-3">
+        <div class="border-bottom col-12">
             <h4>搜尋結果</h4>
         </div>
         <div class=" w-100" id="searchResult">
@@ -83,8 +77,8 @@
         </div>
     </div>
     @*detail column*@
-    <div class="col-4">
-        <div class="border-bottom">
+    <div class="col-5">
+        <div class="border-bottom col-12">
             <h4>詳細資訊</h4>
         </div>
         <div id="detailView" class="invisible">

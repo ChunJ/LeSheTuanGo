@@ -2,29 +2,27 @@
 @{
     ViewData["Title"] = "Login";
 }
-
-<h1>登入</h1>
-
-<hr />
-<div class="row">
-    <div class="col-md-4">
+<div style="border:hidden 5px black; margin:0px 100px; ">
+    <h1 style="text-align: center">登入</h1>
+    <hr />
+    <div class="col-md-6 col-md-offset-3" style="margin:0 auto">
         <form asp-action="Login" id="form">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input hidden name="from" value="@ViewData["from"]"/>
+            <input hidden name="from" value="@ViewData["from"]" />
             <div class="form-group">
                 <label asp-for="Email" class="control-label" id="labelEmail"></label>
-                <input asp-for="Email" class="form-control" id="txtEmail"/>
+                <input asp-for="Email" class="form-control" id="txtEmail" />
                 <span asp-validation-for="Email" class="text-danger" id="spanEmail"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Password" class="control-label" id="labelPassword"></label>
-                <input asp-for="Password" class="form-control" id="txtPassword"/>
+                <input asp-for="Password" class="form-control" id="txtPassword" />
                 <span asp-validation-for="Password" class="text-danger" id="spanPassword"></span>
             </div>
             <div class="form-group">
                 <input type="button" value="登入" class="btn btn-primary" onclick="checkLogin()" />
-                <a asp-action="forgetPassword" type="button" class="btn btn-primary" >忘記密碼</a>
-                <a asp-action="Create" type="button" class="btn btn-primary" >註冊</a>
+                <a asp-action="forgetPassword" type="button" class="btn btn-primary">忘記密碼</a>
+                <a asp-action="Create" type="button" class="btn btn-primary">註冊</a>
             </div>
             @*<div class="g-recaptcha" data-sitekey="6LdLl4UaAAAAAJHIzFhcfwmN2Gui1oNs9L-3lEJM"></div>*@
             <div class="form-group">
@@ -72,7 +70,7 @@
                     labelPassword.style.color = "red";
                     txtPassword.style.borderColor = "red";
                 } else if (js == "not Validate") {
-                    spanEmail.innerHTML = "Email驗證尚未通過,或<a href='/Member/reSendEmail?Email=" + Email.value+"'> 重新發送驗證信</a >? ";
+                    spanEmail.innerHTML = "Email驗證尚未通過,或<a onclick='reSendEmail()' href='#'>重新發送驗證信</a >?";
                     spanPassword.innerHTML = "";
                     labelEmail.style.color = "red";
                     txtEmail.style.borderColor = "red";
@@ -95,7 +93,7 @@
             labelEmail.style.color = "red";
             txtEmail.style.borderColor = "red";
             return false;
-        } 
+        }
         if (txtPassword.value == "") {
             spanPassword.innerHTML = "不可為空";
             labelPassword.style.color = "red";
@@ -104,7 +102,19 @@
         } else
             return true;
     }//ok
-
+    function reSendEmail() {
+        $.ajax({
+            url: "/Member/reSendEmail?Email=" + txtEmail.value,
+            type: "Get",
+            success: function (resalt) {
+                let js = JSON.parse(resalt);
+                if (js == "not find")
+                    alert("查無Email");
+                else if (js == "success")
+                    alert("已寄出!");
+            }
+        })
+    }//ok
     //demo
     function demo() {
         txtEmail.value = "YuChen789@gmail.com";

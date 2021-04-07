@@ -1,62 +1,20 @@
 ﻿@model IEnumerable<LeSheTuanGo.Models.ChatMessageRecord>
 
 @{
+    Layout = "_layoutWide";
     ViewData["Title"] = "Index";
 }
 
 <style>
-    #wrap {
-        display: flex;
-        height: 80vh;
-    }
-
-    #link {
-        border: 5px solid red;
-        background-color: green;
-        flex: 1 1 25%;
-    }
-    #link_select div{
-        border-bottom:dashed 1px;
-    }
-
-    #link_btn{
-        display:flex;
-        padding:3px;
-        flex-direction:column;
-    }
-
-    #link_btn button{
-        display:block;
-        margin-top:5px;
-    }
-
-    #chatroom {
-        position: relative;
-        border: 5px solid red;
-        background-color: aqua;
-        flex: 1 1 50%;
-    }
-    .chatheader{
-        text-align:center;
-        border-bottom:solid;
-    }
-
     #chat {
         position: relative;
         width: 100%;
         height: 95%;
         overflow: auto;
     }
-
     #inputbox {
         position: absolute;
         bottom: 0;
-    }
-
-    #detail {
-        border: 5px solid red;
-        background-color: yellow;
-        flex: 1 1 25%;
     }
 
     .self {
@@ -66,16 +24,16 @@
         position: relative;
     }
 
-        .self > div div {
-            display: inline-block;
-            word-break: break-all;
-            background: #3F51B5 none repeat scroll 0 0;
-            border-radius: 3px;
-            font-size: 14px;
-            margin: 0;
-            color: #fff;
-            padding: 5px 10px 5px 12px;
-        }
+    .self > div div {
+        display: inline-block;
+        word-break: break-all;
+        background: #3F51B5 none repeat scroll 0 0;
+        border-radius: 3px;
+        font-size: 14px;
+        margin: 0;
+        color: #fff;
+        padding: 5px 10px 5px 12px;
+    }
 
     .other {
         float: left;
@@ -83,61 +41,75 @@
         width: 60%;
     }
 
-        .other > div div {
-            display: inline-block;
-            word-break: break-all;
-            background: #e4e8fb none repeat scroll 0 0;
-            border-radius: 3px;
-            color: #646464;
-            font-size: 14px;
-            margin: 0;
-            padding: 5px 10px 5px 12px;
-        }
+    .other > div div {
+        display: inline-block;
+        word-break: break-all;
+        background: #e4e8fb none repeat scroll 0 0;
+        border-radius: 3px;
+        color: #646464;
+        font-size: 14px;
+        margin: 0;
+        padding: 5px 10px 5px 12px;
+    }
 </style>
-
+<link href="~/css/chat.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" type="text/css" rel="stylesheet" />
 <h2>會員中心</h2>
-<div id="wrap">
-    <div id="link">
-        <div id="link_select">
-            <div>
-                <label>選擇團別：</label>
-                <label><input type="radio" name="grouptype" value="1">團購團</label>
-                <label><input type="radio" name="grouptype" value="2">垃圾團</label>
-                <input type="hidden" id="rec_grouptype" value="0" />
+
+    <div class="row" style="width:98vw;height:95%;border:1px solid">
+        @*column1*@
+        <div class="col-3">
+            <div id="link_select" class="inbox_people">
+                <div class="headind_srch">
+                    <div>
+                        <label>選擇團別：</label>
+                        <label><input type="radio" name="grouptype" value="1">團購團</label>
+                        <label><input type="radio" name="grouptype" value="2">垃圾團</label>
+                        <input type="hidden" id="rec_grouptype" value="0" />
+                    </div>
+                    <hr />
+                    <div>
+                        <label>發起人：</label>
+                        <label><input type="radio" name="selfother" value="0" checked>全部顯示</label>
+                        <label><input type="radio" name="selfother" value="1">我發起的</label>
+                        <label><input type="radio" name="selfother" value="2">我加入的</label>
+                        <input type="hidden" id="rec_selfother" value="0" />
+                    </div>
+                    <hr />
+                    <div>
+                        <label>案件狀態：</label>
+                        <label><input type="radio" name="onoff" value="0" checked>全部顯示</label>
+                        <label><input type="radio" name="onoff" value="1">進行中</label>
+                        <label><input type="radio" name="onoff" value="2">已結束</label>
+                        <input type="hidden" id="rec_onoff" value="0" />
+                    </div>
+                </div>
+                @*<hr />*@
+                <div id="link_btn" class="d-flex flex-column p-1 inbox_chat">
+
+                </div>
             </div>
-            <div>
-                <label>發起人：</label>
-                <label><input type="radio" name="selfother" value="0" checked>全部顯示</label>
-                <label><input type="radio" name="selfother" value="1">我發起的</label>
-                <label><input type="radio" name="selfother" value="2">我加入的</label>
-                <input type="hidden" id="rec_selfother" value="0" />
+
+        </div>
+        @*column2*@
+        <div class="col-5 mesgs" style="border:dashed">
+            <h5 id="chatheader" class="text-center border-bottom">&nbsp;</h5>
+            <div id="chat" class="msg_history">
             </div>
-            <div>
-                <label>案件狀態：</label>
-                <label><input type="radio" name="onoff" value="0" checked>全部顯示</label>
-                <label><input type="radio" name="onoff" value="1">進行中</label>
-                <label><input type="radio" name="onoff" value="2">已結束</label>
-                <input type="hidden" id="rec_onoff" value="0" />
+            <div class="type_msg">
+                <input type="hidden" id="roomid" value="0" />
+                <div class="input_msg_write">
+                    <input type="text" id="message" class="write_msg" placeholder="Type a message" />
+                    <button class="msg_send_btn" type="button" id="btnSend" disabled='disabled'>送出</button>
+                </div>
             </div>
         </div>
-        <div id="link_btn">
+        @*column3*@
+        <div class="col-4 msg" id="detail">
 
         </div>
     </div>
-    <div id="chatroom">
-        <h5 id="chatheader"></h5>
-        <div id="chat">
-        </div>
-        <span id="inputbox">
-            <input type="hidden" id="roomid" value="0" />
-            <input type="text" id="message" />
-            <button id="btnSend" disabled='disabled'>Send</button>
-        </span>
-    </div>
-    <div id="detail">
 
-    </div>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
@@ -250,12 +222,12 @@
                     var txt = "";
                     if (gt == 1) {
                         for (let i = 0; i < s.length; i++) {
-                            txt += `<button onclick="chatGetOrder(${s[i].OrderId} , ${gt} ,'${ s[i].ProductName}(編號：${s[i].OrderId}  )')"> ${ s[i].ProductName} (編號：${ s[i].OrderId})</button>`
+                            txt += `<div class="p-2 w-100 search-item border-bottom" onclick="chatGetOrder(${s[i].OrderId} , ${gt} ,'${s[i].ProductName}(編號：${s[i].OrderId}  )')"> ${s[i].ProductName} (編號：${s[i].OrderId})</div>`
                         }
                     }
                     else if (gt == 2) {
                         for (let i = 0; i < s.length; i++) {
-                            txt += `<button onclick="chatGetOrder(${s[i].GarbageServiceId} , ${gt} ,'${s[i].EndTime}(編號：${s[i].GarbageServiceId}  )')"> ${s[i].EndTime} (編號：${s[i].GarbageServiceId})</button>`
+                            txt += `<div class="p-2 w-100 search-item border-bottom" onclick="chatGetOrder(${s[i].GarbageServiceId} , ${gt} ,'${s[i].EndTime}(編號：${s[i].GarbageServiceId}  )')"> ${s[i].EndTime} (編號：${s[i].GarbageServiceId})</div>`
                         }
                     }
                     $("#link_btn").html(txt);
@@ -267,6 +239,9 @@
             //發訊息
         $('#btnSend').click(function () {
             var message = $("#message").val();
+            if (message == "") {
+                return
+            }
             $("#message").val('');
             var orderid = $("#OrderId").val();
             var grouptype = $("#rec_grouptype").val();

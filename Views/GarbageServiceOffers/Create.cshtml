@@ -86,17 +86,14 @@
                         <span asp-validation-for="L120maxCount" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <input type="submit" value="Create" class="btn btn-primary" />
+                        <input type="submit" value="新增" class="btn btn-primary" />
+                        <a class="btn btn-primary" href="/ChatMessageRecords/Index">查看紀錄</a>
                         <input type="button" value="Demo" class="btn btn-primary" onclick="CreateDemo()" />
                     </div>
                 </div>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 <script>
     function CreateDemo() {
