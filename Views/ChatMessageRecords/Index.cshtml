@@ -224,8 +224,10 @@
                     txt += "<input type='hidden' id='OrderId' value='" + oid + "'/>"
                     if (gt == 1) {
                         for (let i = 0; i < s.length; i++) {
-                            txt += "<label>團編號：" + s[i].OrderId + "</label><br />";
-                            txt += "<label>地址：" + s[i].Address + "</label>"
+                            txt += `<label>團編號：${ s[i].OrderId } </label><br />`;
+                            txt += `<label>地址： ${s[i].Address} </label><br />`;
+                            //txt += `<label>商品名稱： ${s[i].Address} </label>`;
+
                         }
                     }
                     else if (gt == 2) {
@@ -270,7 +272,7 @@
                     }
                     else if (gt == 2) {
                         for (let i = 0; i < s.length; i++) {
-                            txt += `<div class="p-2 w-100 text-center" id="btn${s[i].OrderId}" onclick="chatGetOrder(${s[i].GarbageServiceId} , ${gt} ,'${s[i].EndTime}(編號：${s[i].GarbageServiceId}  )')"> ${s[i].EndTime} (編號：${s[i].GarbageServiceId})</div>`
+                            txt += `<div class="p-2 w-100 text-center" id="btn${s[i].GarbageServiceId}" onclick="chatGetOrder(${s[i].GarbageServiceId} , ${gt} ,'${s[i].EndTime}(編號：${s[i].GarbageServiceId}  )')"> ${s[i].EndTime} (編號：${s[i].GarbageServiceId})</div>`
                         }
                     }
                     $("#link_btn").html(txt).promise().done(function () {
