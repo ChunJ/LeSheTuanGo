@@ -18,254 +18,253 @@
 }
 
 
-<!DOCTYPE html>
-<html>
-<head>
-    @*<title>Simple Map</title>*@
-    <script></script>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-    <style type="text/css">
-        /* Always set the map height explicitly to define the size of the div
+@*+++head+++*@
+@*<title>Simple Map</title>*@
+<script></script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+<style type="text/css">
+    /* Always set the map height explicitly to define the size of the div
         * element that contains the map. */
-        #map {
-            height: 100%;
+    #map {
+        height: 100%;
+    }
+
+    /* Optional: Makes the sample page fill the window. */
+    html,
+    main, div, /* father/child tags all need css settings to height 100%! */
+    body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    #myBtn {
+        display: none; /* Hidden by default */
+        position: fixed; /* Fixed/sticky position */
+        bottom: 20px; /* Place the button at the bottom of the page */
+        right: 30px; /* Place the button 30px from the right */
+        z-index: 99; /* Make sure it does not overlap */
+        border: none; /* Remove borders */
+        outline: none; /* Remove outline */
+        background-color: red; /* Set a background color */
+        color: white; /* Text color */
+        cursor: pointer; /* Add a mouse pointer on hover */
+        padding: 15px; /* Some padding */
+        border-radius: 10px; /* Rounded corners */
+        font-size: 18px; /* Increase font size */
+    }
+
+        #myBtn:hover {
+            background-color: #555; /* Add a dark-grey background on hover */
         }
+</style>
+@*<script>
+      let map;
 
-        /* Optional: Makes the sample page fill the window. */
-        html,
-        main, div, /* father/child tags all need css settings to height 100%! */
-        body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
+      function initMap() {
+        map = new google.maps.Map(document.getElementById("map"), {
+          center: { lat: @ViewBag.resultLat, lng: @ViewBag.resultLng },
+          zoom: 18,
+        });
+        new google.maps.Marker({
+              position: { lat: @ViewBag.resultLat, lng: @ViewBag.resultLng },
+              map,
+              animation: google.maps.Animation.DROP,
+              title: "hi",
+              icon: "https://crd-rubbish.epd.ntpc.gov.tw/maps/images/icon/Icon_LegendC.png",
+        });
+      }
+    </script>*@
+<script>
+    let map;
 
-        #myBtn {
-            display: none; /* Hidden by default */
-            position: fixed; /* Fixed/sticky position */
-            bottom: 20px; /* Place the button at the bottom of the page */
-            right: 30px; /* Place the button 30px from the right */
-            z-index: 99; /* Make sure it does not overlap */
-            border: none; /* Remove borders */
-            outline: none; /* Remove outline */
-            background-color: red; /* Set a background color */
-            color: white; /* Text color */
-            cursor: pointer; /* Add a mouse pointer on hover */
-            padding: 15px; /* Some padding */
-            border-radius: 10px; /* Rounded corners */
-            font-size: 18px; /* Increase font size */
-        }
+    function initMap(lat, lng, add, spotId) {
 
-            #myBtn:hover {
-                background-color: #555; /* Add a dark-grey background on hover */
-            }
-    </style>
-    @*<script>
-          let map;
+        if (lng !== "l") {
+            var coor = new google.maps.LatLng(lat, lng);
+            var mbr = new google.maps.LatLng(latNow, lngNow);  //fixed for now
 
-          function initMap() {
             map = new google.maps.Map(document.getElementById("map"), {
-              center: { lat: @ViewBag.resultLat, lng: @ViewBag.resultLng },
-              zoom: 18,
+                center: coor,
+                zoom: 19,
             });
+
             new google.maps.Marker({
-                  position: { lat: @ViewBag.resultLat, lng: @ViewBag.resultLng },
-                  map,
-                  animation: google.maps.Animation.DROP,
-                  title: "hi",
-                  icon: "https://crd-rubbish.epd.ntpc.gov.tw/maps/images/icon/Icon_LegendC.png",
+                position: mbr,
+                map,
+                title: "YOU",
+                icon: "https://crd-rubbish.epd.ntpc.gov.tw/maps/images/icon/Icon_LegendD.png",
             });
-          }
-        </script>*@
-    <script>
-        let map;
 
-        function initMap(lat, lng, add, spotId) {
+            let marker = new google.maps.Marker({
+                position: coor,
+                map,
+                animation: google.maps.Animation.DROP,
+                title: add,
+                label: { text: spotId + "", color: "transparent" },
+                zIndex: 999999999,
+                icon: "https://crd-rubbish.epd.ntpc.gov.tw/maps/images/icon/Icon_LegendC.png",
+            });
 
-            if (lng !== "l") {
-                var coor = new google.maps.LatLng(lat, lng);
-                var mbr = new google.maps.LatLng(latNow, lngNow);  //fixed for now
+            marker.addListener("click", () => {
+                console.log(marker.title);
+                console.log(marker.label.text);
+                document.getElementById(marker.label.text).scrollIntoView();
+                $(`#${marker.label.text}`).css("background-color", "gray").css("transition-duration", "2s");
+                setTimeout(() => { $(`#${marker.label.text}`).css("background-color", "transparent").css("transition-duration", "2s"); }, 2000);
+            });
+        }
+        else {
+            var mbr = new google.maps.LatLng(latNow, lngNow);
 
-                map = new google.maps.Map(document.getElementById("map"), {
-                    center: coor,
-                    zoom: 19,
-                });
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: mbr,
+                zoom: 16,
+            });
 
-                new google.maps.Marker({
-                    position: mbr,
-                    map,
-                    title: "YOU",
-                    icon: "https://crd-rubbish.epd.ntpc.gov.tw/maps/images/icon/Icon_LegendD.png",
-                });
+            new google.maps.Marker({
+                position: mbr,
+                map,
+                title: "YOU",
+                icon: "https://crd-rubbish.epd.ntpc.gov.tw/maps/images/icon/Icon_LegendD.png",
+            });
 
+            var markers = [];
+            //console.log(typeof lat);
+            for (let i = 0; i < lat.length; i++) {
                 let marker = new google.maps.Marker({
-                    position: coor,
+                    position: { lat: lat[i]["Latitude"], lng: lat[i]["Longitude"] },
                     map,
                     animation: google.maps.Animation.DROP,
-                    title: add,
-                    label: { text: spotId + "", color: "transparent" },
+                    title: lat[i]["Address"],
+                    label: { text: lat[i]["GarbageTruckSpotId"] + "", color: "transparent" },
                     zIndex: 999999999,
                     icon: "https://crd-rubbish.epd.ntpc.gov.tw/maps/images/icon/Icon_LegendC.png",
                 });
-
-                marker.addListener("click", () => {
-                    console.log(marker.title);
-                    console.log(marker.label.text);
-                    document.getElementById(marker.label.text).scrollIntoView();
-                    $(`#${marker.label.text}`).css("background-color", "gray").css("transition-duration", "2s");
-                    setTimeout(() => { $(`#${marker.label.text}`).css("background-color", "transparent").css("transition-duration", "2s"); }, 2000);
+                markers.push(marker);
+                markers[i].addListener("click", () => {
+                    console.log(markers[i].title);
+                    console.log(markers[i].label.text);
+                    document.getElementById(lat[i]["GarbageTruckSpotId"]).scrollIntoView();
+                    $(`#${lat[i]["GarbageTruckSpotId"]}`).css("background-color", "gray").css("transition-duration", "2s");
+                    setTimeout(() => { $(`#${lat[i]["GarbageTruckSpotId"]}`).css("background-color", "transparent").css("transition-duration", "2s"); }, 2000);
                 });
-            }
-            else {
-                var mbr = new google.maps.LatLng(latNow, lngNow);
-
-                map = new google.maps.Map(document.getElementById("map"), {
-                    center: mbr,
-                    zoom: 16,
-                });
-
-                new google.maps.Marker({
-                    position: mbr,
-                    map,
-                    title: "YOU",
-                    icon: "https://crd-rubbish.epd.ntpc.gov.tw/maps/images/icon/Icon_LegendD.png",
-                });
-
-                var markers = [];
-                //console.log(typeof lat);
-                for (let i = 0; i < lat.length; i++) {
-                    let marker = new google.maps.Marker({
-                        position: { lat: lat[i]["Latitude"], lng: lat[i]["Longitude"] },
-                        map,
-                        animation: google.maps.Animation.DROP,
-                        title: lat[i]["Address"],
-                        label: { text: lat[i]["GarbageTruckSpotId"] + "", color: "transparent" },
-                        zIndex: 999999999,
-                        icon: "https://crd-rubbish.epd.ntpc.gov.tw/maps/images/icon/Icon_LegendC.png",
-                    });
-                    markers.push(marker);
-                    markers[i].addListener("click", () => {
-                        console.log(markers[i].title);
-                        console.log(markers[i].label.text);
-                        document.getElementById(lat[i]["GarbageTruckSpotId"]).scrollIntoView();
-                        $(`#${lat[i]["GarbageTruckSpotId"]}`).css("background-color", "gray").css("transition-duration", "2s");
-                        setTimeout(() => { $(`#${lat[i]["GarbageTruckSpotId"]}`).css("background-color", "transparent").css("transition-duration", "2s"); }, 2000);
-                    });
-                }
             }
         }
-    </script>
-</head>
-<body onload="">
-    <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+    }
+</script>
+@*---head---*@
+
+@*+++body+++*@
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
 
 
-    <button id="find-me" onclick="geoFindMe()">查詢目前位置</button>
-    <p id="status"></p>
-    <a id="map-link" href="" target="_blank"></a>  @*target=_blank will open a new tab*@
+<button id="find-me" onclick="geoFindMe()">查詢目前位置</button>
+<p id="status"></p>
+<a id="map-link" href="" target="_blank"></a>  @*target=_blank will open a new tab*@
 
-    @*<button onclick="init100M()">100M</button>*@
-    <div id="map" style="height: 50%;width: 100%;"></div>
-    @*<button onclick="clearContent()">100M</button>*@
-    <br />
+@*<button onclick="init100M()">100M</button>*@
+<div id="map" style="height: 50%;width: 100%;"></div>
+@*<button onclick="clearContent()">100M</button>*@
+<br />
 
-    <label id="labelAddress">搜尋新地址：</label>
-    <select id="selectCity" onchange="getDistrict('#selectDistric')" asp-items="ViewBag.CityId">
-        <option hidden id="optionCity">請選擇</option>
-    </select>
-    <select id="selectDistric">
-        <option hidden id="optionCity">請選擇</option>
-    </select>
-    <input id="txtAddress" />
+<label id="labelAddress">搜尋新地址：</label>
+<select id="selectCity" onchange="getDistrict('#selectDistric')" asp-items="ViewBag.CityId">
+    <option hidden id="optionCity">請選擇</option>
+</select>
+<select id="selectDistric">
+    <option hidden id="optionCity">請選擇</option>
+</select>
+<input id="txtAddress" />
 
-    <button onclick="captureSelect()">get new location's json</button>
-    <br />
-    <select id="rangeLevel" onchange="">
-        <option hidden>請選擇</option>
-        <option>300</option>
-        <option>200</option>
-        <option>100</option>
-    </select>
-    <label>公尺內</label>
-    <select id="selectTimeStart" onchange="">
-        <option hidden>請選擇</option>
-        <option>0</option>
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-        <option>4</option>
-        <option>5</option>
-        <option>6</option>
-        <option>7</option>
-        <option>8</option>
-        <option>9</option>
-        <option>10</option>
-        <option>11</option>
-        <option>12</option>
-        <option>13</option>
-        <option>14</option>
-        <option>15</option>
-        <option>16</option>
-        <option>17</option>
-        <option>18</option>
-        <option>19</option>
-        <option>20</option>
-        <option>21</option>
-        <option>22</option>
-        <option>23</option>
-    </select>
-    <label>時起</label>
-    <select id="selectTimeEnd" onchange="">
-        <option hidden>請選擇</option>
-        <option>0</option>
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-        <option>4</option>
-        <option>5</option>
-        <option>6</option>
-        <option>7</option>
-        <option>8</option>
-        <option>9</option>
-        <option>10</option>
-        <option>11</option>
-        <option>12</option>
-        <option>13</option>
-        <option>14</option>
-        <option>15</option>
-        <option>16</option>
-        <option>17</option>
-        <option>18</option>
-        <option>19</option>
-        <option>20</option>
-        <option>21</option>
-        <option>22</option>
-        <option>23</option>
-    </select>
-    <label>時迄</label>
-    <button onclick="filter()">filter</button>
+<button onclick="captureSelect()">get new location's json</button>
+<br />
+<select id="rangeLevel" onchange="">
+    <option hidden>請選擇</option>
+    <option>300</option>
+    <option>200</option>
+    <option>100</option>
+</select>
+<label>公尺內</label>
+<select id="selectTimeStart" onchange="">
+    <option hidden>請選擇</option>
+    <option>0</option>
+    <option>1</option>
+    <option>2</option>
+    <option>3</option>
+    <option>4</option>
+    <option>5</option>
+    <option>6</option>
+    <option>7</option>
+    <option>8</option>
+    <option>9</option>
+    <option>10</option>
+    <option>11</option>
+    <option>12</option>
+    <option>13</option>
+    <option>14</option>
+    <option>15</option>
+    <option>16</option>
+    <option>17</option>
+    <option>18</option>
+    <option>19</option>
+    <option>20</option>
+    <option>21</option>
+    <option>22</option>
+    <option>23</option>
+</select>
+<label>時起</label>
+<select id="selectTimeEnd" onchange="">
+    <option hidden>請選擇</option>
+    <option>0</option>
+    <option>1</option>
+    <option>2</option>
+    <option>3</option>
+    <option>4</option>
+    <option>5</option>
+    <option>6</option>
+    <option>7</option>
+    <option>8</option>
+    <option>9</option>
+    <option>10</option>
+    <option>11</option>
+    <option>12</option>
+    <option>13</option>
+    <option>14</option>
+    <option>15</option>
+    <option>16</option>
+    <option>17</option>
+    <option>18</option>
+    <option>19</option>
+    <option>20</option>
+    <option>21</option>
+    <option>22</option>
+    <option>23</option>
+</select>
+<label>時迄</label>
+<button onclick="filter()">filter</button>
 
-    <table class="table" id="table100m">
-        <tbody id="header">
-            <tr>
-                <th>收集地點</th>
-                <th onclick="orderByTime()" id="thOrderTime">到達時間</th>
-                <th onclick="orderByDistance()" id="thOrderDistance">距離（公尺）</th>
-                @*<th style="display:none">lat</th>
-                    <th style="display:none">lng</th>*@
-            </tr>
-        </tbody>
-        <tbody id="content"></tbody>
-    </table>
+<table class="table" id="table100m">
+    <tbody id="header">
+        <tr>
+            <th>收集地點</th>
+            <th onclick="orderByTime()" id="thOrderTime">到達時間</th>
+            <th onclick="orderByDistance()" id="thOrderDistance">距離（公尺）</th>
+            @*<th style="display:none">lat</th>
+                <th style="display:none">lng</th>*@
+        </tr>
+    </tbody>
+    <tbody id="content"></tbody>
+</table>
 
-    @*<button onclick="initMap(@ViewBag.resultLat, @ViewBag.resultLng)">1</button>
-        <button onclick="initMap(@ViewBag.result[1].Latitude, @ViewBag.result[1].Longitude)">2</button>
-        <button onclick="initMap(@ViewBag.result[2].Latitude, @ViewBag.result[2].Longitude)">3</button>*@
+@*<button onclick="initMap(@ViewBag.resultLat, @ViewBag.resultLng)">1</button>
+    <button onclick="initMap(@ViewBag.result[1].Latitude, @ViewBag.result[1].Longitude)">2</button>
+    <button onclick="initMap(@ViewBag.result[2].Latitude, @ViewBag.result[2].Longitude)">3</button>*@
 
-    <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBircB99P_RvzxWdQT-hk40-h3Ofzlb_vQ&callback=initMap&libraries=&v=weekly"
-            async></script>
-    <script>
+<!-- Async script executes immediately and must be after any DOM elements used in callback. -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBircB99P_RvzxWdQT-hk40-h3Ofzlb_vQ&callback=initMap&libraries=&v=weekly"
+        async></script>
+<script>
         let table100m = document.getElementById("table100m");
         let tbodycont = document.getElementById("content");
 
@@ -275,7 +274,7 @@
         var js;
         var js0;  //store material from backend
 
-        window.onload((() => {
+        window.onload = (() => {
             if (currentUser == 0) {
                 geoFindMe();
                 console.log('geoFindMe()');
@@ -283,7 +282,7 @@
                 init300M('', 'mem');
                 console.log('init300M(, mem)');
             }
-        })());
+        })();
 
         var timeOrder = -1;
         var distanceOrder = -1;
@@ -497,6 +496,15 @@
             document.body.scrollTop = 0; // For Safari
             document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
         }
-    </script>
+</script>
+
+@*---body---*@
+
+
+@*<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body onload="">
 </body>
-</html>
+</html>*@
