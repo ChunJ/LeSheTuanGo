@@ -122,14 +122,13 @@ namespace LeSheTuanGo.Controllers
         //取得聊天紀錄
         public string chatGetChat(int orderId, int grouptype)
         {
-            var chatMessages = _context.ChatMessageRecords.Where(n => n.GroupId == orderId).Select(n => new
+            var chatMessages = _context.ChatMessageRecords.Where(n => n.GroupId == orderId&&n.GroupType==grouptype).Select(n => new
             {
                 n.Message,
                 n.SentMemberId,
                 SentTime = n.SentTime.ToString("yyyy/MM/dd, HH:mm"),
                 username = n.SentMember.FirstName + n.SentMember.LastName
-            }
-            ).ToList();
+            }).ToList();
             return JsonConvert.SerializeObject(chatMessages);
         }
 
