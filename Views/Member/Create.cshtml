@@ -94,8 +94,9 @@
                 document.getElementById("form").submit();
             } else {
                 return;
-            } }, "500");
-        
+            }
+        }, "500");
+
     }//檢查全部
 
     function isName(Name) {
@@ -126,6 +127,7 @@
             txtFirstName.style.borderColor = "red";
             labelLastName.style.color = "red";
             txtLastName.style.borderColor = "red";
+            flagName = false;
             return;
         }
         if (isName(txtFirstName)) {
@@ -140,6 +142,7 @@
             spanFirstName.style.color = "red";
             spanFirstName.innerHTML = "請輸入中英文";
             flagName = false;
+            return;
         }
 
         if (isName(txtLastName)) {
@@ -154,6 +157,7 @@
             spanLastName.style.color = "red";
             spanLastName.innerHTML = "請輸入中英文";
             flagName = false;
+            return;
         }
     }//ok
     function isPassword(pwd) {
@@ -203,6 +207,7 @@
             spanPassword.innerHTML = "與密碼不同";
             spanPassword.style.color = "red";
             flagPassword = false;
+            return;
         } else {
             labelPasswordCheck.style.color = "green";
             txtPasswordCheck.style.borderColor = "green";
@@ -251,8 +256,9 @@
             spanEmail.style.color = "red";
             txtEmail.style.borderColor = "red";
             flagEmail = false;
+            return;
         }//如果為空
-        
+
         if (isEmail(txtEmail)) {
             spanEmail.innerHTML = "格式正確";
             labelEmail.style.color = "green";
@@ -265,6 +271,7 @@
             spanEmail.style.color = "red";
             txtEmail.style.borderColor = "red";
             flagEmail = false;
+            return;
         }//是否為正確Email格式
 
     }//ok
@@ -294,10 +301,11 @@
         let selectDistric = document.getElementById("selectDistric");
         let selectCity = document.getElementById("selectCity");
 
-        if (selectDistric.options.selectedIndex == 0) {
+        if (selectCity.options.selectedIndex == 0) {
             selectCity.style.borderColor = "red";
             selectDistric.style.borderColor = "red";
             flagAddress = false;
+            return;
         } else {
             selectCity.style.borderColor = "green";
             selectDistric.style.borderColor = "green";
@@ -324,6 +332,7 @@
             spanAddress.style.color = "red";
             txtAddress.style.borderColor = "red";
             flagAddress = false;
+            return;
         }
 
     }//ok
