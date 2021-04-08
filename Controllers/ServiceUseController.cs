@@ -95,7 +95,7 @@ namespace LeSheTuanGo.Controllers{
             offer.L120available -= r.L120count;
             db.Add(r);
             db.SaveChanges();
-            return RedirectToAction("Index", "ChatMessageRecords");
+            return RedirectToAction("Index", "ChatMessageRecords", new { grouptype = 2, groupid = r.GarbageServiceOfferId });
         }
 
         public IActionResult Delete(int id, int id2) {

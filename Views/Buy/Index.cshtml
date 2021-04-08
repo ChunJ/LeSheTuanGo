@@ -4,7 +4,7 @@
 }
 <div class="row">
     @*search column*@
-    <div class="col-2">
+    <div class="col-2 column-main pb-2">
         <div class="row">
             <div class="border-bottom-dark col-12">
                 <h5>搜尋團購</h5>
@@ -48,50 +48,50 @@
         </div>
     </div>
     @*result column*@
-<div class="col-2">
-    <div style="height:68vh">
-        <div class="border-bottom-dark">
-            <h5>搜尋結果</h5>
+    <div class="col-2">
+        <div class="column-main" style="height:68vh">
+            <div class="border-bottom-dark">
+                <h5>搜尋結果</h5>
+            </div>
+            <div id="searchResult">
+                @*@for (int i = 0; i < 5; i++) {
+                    <div class="p-2 w-100 search-item border-bottom" onclick="test()">
+                        <p>台北市大安區信義路四段2號</p>
+                        <div class="w-100"><div class="rem-4">截止時間</div><span class="px-1">:</span>2021年05月20號</div>
+                        <div class="w-100"><div class="rem-4">距離</div><span class="px-1">:</span>532 公尺</div>
+                    </div>
+                    }*@
+            </div>
         </div>
-        <div id="searchResult">
-            @*@for (int i = 0; i < 5; i++) {
-                <div class="p-2 w-100 search-item border-bottom" onclick="test()">
-                    <p>台北市大安區信義路四段2號</p>
-                    <div class="w-100"><div class="rem-4">截止時間</div><span class="px-1">:</span>2021年05月20號</div>
-                    <div class="w-100"><div class="rem-4">距離</div><span class="px-1">:</span>532 公尺</div>
-                </div>
-                }*@
-        </div>
-    </div>
-    <div class="border-bottom-dark"></div>
-    <div class="invisible" id="detailView">
-        <div id="detailInfo">
-            <div class="w-100"><div class="rem-4">地點</div><span class="px-1">:</span><span id="info">台北市大安區</span></div>
-            <div class="w-100"><div class="rem-4">距離</div><span class="px-1">:</span><span id="info">532</span> 公尺</div>
-            <div class="w-100"><div class="rem-4">截止時間</div><span class="px-1">:</span><span id="info">2021年05月20號</span></div>
-        </div>
-        <form method="post" action="/Buy/Join">
-            <div id="formInput">
-                <input hidden=hidden name="OrderId" value="" />
-                <input hidden=hidden name="ComeDistrictId" value="" />
-                <input hidden=hidden name="ComeAddress" value="" />
-                <div class="form-group form-check">
-                    <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox" name="NeedCome" value="true" />
-                        是否需要宅配服務?
-                    </label>
+        <div class="border-bottom-dark"></div>
+        <div class="invisible" id="detailView">
+            <div id="detailInfo">
+                <div class="w-100"><div class="rem-4">地點</div><span class="px-1">:</span><span id="info">台北市大安區</span></div>
+                <div class="w-100"><div class="rem-4">距離</div><span class="px-1">:</span><span id="info">532</span> 公尺</div>
+                <div class="w-100"><div class="rem-4">截止時間</div><span class="px-1">:</span><span id="info">2021年05月20號</span></div>
+            </div>
+            <form method="post" action="/Buy/Join">
+                <div id="formInput">
+                    <input hidden=hidden name="OrderId" value="" />
+                    <input hidden=hidden name="ComeDistrictId" value="" />
+                    <input hidden=hidden name="ComeAddress" value="" />
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" name="NeedCome" value="true" />
+                            是否需要宅配服務?
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>購買量</label>
+                        <input class="form-control" name="Count" type="number" min="0" value="" />
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label>購買量</label>
-                    <input class="form-control" name="Count" type="number" min="0" value="" />
+                    <input type="submit" value="加入" class="btn btn-primary" />
                 </div>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="加入" class="btn btn-primary" />
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
-</div>
     @*map column*@
     <div class="col-8">
         <div id="map" style="height: 100%;width: 100%;"></div>
@@ -122,7 +122,7 @@
         let fList = [];
         let markers = [];
         let map;
-        let userLatlong = [];
+        
         window.onload = function () {
             cityS.value = @ViewData["CityId"];
             fillDistrict(@ViewData["CityId"], "#DistrictId", function () {
@@ -206,7 +206,7 @@
             formInputs[2].value = fList[id].Address;
             if (fList[id].CanGo) {
                 //need to use the filter option
-                formInputs[3].checked = true;
+                formInputs[3].checked = false;
                 formInputs[3].disabled = false;
             } else {
                 formInputs[3].checked = false;

@@ -61,7 +61,7 @@ namespace LeSheTuanGo.Controllers
                 g.gso.L120available = g.L120maxCount;
                 _context.Add(g.gso);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index", "ChatMessageRecords");
+                return RedirectToAction("Index", "ChatMessageRecords", new { grouptype = 2, groupid = g.gso.GarbageServiceId });
             }
             ViewData["DistrictId"] = new SelectList(_context.DistrictRefs, "DistrictId", "DistrictName", g.DistrictId);
             ViewData["GoRangeId"] = new SelectList(_context.RangeRefs, "RangeId", "RangeInMeaters", g.GoRangeId);

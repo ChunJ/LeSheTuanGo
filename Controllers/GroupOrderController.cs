@@ -53,7 +53,7 @@ namespace LeSheTuanGo.Controllers {
             if (order.OrderDescription == null) order.OrderDescription = "";
             db.Add(order);
             await db.SaveChangesAsync();
-            return RedirectToAction("Index", "ChatMessageRecords");
+            return RedirectToAction("Index", "ChatMessageRecords", new { grouptype = 1, groupid = order.OrderId });
         }
 
         public IActionResult List() {
