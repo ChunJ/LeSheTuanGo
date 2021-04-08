@@ -363,9 +363,9 @@ namespace LeSheTuanGo.Controllers
         {
             string bodyEmail = "";
             if (controllerName == "openMember")
-                bodyEmail = "https://localhost:5001/Member/openMember?memberId=" + inputId;
+                bodyEmail = "http://192.168.36.145:8080/Member/openMember?memberId=" + inputId;
             else if (controllerName == "resetPassword")
-                bodyEmail = "https://localhost:5001/Member/resetPassword?memberId=" + inputId;
+                bodyEmail = "http://192.168.36.145:8080/Member/resetPassword?memberId=" + inputId;
             SmtpClient MySmtp = new SmtpClient("smtp.gmail.com", 587);
             MySmtp.Credentials = new System.Net.NetworkCredential("msit129GarbageCar@gmail.com", "@msit129GarbageCar@");
 

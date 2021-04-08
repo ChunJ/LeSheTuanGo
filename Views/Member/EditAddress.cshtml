@@ -2,8 +2,8 @@
 
 <div style="border:hidden 5px black; margin:0px 200px; ">
     <h1 style="text-align: center">變更地址</h1>
-    <hr />
     <div class="col-md-6 col-md-offset-3" style="margin:0 auto">
+    <hr />
         <form asp-action="EditAddress" id="form">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="MemberId" />
@@ -58,7 +58,7 @@
         let selectDistric = document.getElementById("selectDistric");
         let selectCity = document.getElementById("selectCity");
 
-        if (selectDistric.options.selectedIndex == 0) {
+        if (selectCity.options.selectedIndex == 0) {
             selectCity.style.borderColor = "red";
             selectDistric.style.borderColor = "red";
             return
