@@ -194,16 +194,17 @@ img {
 }
 
     .input_msg_write input {
-        margin-top:2px;
-        margin-left:10px;
+        margin-top: 2px;
+        margin-left: 10px;
         background: #ddd;
         border: medium none;
         color: #4c4c4c;
         font-size: 15px;
-        position:absolute;
+        position: absolute;
+        border-radius: 3px;
         /*min-height: 48px;*/
         width: 86%;
-        height:85%;
+        height: 85%;
     }
 
 .type_msg {
@@ -220,6 +221,7 @@ img {
     font-size: 17px;
     height: 70%;
     position: absolute;
+    border-radius: 10px;
     right: 10px;
     top: 15%;
     width: 10%;
