@@ -3,55 +3,63 @@
 @{
     ViewData["Create"] = "Create";
 }
-<div style="border:solid 5px #5B5B5B;border-radius:10px 15px;padding:30px 20px;margin:20px auto;width:auto">
-
-
-    <h1>申請帳號</h1>
-
-    <hr />
-    <div class="row">
-        <div class="col-md-4">
+<div style="
+    border: hidden 5px #5B5B5B;
+    border-radius: 10px 15px;
+    padding: 30px 20px;
+    margin: 0px auto;
+    width: 600px">
+    <h3 style="text-align:center" onclick="demo()">建立您的樂社團GO帳號</h3>
+    <div class="row" >
+        <div class="col-xs-12 col-sm-6 col-md-8" style="margin:0px auto">
+            <hr />
             <form asp-action="Create" id="form" enctype="multipart/form-data">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="form-group">
-                    <label asp-for="FirstName" class="control-label" id="labelFirstName"></label>
-                    <input asp-for="FirstName" class="form-control" id="txtFirstName" />
-                    <span asp-validation-for="FirstName" style="color:red" id="spanFirstName"></span>
-                </div><!--FirstName-->
-                <div class="form-group">
-                    <label asp-for="LastName" class="control-label" id="labelLastName"></label>
-                    <input asp-for="LastName" class="form-control" id="txtLastName" onblur="checkName()" />
-                    <span asp-validation-for="LastName" style="color:red" id="spanLastName"></span>
-                </div><!--LastName-->
-                <div class="form-group">
+                <div asp-validation-summary="ModelOnly"></div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6">
+                        <label asp-for="FirstName" class="control-label" id="labelFirstName"></label>
+                        <input asp-for="FirstName" class="form-control" id="txtFirstName" />
+                    </div><!--FirstName-->
+                    <div class="col-xs-12 col-sm-6">
+                        <label asp-for="LastName" class="control-label" id="labelLastName"></label>
+                        <input asp-for="LastName" class="form-control" id="txtLastName" onblur="checkName()" />
+                        @*<span asp-validation-for="LastName" style="color:red" id="spanLastName"></span>*@
+                    </div><!--LastName-->
+                </div>
+                <span asp-validation-for="FirstName" style="color:red" id="spanFirstName"> </span>
+
+                <div class="form-group" style="margin-top:15px">
                     <label asp-for="DateOfBirth" class="control-label" id="labelBirth"></label>
                     <input type="date" asp-for="DateOfBirth" class="form-control" id="txtBirth" value="2000-01-01" min="1930-01-01" />
                     <span asp-validation-for="DateOfBirth" style="color:red" id="spanBirth"></span>
                 </div><!--DateOfBirth-->
-                <div class="form-group">
-                    <label asp-for="image" class="control-label" id="labelImage"></label>
-                    <input type="file" asp-for="image" id="txtImage" accept=".png, .jpg, .jpeg" onchange="imageShow()" />
-                    <span asp-validation-for="image" style="color:red" id="spanImage"></span>
-                </div><!--image-->
-                <img width="200" id="uploadPreview" />
+                <!--<div class="col-xs-12 col-sm-6">
+            <label asp-for="image" class="control-label" id="labelImage"></label>
+            <input type="file" asp-for="image" id="txtImage" accept=".png, .jpg, .jpeg" onchange="imageShow()" />
+            <span asp-validation-for="image" style="color:red" id="spanImage"></span>
+            <img width="200" id="uploadPreview" />
+        </div>-->
+                <!--image-->
 
                 <div class="form-group">
                     <label asp-for="Email" class="control-label" id="labelEmail"></label>
                     <input asp-for="Email" class="form-control" id="txtEmail" onblur="checkEmail()" />
                     <span asp-validation-for="Email" style="color:red" id="spanEmail"></span>
                 </div><!--Email-->
-                <div class="form-group">
-                    <label asp-for="Password" class="control-label" id="labelPassword"></label>
-                    <input asp-for="Password" class="form-control" id="txtPassword" />
-                    <span asp-validation-for="Password" style="color:red" id="spanPassword"></span>
-                    <br />
-                    <div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6">
+                        <label asp-for="Password" class="control-label" id="labelPassword"></label>
+                        <input asp-for="Password" class="form-control" id="txtPassword" />
+                    </div>
+                    <div class="col-xs-12 col-sm-6">
                         <label class="control-label" id="labelPasswordCheck">確認密碼</label>
                         <input type="text" class="form-control" id="txtPasswordCheck" onblur="checkPassword()" />
-                        <span style="color:red" id="spanPasswordCheck"></span>
                     </div>
-                </div><!--Password-->
-                <div class="form-group">
+                    <!--Password-->
+                </div>
+                <span asp-validation-for="Password" style="color:red" id="spanPassword"></span>
+
+                <div class="form-group" style="margin-top:15px">
                     <label asp-for="Address" class="control-label" id="labelAddress"></label>
                     <br />
                     <select id="selectCity" onchange="getDistrict('#selectDistric')" asp-items="ViewBag.City">
@@ -64,17 +72,11 @@
                     <span asp-validation-for="Address" style="color:red" id="spanAddress"></span>
                 </div><!--Address-->
                 <div class="form-group">
-                    <input type="button" value="送出" class="btn btn-primary" onclick="checkValue()"/>
+                    <input type="button" value="送出" class="btn btn-primary" onclick="checkValue()" style="width:25%"/>
                 </div>
             </form>
-            <div class="form-group">
-                <input type="button" value="demo" class="btn btn-primary" onclick="demo()"/>
-            </div>
         </div>
     </div>
-</div>
-<div>
-    <a asp-action="Index" asp-controller="Home">回到首頁</a>
 </div>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
@@ -87,13 +89,12 @@
         checkPassword();
         checkEmail();
         checkAddress();
-        console.log("Finish");
         setTimeout(function () {
             if (flagName && flagPassword && flagEmail && flagAddress) {
                 document.getElementById("form").submit();
             } else {
                 return;
-            } }, "75");
+            } }, "500");
         
     }//檢查全部
 
@@ -117,7 +118,16 @@
         let labelFirstName = document.getElementById("labelFirstName");
         let labelLastName = document.getElementById("labelLastName");
         let spanFirstName = document.getElementById("spanFirstName");
-        let spanLastName = document.getElementById("spanLastName");
+        let spanLastName = document.getElementById("spanFirstName");
+        if (txtFirstName.value == "" || txtLastName.value == "") {
+            spanFirstName.innerHTML = "請輸入中英文";
+            spanFirstName.style.color = "red";
+            labelFirstName.style.color = "red";
+            txtFirstName.style.borderColor = "red";
+            labelLastName.style.color = "red";
+            txtLastName.style.borderColor = "red";
+            return;
+        }
         if (isName(txtFirstName)) {
             labelFirstName.style.color = "green";
             txtFirstName.style.borderColor = "green";
@@ -169,6 +179,7 @@
             spanPassword.style.color = "red";
             txtPassword.style.borderColor = "red";
             flagPassword = false;
+            return;
         }
         if (isPassword(txtPassword)) {
             spanPassword.innerHTML = "可用";
@@ -183,17 +194,19 @@
             spanPassword.style.color = "red";
             txtPassword.style.borderColor = "red";
             flagPassword = false;
+            return;
         }
         //驗證確認密碼
         if (txtPassword.value != txtPasswordCheck.value) {
             labelPasswordCheck.style.color = "red";
             txtPasswordCheck.style.borderColor = "red";
-            spanPasswordCheck.innerHTML = "與密碼不同";
+            spanPassword.innerHTML = "與密碼不同";
+            spanPassword.style.color = "red";
             flagPassword = false;
         } else {
             labelPasswordCheck.style.color = "green";
             txtPasswordCheck.style.borderColor = "green";
-            spanPasswordCheck.innerHTML = "";
+            spanPassword.innerHTML = "";
             flagPassword = true;
         }
 
@@ -220,7 +233,6 @@
                     flagEmail = false;
                 } else {
                     flagEmail = true;
-                    console.log("Email");
                     spanEmail.innerHTML = "可用";
                     labelEmail.style.color = "green";
                     spanEmail.style.color = "green";
@@ -298,6 +310,7 @@
             spanAddress.style.color = "red";
             txtAddress.style.borderColor = "red";
             flagAddress = false;
+            return;
         }
         if (isAddress(txtAddress)) {
             spanAddress.innerHTML = "";
