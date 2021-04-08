@@ -146,6 +146,7 @@ namespace LeSheTuanGo.Controllers
             };
             _context.Add(chatMessageRecord);
             _context.SaveChanges();
+
         }
 
         #region 無用僅佔存的code
