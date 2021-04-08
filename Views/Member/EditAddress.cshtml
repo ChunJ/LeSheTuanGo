@@ -4,7 +4,7 @@
     <h1 style="text-align: center">變更地址</h1>
     <hr />
     <div class="col-md-6 col-md-offset-3" style="margin:0 auto">
-        <form asp-action="EditAddress" onsubmit="checkValue()">
+        <form asp-action="EditAddress" id="form">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="MemberId" />
             <div @*class="form-group"*@>
@@ -23,7 +23,7 @@
             </div><!--Address-->
             <br />
             <div class="form-group">
-                <input type="submit" value="送出" class="btn btn-primary" />
+                <input type="button" value="送出" class="btn btn-primary" onclick="checkAddress()"/>
             </div>
         </form>
     </div>
@@ -32,13 +32,6 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
 <script>
-    var flagAddress = false;
-    function checkValue() {
-        if (flagAddress)
-            return true;
-        else
-            return false;
-    }
     function isAddress(Address) {
         for (let i = 0; i < Address.value.length; i++) {
             let ch = Address.value.charAt(i);
@@ -68,11 +61,10 @@
         if (selectDistric.options.selectedIndex == 0) {
             selectCity.style.borderColor = "red";
             selectDistric.style.borderColor = "red";
-            flagAddress = false;
+            return
         } else {
             selectCity.style.borderColor = "green";
             selectDistric.style.borderColor = "green";
-            flagAddress = true;
         }
 
         if (txtAddress.value == "") {
@@ -80,20 +72,19 @@
             labelAddress.style.color = "red";
             spanAddress.style.color = "red";
             txtAddress.style.borderColor = "red";
-            flagAddress = false;
         }
         if (isAddress(txtAddress)) {
             spanAddress.innerHTML = "";
             labelAddress.style.color = "green";
             spanAddress.style.color = "green";
             txtAddress.style.borderColor = "green";
-            flagAddress = true;
+            document.getElementById("form").submit();
+
         } else {
             spanAddress.innerHTML = "請輸入正確地址格式";
             labelAddress.style.color = "red";
             spanAddress.style.color = "red";
             txtAddress.style.borderColor = "red";
-            flagAddress = false;
         }
 
     }//ok
