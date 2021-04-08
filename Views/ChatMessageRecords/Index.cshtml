@@ -148,8 +148,10 @@
         var username = '@ViewBag.username';
         var groupName = $("#roomid").val().toString();
 
-        //ready事件，給radioBTN及send鍵掛事件
+        //ready事件，radioBTN及send鍵掛事件，預先指定group
         $(function () {
+
+            //掛事件
             $('input[type=radio][name="grouptype"]').change(function () {
                 $("#rec_grouptype").val($(this).val());
                 getOrderList($("#rec_grouptype").val(), $("#rec_selfother").val(), $("#rec_onoff").val())
@@ -168,7 +170,13 @@
                     return false;
                 }
             });
+
+            //預先選團
+            let gt =@ViewBag.grouptype;
+            if (gt != 0) {
+                $(`input[type=radio][name="grouptype"][value="${gt}"]`).click()}
         })
+
 
         //建立SignalR連線，接收訊息用事件
         connection.on("ReceiveGroupMessage", function (groupName, memberid,username, message) {
@@ -265,7 +273,12 @@
                             txt += `<div class="p-2 w-100 text-center" id="btn${s[i].OrderId}" onclick="chatGetOrder(${s[i].GarbageServiceId} , ${gt} ,'${s[i].EndTime}(編號：${s[i].GarbageServiceId}  )')"> ${s[i].EndTime} (編號：${s[i].GarbageServiceId})</div>`
                         }
                     }
-                    $("#link_btn").html(txt);
+                    $("#link_btn").html(txt).promise().done(function () {
+                        let oid = @ViewBag.groupid;
+                        if (oid != 0) {
+                            $(`#link_btn div[id=btn${oid}]`).click();
+                        }});
+
                 },
             })
         }

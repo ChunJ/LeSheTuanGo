@@ -75,8 +75,7 @@ namespace LeSheTuanGo.Controllers {
             if (HttpContext.Session.GetInt32(cUtility.Current_User_Id) == null) {
                 return RedirectToAction("Login", "Member", new { from = "Buy/Index" });
             }
-            int MemberID = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
-            r.MemberId = MemberID;
+            r.MemberId = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
             //need server side validation
             var order = db.Orders.Where(o => o.OrderId == r.OrderId).First();
             order.AvailableCount -= r.Count;
@@ -84,8 +83,7 @@ namespace LeSheTuanGo.Controllers {
             db.SaveChanges();
             //if server side validation is not passed, return view with user's filter option
             //if successed, redirect to history
-            //todo 修改max總數
-            return RedirectToAction("Index", "ChatMessageRecords");
+            return RedirectToAction("Index", "ChatMessageRecords", new { grouptype = 1, groupid = r.OrderId });
         }
         public IActionResult HistoryList() {
             return View();

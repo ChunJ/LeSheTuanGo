@@ -84,7 +84,6 @@ namespace LeSheTuanGo.Controllers{
                 return RedirectToAction("Login", "Member", new { from = "ServiceUse/Index" });
             }
             r.MemberId = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
-
             var offer = db.GarbageServiceOffers.Where(o => o.GarbageServiceId == r.GarbageServiceOfferId).First();
             //some testing here need to be done
             offer.L3available -= r.L3count;
@@ -96,8 +95,7 @@ namespace LeSheTuanGo.Controllers{
             offer.L120available -= r.L120count;
             db.Add(r);
             db.SaveChanges();
-            //redirect to history
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "ChatMessageRecords");
         }
 
         public IActionResult Delete(int id, int id2) {

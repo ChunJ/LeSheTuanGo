@@ -98,7 +98,7 @@
     </div>
 </div>
 @section Scripts {
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBircB99P_RvzxWdQT-hk40-h3Ofzlb_vQ&callback=initMap&libraries=&v=weekly" async=async></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBircB99P_RvzxWdQT-hk40-h3Ofzlb_vQ&callback=showMap&libraries=&v=weekly" async></script>
     <script>
         let cityS = document.querySelector("#CityId");
         let distS = document.querySelector("#DistrictId");
@@ -237,7 +237,7 @@
             });
         }
         function showAllMap() {
-            let mapCenter = new google.maps.LatLng(fList[0].userLat, fList[0].userLong);  //fixed for now
+            let mapCenter = new google.maps.LatLng(fList[0].userLat, fList[0].userLong);
             map = new google.maps.Map(mapDiv,
                 {
                     center: mapCenter,

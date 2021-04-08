@@ -269,6 +269,36 @@
             showMap(fList[id].Latitude, fList[id].Longitude);
             detailView.classList.remove("invisible");
         }
+        function showAllMap() {
+            let mapCenter = new google.maps.LatLng(fList[0].userLat, fList[0].userLong);
+            map = new google.maps.Map(mapDiv,
+                {
+                    center: mapCenter,
+                    zoom: 17,
+                });
+            new google.maps.Marker({
+                position: mapCenter,
+                map,
+                title: "您的位置",
+                icon: "https://crd-rubbish.epd.ntpc.gov.tw/maps/images/icon/Icon_LegendD.png",
+            });
+            markers = [];
+            for (let i = 0; i < fList.length; i++) {
+                let marker = new google.maps.Marker({
+                    position: { lat: fList[i].Latitude, lng: fList[i].Longitude },
+                    map,
+                    title: fList[i].Address,
+                    label: { text: i + "", color: "transparent" },
+                });
+                marker.addListener("click", () => {
+                    console.log(markers[i].title);
+                    //console.log(markers[i].label.text);
+                    //document.getElementById(markers[i].label.text).scrollIntoView();
+                    getDetail(marker.label.text);
+                });
+                markers.push(marker);
+            }
+        }
         function showMap(lat, lng) {
             let coor = new google.maps.LatLng(lat, lng);
             let mbr = new google.maps.LatLng(25.0339400, 121.5435000);  //fixed for now
