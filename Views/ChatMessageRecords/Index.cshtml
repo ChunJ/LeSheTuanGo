@@ -171,16 +171,10 @@
                 }
             });
             let gt =@ViewBag.grouptype;
-            let oid = @ViewBag.groupid;
             if (gt != 0) {
-                $(`input[type=radio][name="grouptype"][value="${gt}"]`).click(function () {
-                    if (oid != 0) {
-                        $(`#link_btn div[id=btn${oid}]`).click();
-                    }
-                }
-            }
+                $(`input[type=radio][name="grouptype"][value="${gt}"]`).click()}
         })
-        
+
 
         //建立SignalR連線，接收訊息用事件
         connection.on("ReceiveGroupMessage", function (groupName, memberid,username, message) {
@@ -277,7 +271,12 @@
                             txt += `<div class="p-2 w-100 text-center" id="btn${s[i].OrderId}" onclick="chatGetOrder(${s[i].GarbageServiceId} , ${gt} ,'${s[i].EndTime}(編號：${s[i].GarbageServiceId}  )')"> ${s[i].EndTime} (編號：${s[i].GarbageServiceId})</div>`
                         }
                     }
-                    $("#link_btn").html(txt);
+                    $("#link_btn").html(txt).promise().done(function () {
+                        let oid = @ViewBag.groupid;
+                        if (oid != 0) {
+                            $(`#link_btn div[id=btn${oid}]`).click();
+                        }});
+
                 },
             })
         }
