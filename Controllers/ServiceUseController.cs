@@ -38,13 +38,13 @@ namespace LeSheTuanGo.Controllers{
             //var distantMax = db.RangeRefs.Last().RangeInMeters;
             int distanceMax = 3000;
             //disable query and use the first user's location for testing
-            //DistrictRef dist = db.DistrictRefs.Where(d => d.DistrictId == DistrictInput)
-            //    .Include(d => d.City).First();
-            //string address = dist.City.CityName + dist.DistrictName + addressInput;
-            //var latlong = cUtility.addressToLatlong(address);
-            //GeoCoordinate userLocation = new GeoCoordinate((double)latlong[0], (double)latlong[1]);
-            var tempUser = db.Members.First();
-            GeoCoordinate userLocation = new GeoCoordinate((double)tempUser.Latitude, (double)tempUser.Longitude);
+            DistrictRef dist = db.DistrictRefs.Where(d => d.DistrictId == DistrictInput)
+                .Include(d => d.City).First();
+            string address = dist.City.CityName + dist.DistrictName + addressInput;
+            var latlong = cUtility.addressToLatlong(address);
+            GeoCoordinate userLocation = new GeoCoordinate((double)latlong[0], (double)latlong[1]);
+            //var tempUser = db.Members.First();
+            //GeoCoordinate userLocation = new GeoCoordinate((double)tempUser.Latitude, (double)tempUser.Longitude);
             var bagTypeSearch = from o in db.GarbageServiceOffers
                                 where o.IsActive == true && 
                                 !(o.L3available == 0
@@ -70,6 +70,9 @@ namespace LeSheTuanGo.Controllers{
                                 o.L120available,
                                 o.Latitude,
                                 o.Longitude,
+                                //put user location in every data, not worth putting it elsewhere when the data count is small.
+                                userLat = latlong[0],
+                                userLong = latlong[1],
                                 Distance = userLocation.GetDistanceTo(new GeoCoordinate((double)o.Latitude, (double)o.Longitude)),
                             };
             var offerList = newObject.AsEnumerable().Where(o => o.Distance <= distanceMax).ToList();

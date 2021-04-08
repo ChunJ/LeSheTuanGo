@@ -44,11 +44,12 @@
             <button class="btn btn-primary" onclick="searchStart()">搜尋</button>
             <a class="btn btn-primary" href="/ChatMessageRecords/Index">查看紀錄</a>
             <button class="btn btn-primary" onclick="fillDemo()">DEMO</button>
+            <button class="btn btn-primary" onclick="test()">test</button>
         </div>
     </div>
     @*result column*@
 <div class="col-2">
-    <div style="height:65vh">
+    <div style="height:68vh">
         <div class="border-bottom-dark">
             <h5>搜尋結果</h5>
         </div>
@@ -71,7 +72,7 @@
         </div>
         <form method="post" action="/Buy/Join">
             <div id="formInput">
-                <input hidden=hidden name="GarbageServiceOfferId" value="" />
+                <input hidden=hidden name="OrderId" value="" />
                 <input hidden=hidden name="ComeDistrictId" value="" />
                 <input hidden=hidden name="ComeAddress" value="" />
                 <div class="form-group form-check">
@@ -91,14 +92,11 @@
         </form>
     </div>
 </div>
-    @*detail column*@
-    
     @*map column*@
     <div class="col-8">
         <div id="map" style="height: 100%;width: 100%;"></div>
     </div>
 </div>
-
 @section Scripts {
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBircB99P_RvzxWdQT-hk40-h3Ofzlb_vQ&callback=initMap&libraries=&v=weekly" async=async></script>
     <script>
@@ -124,7 +122,7 @@
         let fList = [];
         let markers = [];
         let map;
-
+        let userLatlong = [];
         window.onload = function () {
             cityS.value = @ViewData["CityId"];
             fillDistrict(@ViewData["CityId"], "#DistrictId", function () {
@@ -138,6 +136,9 @@
         function fillDemo() {
             addressIn.value = "信義路四段2號";
             distS.value = 5;
+        }
+        function test() {
+
         }
         function searchStart() {
             detailView.classList.add("invisible");
@@ -155,6 +156,7 @@
                     },
                     function (data, status) {
                         if (status == "success") {
+                            //console.log(data);
                             queryList = JSON.parse(data);
                             filterResult();
                         }
@@ -190,9 +192,9 @@
                     //htmlString += `<div class="w-100"><div class="rem-4">距離</div><span class="px-1">:</span>${parseInt(fList[i].Distance, 10)} 公尺</div>`;
                     htmlString += `<div class="w-100"><div class="rem-4">宅配服務</div><span class="px-1">:</span>${fList[i].CanGo?"有":"不"}提供</div></div>`;
                 }
+                showAllMap();
             }
             result.innerHTML = htmlString;
-            showAllMap();
         }
         function getDetail(id) {
         //fill view + update map + turn visible
@@ -235,14 +237,14 @@
             });
         }
         function showAllMap() {
-            let mbr = new google.maps.LatLng(25.0339400, 121.5435000);  //fixed for now
+            let mapCenter = new google.maps.LatLng(fList[0].userLat, fList[0].userLong);  //fixed for now
             map = new google.maps.Map(mapDiv,
                 {
-                    center: mbr,
+                    center: mapCenter,
                     zoom: 17,
                 });
             new google.maps.Marker({
-                position: mbr,
+                position: mapCenter,
                 map,
                 title: "您的位置",
                 icon: "https://crd-rubbish.epd.ntpc.gov.tw/maps/images/icon/Icon_LegendD.png",
