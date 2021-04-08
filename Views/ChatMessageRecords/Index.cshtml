@@ -148,7 +148,9 @@
         var username = '@ViewBag.username';
         var groupName = $("#roomid").val().toString();
 
-        //ready事件，給radioBTN及send鍵掛事件
+
+
+        //ready事件，給radioBTN及send鍵掛事件，預先指定group
         $(function () {
             $('input[type=radio][name="grouptype"]').change(function () {
                 $("#rec_grouptype").val($(this).val());
@@ -168,6 +170,15 @@
                     return false;
                 }
             });
+            let gt =@ViewBag.grouptype;
+            let oid = @ViewBag.groupid;
+            if (gt != 0) {
+                $(`input[type=radio][name="grouptype"][value="${gt}"]`).click().then(function () {
+                    if (oid != 0) {
+                        $(`#link_btn div[id=btn${oid}]`).click();
+                    }
+                })
+            }
         })
 
         //建立SignalR連線，接收訊息用事件

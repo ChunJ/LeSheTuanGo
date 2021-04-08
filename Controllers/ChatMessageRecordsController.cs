@@ -22,12 +22,13 @@ namespace LeSheTuanGo.Controllers
         int memberID = 0;
 
         //聊天室主頁
-        public async Task<IActionResult> Index(int grouptype = 0)
+        public async Task<IActionResult> Index(int grouptype = 0, int groupid = 0)
         {
             if (HttpContext.Session.GetInt32(cUtility.Current_User_Id) == null)
             {
                 return RedirectToAction("Login", "Member");
             }
+
             memberID = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
             var memberName = await _context.Members.Where(n => n.MemberId == memberID).Select(n => n.FirstName + n.LastName).ToListAsync();
             var orderQuery = _context.Orders.Where(n => n.HostMemberId == memberID).Select(n => n.OrderId);
@@ -35,6 +36,8 @@ namespace LeSheTuanGo.Controllers
             ViewBag.order = (await orderQuery.ToListAsync()).Union(await orderBuyRQuery.ToListAsync());
             ViewBag.username = memberName[0];
             ViewBag.memberid = memberID;
+            ViewBag.grouptype = grouptype;
+            ViewBag.groupid = groupid;
             return View();
         }
 
