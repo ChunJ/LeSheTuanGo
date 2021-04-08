@@ -244,8 +244,8 @@
         <tbody id="header">
             <tr>
                 <th>收集地點</th>
-                <th onclick="orderByTime()" id="thOrderTime">到達時間</th>
-                <th onclick="orderByDistance()" id="thOrderDistance">距離（公尺）</th>
+                <th onclick="orderByTime()" id="thOrderTime">到達時間☰</th>
+                <th onclick="orderByDistance()" id="thOrderDistance">距離（公尺）☰</th>
                 @*<th style="display:none">lat</th>
                     <th style="display:none">lng</th>*@
             </tr>
@@ -319,8 +319,8 @@
                     }
                 }
             })
-            document.getElementById("thOrderTime").innerText = "到達時間";
-            document.getElementById("thOrderDistance").innerText = "距離（公尺）";
+            document.getElementById("thOrderTime").innerText = "到達時間☰";
+            document.getElementById("thOrderDistance").innerText = "距離（公尺）☰";
         }
 
         function clearContent() {
@@ -354,7 +354,7 @@
                 document.getElementById("thOrderTime").innerText = "到達時間▼";
             }
 
-            document.getElementById("thOrderDistance").innerText = "距離（公尺）";
+            document.getElementById("thOrderDistance").innerText = "距離（公尺）☰";
             timeOrder = timeOrder * -1;
         }
 
@@ -383,7 +383,7 @@
                 document.getElementById("thOrderDistance").innerText = "距離（公尺）▼";
             }
 
-            document.getElementById("thOrderTime").innerText = "到達時間";
+            document.getElementById("thOrderTime").innerText = "到達時間☰";
             distanceOrder = distanceOrder * -1;
         }
 
@@ -422,8 +422,8 @@
             }
 
             table100m.appendChild(ele);
-            document.getElementById("thOrderTime").innerText = "到達時間";
-            document.getElementById("thOrderDistance").innerText = "距離（公尺）";
+            document.getElementById("thOrderTime").innerText = "到達時間☰";
+            document.getElementById("thOrderDistance").innerText = "距離（公尺）☰";
 
 
 
@@ -502,10 +502,10 @@
 
 @*/body*@
 
-<!DOCTYPE html>
+@*<!DOCTYPE html>
 <html>
 <head>
 </head>
 <body onload="">
 </body>
-</html>
+</html>*@
