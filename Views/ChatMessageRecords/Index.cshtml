@@ -148,10 +148,10 @@
         var username = '@ViewBag.username';
         var groupName = $("#roomid").val().toString();
 
-
-
-        //ready事件，給radioBTN及send鍵掛事件，預先指定group
+        //ready事件，radioBTN及send鍵掛事件，預先指定group
         $(function () {
+
+            //掛事件
             $('input[type=radio][name="grouptype"]').change(function () {
                 $("#rec_grouptype").val($(this).val());
                 getOrderList($("#rec_grouptype").val(), $("#rec_selfother").val(), $("#rec_onoff").val())
@@ -170,6 +170,8 @@
                     return false;
                 }
             });
+
+            //預先選團
             let gt =@ViewBag.grouptype;
             if (gt != 0) {
                 $(`input[type=radio][name="grouptype"][value="${gt}"]`).click()}
