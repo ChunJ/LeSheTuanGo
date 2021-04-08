@@ -173,13 +173,14 @@
             let gt =@ViewBag.grouptype;
             let oid = @ViewBag.groupid;
             if (gt != 0) {
-                $(`input[type=radio][name="grouptype"][value="${gt}"]`).click().then(function () {
+                $(`input[type=radio][name="grouptype"][value="${gt}"]`).click(function () {
                     if (oid != 0) {
                         $(`#link_btn div[id=btn${oid}]`).click();
                     }
-                })
+                }
             }
         })
+        
 
         //建立SignalR連線，接收訊息用事件
         connection.on("ReceiveGroupMessage", function (groupName, memberid,username, message) {
