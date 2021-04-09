@@ -27,6 +27,41 @@ namespace LeSheTuanGo.Controllers
             iv_context = midtermContext;
         }
 
+        public string spotCollected(int mem)
+        {
+            var spotCollected = iv_context.GarbageSpotAlerts.Where(s => s.MemberId == mem).Select(s => s.GarbageTruckSpotId).ToList();
+
+            var memberLat = iv_context.Members.Where(m => m.MemberId == mem).First().Latitude;
+            var memberLng = iv_context.Members.Where(m => m.MemberId == mem).First().Longitude;
+
+
+            List<dynamic> qList=new List<dynamic>();
+            foreach (int i in spotCollected)
+            {
+                var spotinfo = iv_context.GarbageTruckSpots.Where(s => s.GarbageTruckSpotId == i).Select(s => new { s.Address, s.ArrivalTime, s.Latitude, s.Longitude, distance = cUtility.distanceBetweenTwoSpots(memberLat, memberLng, s.Latitude, s.Longitude), mLat = memberLat, mLng = memberLng, s.GarbageTruckSpotId }).ToList();
+                qList.Add(spotinfo[0]);
+            }
+
+            //var q = from i in result select new { i.Address, i.ArrivalTime, i.Latitude, i.Longitude, distance = cUtility.distanceBetweenTwoSpots(addressLat, addressLng, i.Latitude, i.Longitude), addLat = addressLat, addLng = addressLng, i.GarbageTruckSpotId };
+            //var qList = q.Where(q => q.distance <= 300 && q.distance >= 0).OrderBy(q => q.distance).ToList();
+
+            string listJsonString = JsonConvert.SerializeObject(qList);
+
+            return listJsonString;
+            //return "";
+        }
+
+        public IActionResult collection()
+        {
+            return View();
+        }
+
+        public IActionResult favorite()
+        {
+            var q = iv_context.GarbageSpotAlerts.ToList();  //viewmodel???
+            return View(q);
+        }
+
         public IActionResult search()
         {
             ViewData["CityId"] = new SelectList(iv_context.CityRefs, "CityId", "CityName");
