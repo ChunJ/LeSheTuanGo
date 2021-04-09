@@ -37,9 +37,17 @@ namespace LeSheTuanGo.Controllers
             return "判斷spotId是否已在memberId收藏中";
         }
         
+        public string spotCollectedNum(int mem)
+        {
+            var spotCollected = iv_context.GarbageSpotLikes.Where(s => s.MemberId == mem).OrderBy(s => s.GarbageTruckSpotId).Select(s => s.GarbageTruckSpotId).ToList();
+            string spotJsonString = JsonConvert.SerializeObject(spotCollected);
+            return spotJsonString;
+        }
+
         public string spotCollected(int mem)
         {
-            var spotCollected = iv_context.GarbageSpotLikes.Where(s => s.MemberId == mem).Select(s => s.GarbageTruckSpotId).ToList();
+            var spotCollected = iv_context.GarbageSpotLikes.Where(s => s.MemberId == mem).OrderBy(s=>s.GarbageTruckSpotId).Select(s => s.GarbageTruckSpotId).ToList();
+
 
             var memberLat = iv_context.Members.Where(m => m.MemberId == mem).First().Latitude;
             var memberLng = iv_context.Members.Where(m => m.MemberId == mem).First().Longitude;
@@ -68,8 +76,7 @@ namespace LeSheTuanGo.Controllers
 
         public IActionResult favorite()
         {
-            var q = iv_context.GarbageSpotLikes.ToList();  //viewmodel???
-            return View(q);
+            return View();
         }
 
         public IActionResult search()

@@ -163,14 +163,14 @@
     if (currentUser == 0) {
         console.log(this);
         console.log(event);
-        alert('請登入後使用');
+        alert('請先登入！');
     } else {
         initFav();
         console.log('initFav');
         document.getElementById('lblSource').innerText = '您的收藏清單';
     }
     })()">
-        收藏清單(需登入)
+        收藏清單（會員專屬）
     </button>
 
     <button id="find-me" onclick="geoFindMe()">查詢目前位置</button>
@@ -295,12 +295,14 @@
         var lngNow = 0;
         var js;
         var js0;  //store material from backend
+        var userspot;
 
         window.onload = (() => {
             if (currentUser == 0) {
                 geoFindMe();
                 console.log('geoFindMe()');
             } else {
+                getSpotNum(currentUser);
                 init300M('', 'mem');
                 console.log('init300M(, mem)');
                 document.getElementById('lblSource').innerText = '您的註冊地址';
@@ -309,6 +311,18 @@
 
         var timeOrder = -1;
         var distanceOrder = -1;
+
+    function getSpotNum(currentUser) {
+        $.ajax({
+            url: "/map/spotCollectedNum?mem=" + currentUser,
+            type: "GET",
+            success: function (spotJsonString) {
+                console.log(this.url);
+                userspot = JSON.parse(spotJsonString);
+                console.log(userspot);
+            }
+        })
+    }
 
         function init300M(address, source) {
             $.ajax({
@@ -331,10 +345,10 @@
                     for (let i = 0; i < js.length; i++) {
                         tbodycont.innerHTML +=
                             '<tr id="' + js[i]["GarbageTruckSpotId"] + '">'
-                            + '<th>+++</th>'
-                        + '<th onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">' + js[i]["Address"] + '</th>'
-                        + '<th onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">' + js[i]["ArrivalTime"] + '</th>'
-                        + '<th onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">' + js[i]["distance"] + '</th>'
+                            + '<td id="thFav' + js[i]["GarbageTruckSpotId"] + '"><label onclick="addFav()">♥️</label></td>'
+                            + '<td onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">' + js[i]["Address"] + '</td>'
+                            + '<td onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">' + js[i]["ArrivalTime"] + '</td>'
+                            + '<td onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">' + js[i]["distance"] + '</td>'
                             + '</tr>';
                             //'<tr id="' + js[i]["GarbageTruckSpotId"] + '" onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">'
                             //+ '<th>+++</th>'
@@ -342,6 +356,12 @@
                             //+ '<th>' + js[i]["ArrivalTime"] + '</th>'
                             //+ '<th>' + js[i]["distance"] + '</th>'
                             //+ '</tr>';
+                    }
+                    if (currentUser == 0) {
+                        $('th[id^="thFav"]').remove();
+                        $('td[id^="thFav"]').remove();
+                    } else {
+                        console.log('currenUser!=0');
                     }
                 }
             })
@@ -369,12 +389,18 @@
                     //console.log(js[0]["addLng"]);
                     for (let i = 0; i < js.length; i++) {
                         tbodycont.innerHTML +=
-                            '<tr id="' + js[i]["GarbageTruckSpotId"] + '" onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">'
-                            + '<th>+++</th>'
-                            + '<th>' + js[i]["Address"] + '</th>'
-                            + '<th>' + js[i]["ArrivalTime"] + '</th>'
-                            + '<th>' + js[i]["distance"] + '</th>'
+                            '<tr id="' + js[i]["GarbageTruckSpotId"] + '">'
+                            + '<th id="thFav' + js[i]["GarbageTruckSpotId"] + '">---</th>'
+                            + '<th onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">' + js[i]["Address"] + '</th>'
+                            + '<th onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">' + js[i]["ArrivalTime"] + '</th>'
+                            + '<th onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">' + js[i]["distance"] + '</th>'
                             + '</tr>';
+                            //'<tr id="' + js[i]["GarbageTruckSpotId"] + '" onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">'
+                            //+ '<th>+++</th>'
+                            //+ '<th>' + js[i]["Address"] + '</th>'
+                            //+ '<th>' + js[i]["ArrivalTime"] + '</th>'
+                            //+ '<th>' + js[i]["distance"] + '</th>'
+                            //+ '</tr>';
                     }
                 }
             })
@@ -397,12 +423,19 @@
             });
             for (let i = 0; i < js.length; i++) {
                 ele.innerHTML +=
-                    '<tr id="' + js[i]["GarbageTruckSpotId"] + '" onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">'
+                    '<tr id="' + js[i]["GarbageTruckSpotId"] + '">'
                     + '<th>+++</th>'
-                    + '<th>' + js[i]["Address"] + '</th>'
-                    + '<th>' + js[i]["ArrivalTime"] + '</th>'
-                    + '<th>' + js[i]["distance"] + '</th>'
+                    + '<th onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">' + js[i]["Address"] + '</th>'
+                    + '<th onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">' + js[i]["ArrivalTime"] + '</th>'
+                    + '<th onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">' + js[i]["distance"] + '</th>'
                     + '</tr>';
+
+                    //'<tr id="' + js[i]["GarbageTruckSpotId"] + '" onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">'
+                    //+ '<th>+++</th>'
+                    //+ '<th>' + js[i]["Address"] + '</th>'
+                    //+ '<th>' + js[i]["ArrivalTime"] + '</th>'
+                    //+ '<th>' + js[i]["distance"] + '</th>'
+                    //+ '</tr>';
             }
 
             table100m.appendChild(ele);
@@ -427,12 +460,19 @@
             });
             for (let i = 0; i < js.length; i++) {
                 ele.innerHTML +=
-                    '<tr id="' + js[i]["GarbageTruckSpotId"] + '" onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">'
+                    '<tr id="' + js[i]["GarbageTruckSpotId"] + '">'
                     + '<th>+++</th>'
-                    + '<th>' + js[i]["Address"] + '</th>'
-                    + '<th>' + js[i]["ArrivalTime"] + '</th>'
-                    + '<th>' + js[i]["distance"] + '</th>'
+                    + '<th onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">' + js[i]["Address"] + '</th>'
+                    + '<th onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">' + js[i]["ArrivalTime"] + '</th>'
+                    + '<th onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">' + js[i]["distance"] + '</th>'
                     + '</tr>';
+
+                    //'<tr id="' + js[i]["GarbageTruckSpotId"] + '" onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">'
+                    //+ '<th>+++</th>'
+                    //+ '<th>' + js[i]["Address"] + '</th>'
+                    //+ '<th>' + js[i]["ArrivalTime"] + '</th>'
+                    //+ '<th>' + js[i]["distance"] + '</th>'
+                    //+ '</tr>';
             }
 
             table100m.appendChild(ele);
@@ -475,13 +515,20 @@
             console.log('filterinit');
             for (let i = 0; i < js.length; i++) {
                 ele.innerHTML +=
-                    '<tr id="' + js[i]["GarbageTruckSpotId"] + '" onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">'
-                    //'<tr onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ')">'
+                    '<tr id="' + js[i]["GarbageTruckSpotId"] + '">'
                     + '<th>+++</th>'
-                    + '<th>' + js[i]["Address"] + '</th>'
-                    + '<th>' + js[i]["ArrivalTime"] + '</th>'
-                    + '<th>' + js[i]["distance"] + '</th>'
+                    + '<th onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">' + js[i]["Address"] + '</th>'
+                    + '<th onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">' + js[i]["ArrivalTime"] + '</th>'
+                    + '<th onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">' + js[i]["distance"] + '</th>'
                     + '</tr>';
+
+            //        '<tr id="' + js[i]["GarbageTruckSpotId"] + '" onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">'
+            //        //'<tr onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ')">'
+            //        + '<th>+++</th>'
+            //        + '<th>' + js[i]["Address"] + '</th>'
+            //        + '<th>' + js[i]["ArrivalTime"] + '</th>'
+            //        + '<th>' + js[i]["distance"] + '</th>'
+            //        + '</tr>';
             }
 
             table100m.appendChild(ele);
@@ -561,6 +608,15 @@
         function topFunction() {
             document.body.scrollTop = 0; // For Safari
             document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+        }
+
+        function removeFav() {
+            console.log('removed');
+        }
+
+        function addFav() {
+            console.log('added');
+            console.log(event.target.parentNode.parentNode.id);
         }
 </script>
 
