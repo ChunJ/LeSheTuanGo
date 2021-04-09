@@ -111,6 +111,11 @@ namespace LeSheTuanGo.Controllers
             return View(vm);
         }
 
+        public IActionResult Charge()
+        {
+            return View();
+        }
+
         public IActionResult EditPassword(int? memberId)
         {
             if (memberId == null)
