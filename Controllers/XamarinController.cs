@@ -10,12 +10,12 @@ namespace LeSheTuanGo.Controllers
     public class XamarinController : Controller
     {
 
-            private readonly MidtermContext db;
-            public XamarinController(MidtermContext context)
-            {
-                db = context;
-            }
-            public IActionResult Index()
+        private readonly MidtermContext db;
+        public XamarinController(MidtermContext context)
+        {
+            db = context;
+        }
+        public IActionResult Index()
         {
             return View();
         }
