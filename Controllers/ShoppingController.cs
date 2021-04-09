@@ -38,7 +38,6 @@ namespace LeSheTuanGo.Controllers
             Console.WriteLine(result);
             pays.Add(pay);
             return Json(new { JsonResult = pays });
-
         }
     }
 }
