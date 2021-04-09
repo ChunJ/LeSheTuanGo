@@ -159,6 +159,20 @@
 <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
 
 <div style="height:100%;width:50%;float:left;">
+    <button onclick="(() => {
+    if (currentUser == 0) {
+        console.log(this);
+        console.log(event);
+        alert('請登入後使用');
+    } else {
+        initFav();
+        console.log('initFav');
+        document.getElementById('lblSource').innerText = '您的收藏清單';
+    }
+    })()">
+        收藏清單(需登入)
+    </button>
+
     <button id="find-me" onclick="geoFindMe()">查詢目前位置</button>
     <p id="status"></p>
     <a id="map-link" href="" target="_blank"></a>  @*target=_blank will open a new tab*@
@@ -178,6 +192,7 @@
     <select id="rangeLevel" onchange="">
         <option hidden>請選擇</option>
         <option>300</option>
+        <option>30000</option>
         <option>200</option>
         <option>100</option>
     </select>
@@ -239,10 +254,13 @@
     </select>
     <label>時迄</label>
     <button onclick="filter()">篩選</button>
-
+    <br />
+    <label>以下結果來自：</label>
+    <label id="lblSource"></label>
     <table class="table" id="table100m" style="float:left;">
         <tbody id="header">
             <tr>
+                <th id="thFav0">加入收藏</th>
                 <th>收集地點</th>
                 <th onclick="orderByTime()" id="thOrderTime">到達時間☰</th>
                 <th onclick="orderByDistance()" id="thOrderDistance">距離（公尺）☰</th>
@@ -285,6 +303,7 @@
             } else {
                 init300M('', 'mem');
                 console.log('init300M(, mem)');
+                document.getElementById('lblSource').innerText = '您的註冊地址';
             }
         })();
 
@@ -311,12 +330,50 @@
                     //console.log(js[0]["addLng"]);
                     for (let i = 0; i < js.length; i++) {
                         tbodycont.innerHTML +=
+                            '<tr id="' + js[i]["GarbageTruckSpotId"] + '">'
+                            + '<th>+++</th>'
+                        + '<th onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">' + js[i]["Address"] + '</th>'
+                        + '<th onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">' + js[i]["ArrivalTime"] + '</th>'
+                        + '<th onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">' + js[i]["distance"] + '</th>'
+                            + '</tr>';
+                            //'<tr id="' + js[i]["GarbageTruckSpotId"] + '" onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">'
+                            //+ '<th>+++</th>'
+                            //+ '<th>' + js[i]["Address"] + '</th>'
+                            //+ '<th>' + js[i]["ArrivalTime"] + '</th>'
+                            //+ '<th>' + js[i]["distance"] + '</th>'
+                            //+ '</tr>';
+                    }
+                }
+            })
+            document.getElementById("thOrderTime").innerText = "到達時間☰";
+            document.getElementById("thOrderDistance").innerText = "距離（公尺）☰";
+        }
+
+        function initFav() {
+            $.ajax({
+                url: "/map/spotCollected?mem=" + currentUser,
+                type: "GET",
+                success: function (listJsonString) {
+                    console.log(this.url);
+                    js0 = JSON.parse(listJsonString);
+                    //js = js.sort(function (a, b) {
+                    //    return a.ArrivalTime < b.ArrivalTime ? -1 : 1;
+                    //});
+                    js = js0;
+                    let tbodycont = document.getElementById("content");
+                    tbodycont.innerHTML = "";
+                    latNow = js[0]["addLat"];
+                    lngNow = js[0]["addLng"];
+                    initMap(js, "l");
+                    //console.log(js[0]["addLat"]);
+                    //console.log(js[0]["addLng"]);
+                    for (let i = 0; i < js.length; i++) {
+                        tbodycont.innerHTML +=
                             '<tr id="' + js[i]["GarbageTruckSpotId"] + '" onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">'
+                            + '<th>+++</th>'
                             + '<th>' + js[i]["Address"] + '</th>'
                             + '<th>' + js[i]["ArrivalTime"] + '</th>'
                             + '<th>' + js[i]["distance"] + '</th>'
-                            //+ '<th style="display:none">' + js[i]["Latitude"] + '</th>'
-                            //+ '<th style="display:none">' + js[i]["Longitude"] + '</th>'
                             + '</tr>';
                     }
                 }
@@ -341,6 +398,7 @@
             for (let i = 0; i < js.length; i++) {
                 ele.innerHTML +=
                     '<tr id="' + js[i]["GarbageTruckSpotId"] + '" onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">'
+                    + '<th>+++</th>'
                     + '<th>' + js[i]["Address"] + '</th>'
                     + '<th>' + js[i]["ArrivalTime"] + '</th>'
                     + '<th>' + js[i]["distance"] + '</th>'
@@ -370,6 +428,7 @@
             for (let i = 0; i < js.length; i++) {
                 ele.innerHTML +=
                     '<tr id="' + js[i]["GarbageTruckSpotId"] + '" onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">'
+                    + '<th>+++</th>'
                     + '<th>' + js[i]["Address"] + '</th>'
                     + '<th>' + js[i]["ArrivalTime"] + '</th>'
                     + '<th>' + js[i]["distance"] + '</th>'
@@ -398,7 +457,8 @@
             console.log(typeof $('#selectDistric :selected').text());
             console.log(typeof $('#txtAddress').val());
 
-            init300M($('#selectCity :selected').text() + $('#selectDistric :selected').text() + $('#txtAddress').val(),'add');
+            init300M($('#selectCity :selected').text() + $('#selectDistric :selected').text() + $('#txtAddress').val(), 'add');
+            document.getElementById('lblSource').innerText = '您輸入的新地址';
         }
 
         function filter() {
@@ -417,6 +477,7 @@
                 ele.innerHTML +=
                     '<tr id="' + js[i]["GarbageTruckSpotId"] + '" onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">'
                     //'<tr onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ')">'
+                    + '<th>+++</th>'
                     + '<th>' + js[i]["Address"] + '</th>'
                     + '<th>' + js[i]["ArrivalTime"] + '</th>'
                     + '<th>' + js[i]["distance"] + '</th>'
@@ -464,7 +525,8 @@
                 mapLink.href = `https://www.openstreetmap.org/#map=18/${latitude}/${longitude}`;
                 mapLink.textContent = `緯度: ${latitude.toFixed(7)}°, 經度: ${longitude.toFixed(7)}°`;
 
-                init300M('','nav');
+                init300M('', 'nav');
+                document.getElementById('lblSource').innerText = '您目前的GPS定位';
             }
 
             function error() {

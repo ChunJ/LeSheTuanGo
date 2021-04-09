@@ -27,9 +27,19 @@ namespace LeSheTuanGo.Controllers
             iv_context = midtermContext;
         }
 
+        public string favorite(int mem, int spot)
+        {
+            return "用來對memberId增加/刪除spotId";
+        }
+
+        public string ifSpotExist(int mem, int spot)
+        {
+            return "判斷spotId是否已在memberId收藏中";
+        }
+        
         public string spotCollected(int mem)
         {
-            var spotCollected = iv_context.GarbageSpotAlerts.Where(s => s.MemberId == mem).Select(s => s.GarbageTruckSpotId).ToList();
+            var spotCollected = iv_context.GarbageSpotLikes.Where(s => s.MemberId == mem).Select(s => s.GarbageTruckSpotId).ToList();
 
             var memberLat = iv_context.Members.Where(m => m.MemberId == mem).First().Latitude;
             var memberLng = iv_context.Members.Where(m => m.MemberId == mem).First().Longitude;
@@ -38,7 +48,7 @@ namespace LeSheTuanGo.Controllers
             List<dynamic> qList=new List<dynamic>();
             foreach (int i in spotCollected)
             {
-                var spotinfo = iv_context.GarbageTruckSpots.Where(s => s.GarbageTruckSpotId == i).Select(s => new { s.Address, s.ArrivalTime, s.Latitude, s.Longitude, distance = cUtility.distanceBetweenTwoSpots(memberLat, memberLng, s.Latitude, s.Longitude), mLat = memberLat, mLng = memberLng, s.GarbageTruckSpotId }).ToList();
+                var spotinfo = iv_context.GarbageTruckSpots.Where(s => s.GarbageTruckSpotId == i).Select(s => new { s.Address, s.ArrivalTime, s.Latitude, s.Longitude, distance = cUtility.distanceBetweenTwoSpots(memberLat, memberLng, s.Latitude, s.Longitude), addLat = memberLat, addLng = memberLng, s.GarbageTruckSpotId }).ToList();
                 qList.Add(spotinfo[0]);
             }
 
@@ -58,7 +68,7 @@ namespace LeSheTuanGo.Controllers
 
         public IActionResult favorite()
         {
-            var q = iv_context.GarbageSpotAlerts.ToList();  //viewmodel???
+            var q = iv_context.GarbageSpotLikes.ToList();  //viewmodel???
             return View(q);
         }
 
