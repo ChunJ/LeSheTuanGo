@@ -159,22 +159,11 @@
 <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
 
 <div style="height:100%;width:50%;float:left;">
-    <button onclick="(() => {
-    if (currentUser == 0) {
-        console.log(this);
-        console.log(event);
-        alert('請先登入！');
-    } else {
-        initFav();
-        console.log('initFav');
-        document.getElementById('lblSource').innerText = '您的收藏清單';
-    }
-    })()">
-        收藏清單（會員專屬）
-    </button>
+
 
     <button id="find-me" onclick="geoFindMe()">查詢目前位置</button>
-    <p id="status"></p>
+    <a id="status"></a>
+    <br />
     <a id="map-link" href="" target="_blank"></a>  @*target=_blank will open a new tab*@
 
     <br />
@@ -255,6 +244,20 @@
     <label>時迄</label>
     <button onclick="filter()">篩選</button>
     <br />
+    <button onclick="(() => {
+    if (currentUser == 0) {
+        console.log(this);
+        console.log(event);
+        alert('請先登入！');
+    } else {
+        initFav();
+        console.log('initFav');
+        document.getElementById('lblSource').innerText = '您的收藏清單';
+    }
+    })()">
+        收藏清單（會員專屬）
+    </button>
+    <br />
     <label>以下結果來自：</label>
     <label id="lblSource"></label>
     <table class="table" id="table100m" style="float:left;">
@@ -295,7 +298,8 @@
         var lngNow = 0;
         var js;
         var js0;  //store material from backend
-        var userspot;
+        var userFav;
+        var userFav0;
 
         window.onload = (() => {
             if (currentUser == 0) {
@@ -308,7 +312,7 @@
                 document.getElementById('lblSource').innerText = '您的註冊地址';
             }
         })();
-
+        
         var timeOrder = -1;
         var distanceOrder = -1;
 
@@ -318,8 +322,9 @@
             type: "GET",
             success: function (spotJsonString) {
                 console.log(this.url);
-                userspot = JSON.parse(spotJsonString);
-                console.log(userspot);
+                userFav0 = JSON.parse(spotJsonString);
+                userFav = userFav0;
+                console.log(userFav);
             }
         })
     }
@@ -342,31 +347,59 @@
                     initMap(js, "l");
                     //console.log(js[0]["addLat"]);
                     //console.log(js[0]["addLng"]);
-                    for (let i = 0; i < js.length; i++) {
-                        tbodycont.innerHTML +=
-                            '<tr id="' + js[i]["GarbageTruckSpotId"] + '">'
-                            + '<td id="thFav' + js[i]["GarbageTruckSpotId"] + '"><label onclick="addFav()">♥️</label></td>'
-                            + '<td onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">' + js[i]["Address"] + '</td>'
-                            + '<td onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">' + js[i]["ArrivalTime"] + '</td>'
-                            + '<td onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">' + js[i]["distance"] + '</td>'
-                            + '</tr>';
+                    if (currentUser == 0) {
+                        $('#thFav0').remove();
+                        for (let i = 0; i < js.length; i++) {
+                            tbodycont.innerHTML +=
+                                '<tr id="' + js[i]["GarbageTruckSpotId"] + '" onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">'
+                                //+ '<th>+++</th>'
+                                + '<td>' + js[i]["Address"] + '</td>'
+                                + '<td>' + js[i]["ArrivalTime"] + '</td>'
+                                + '<td>' + js[i]["distance"] + '</td>'
+                                + '</tr>';
+                        }
+                    }
+                    else {
+
+                        for (let i = 0; i < js.length; i++) {
+                            tbodycont.innerHTML +=
+                                '<tr id="' + js[i]["GarbageTruckSpotId"] + '">'
+                                + '<td id="tdFav' + js[i]["GarbageTruckSpotId"] + '"><label onclick="addFav()">♥️</label></td>'
+                                + '<td onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">' + js[i]["Address"] + '</td>'
+                                + '<td onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">' + js[i]["ArrivalTime"] + '</td>'
+                                + '<td onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">' + js[i]["distance"] + '</td>'
+                                + '</tr>';
+                        }
+                    }
+
+                    
+                            //'<tr id="' + js[i]["GarbageTruckSpotId"] + '">'
+                            //+ '<td id="thFav' + js[i]["GarbageTruckSpotId"] + '"><label onclick="addFav()">♥️</label></td>'
+                            //+ '<td onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">' + js[i]["Address"] + '</td>'
+                            //+ '<td onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">' + js[i]["ArrivalTime"] + '</td>'
+                            //+ '<td onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">' + js[i]["distance"] + '</td>'
+                            //+ '</tr>';
+
                             //'<tr id="' + js[i]["GarbageTruckSpotId"] + '" onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">'
                             //+ '<th>+++</th>'
                             //+ '<th>' + js[i]["Address"] + '</th>'
                             //+ '<th>' + js[i]["ArrivalTime"] + '</th>'
                             //+ '<th>' + js[i]["distance"] + '</th>'
                             //+ '</tr>';
-                    }
-                    if (currentUser == 0) {
-                        $('th[id^="thFav"]').remove();
-                        $('td[id^="thFav"]').remove();
-                    } else {
-                        console.log('currenUser!=0');
-                    }
                 }
+
+                    //if (currentUser == 0) {
+                    //    $('th[id^="thFav"]').remove();
+                    //    $('td[id^="thFav"]').remove();
+                    //} else {
+                    //    console.log('currenUser!=0');
+                    //}
+
             })
+
             document.getElementById("thOrderTime").innerText = "到達時間☰";
             document.getElementById("thOrderDistance").innerText = "距離（公尺）☰";
+
         }
 
         function initFav() {
