@@ -9,7 +9,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" type="text/css" rel="stylesheet" />
 <h2 style="margin-left:2vh">揪團紀錄</h2>
 
-<div class="row"  style="width: 96vw; height: 95%; border: 1px solid lightgray; margin-left:2vh;">
+<div class="row" style="width: 96vw; height: 95%; border: 1px solid lightgray; margin-left:2vh;">
     @*column1*@
     <div class="col-3" style="padding:0">
         <div id="link_select" class="inbox_people">
@@ -57,10 +57,10 @@
         </div>
     </div>
     @*column3*@
-<div class="col-4 inbox_people" >
-    <h3 class="sideheader text-center">詳細資訊</h3>
-    <div id="detail"></div>
-</div>
+    <div class="col-4 inbox_people">
+        <h3 class="sideheader text-center">詳細資訊</h3>
+        <div id="detail"></div>
+    </div>
 </div>
 
 
@@ -73,6 +73,8 @@
         var gmemberid = '@ViewBag.memberid';
         var username = '@ViewBag.username';
         var groupName = $("#roomid").val().toString();
+        var oid = @ViewBag.groupid;
+        var gt =@ViewBag.grouptype;
 
         //ready事件，radioBTN及send鍵掛事件，預先指定group
         $(function () {
@@ -98,7 +100,7 @@
             });
 
             //預先選團
-            let gt =@ViewBag.grouptype;
+
             if (gt != 0) {
                 $(`input[type=radio][name="grouptype"][value="${gt}"]`).click()}
         })
@@ -112,7 +114,7 @@
         });
 
             //選團
-        function chatGetOrder(oid, gt,rn) {
+        function chatGetOrder(oid, gt,rn,hid) {
             //加入SignalR聊天室
             var group = gt.toString()+'_'+oid.toString();
             if (connection.connectionState != "Connected") {
@@ -140,10 +142,15 @@
                 });
             };
             //取得團明細
-            var urlorder = "/ChatMessageRecords/chatGetOrderDetail?orderId=" + oid+"&grouptype="+gt;
+            var urlorder = "/ChatMessageRecords/chatGetOrderDetail";
             $.ajax({
                 url: urlorder,
                 type: "GET",
+                data: {
+                    orderId: oid,
+                    grouptype: gt,
+                    hostid: hid,
+                },
                 success: function (data) {
                     var s = JSON.parse(data);
                     var txt = "";
@@ -153,7 +160,6 @@
                             txt += `<label>團編號：${ s[i].OrderId } </label><br />`;
                             txt += `<label>地址： ${s[i].Address} </label><br />`;
                             //txt += `<label>商品名稱： ${s[i].Address} </label>`;
-
                         }
                     }
                     else if (gt == 2) {
@@ -193,20 +199,21 @@
                     var txt = "";
                     if (gt == 1) {
                         for (let i = 0; i < s.length; i++) {
-                            txt += `<div class="p-2 w-100 text-center" id="btn${s[i].OrderId}" onclick="chatGetOrder(${s[i].OrderId} , ${gt} ,'${s[i].ProductName}(編號：${s[i].OrderId}  )')"> ${s[i].ProductName} (編號：${s[i].OrderId})</div>`
+                            txt += `<div class="p-2 w-100 text-center" id="btn${s[i].OrderId}" data-hostid=${s[i].HostMemberId} onclick="chatGetOrder(${s[i].OrderId} , ${gt} ,'${s[i].ProductName}(編號：${s[i].OrderId}  )',${s[i].HostMemberId})"> ${s[i].ProductName} (編號：${s[i].OrderId})</div>`
                         }
                     }
                     else if (gt == 2) {
                         for (let i = 0; i < s.length; i++) {
-                            txt += `<div class="p-2 w-100 text-center" id="btn${s[i].GarbageServiceId}" onclick="chatGetOrder(${s[i].GarbageServiceId} , ${gt} ,'${s[i].EndTime}(編號：${s[i].GarbageServiceId}  )')"> ${s[i].EndTime} (編號：${s[i].GarbageServiceId})</div>`
+                            txt += `<div class="p-2 w-100 text-center" id="btn${s[i].GarbageServiceId}" data-hostid= onclick="chatGetOrder(${s[i].GarbageServiceId} , ${gt} ,'${s[i].EndTime}(編號：${s[i].GarbageServiceId}  )',${s[i].HostMemberId})"> ${s[i].EndTime} (編號：${s[i].GarbageServiceId})</div>`
                         }
                     }
                     $("#link_btn").html(txt).promise().done(function () {
-                        let oid = @ViewBag.groupid;
+
                         if (oid != 0) {
                             $(`#link_btn div[id=btn${oid}]`).click();
+                            oid = 0;
+                            gt = 0;
                         }});
-
                 },
             })
         }
