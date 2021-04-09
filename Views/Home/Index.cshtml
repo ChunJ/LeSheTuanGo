@@ -1,12 +1,27 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    ViewData["bgImage"] = "/images/Others/wallpaperflare.jpg";
 }
 
 <div class="container">
     <div class="row align-items-center vh-80">
-        <div class="col-6 offset-6">
+        <div class="col-6">
+            <button class="accordion">Section 1</button>
+            <div class="panel">
+                <p>Lorem ipsum...</p>
+            </div>
+            <button class="accordion">Section 2</button>
+            <div class="panel">
+                <p>Lorem ipsum...</p>
+            </div>
+            <button class="accordion">Section 3</button>
+            <div class="panel">
+                <p>Lorem ipsum...</p>
+            </div>
+        </div>
+        <div class="col-6">
             <div class="banner_content">
-                <h3>樂活社區，全民動起來。</h3>                
+                <h3>樂活社區，全民動起來。</h3>
                 <h5>短距離的社區型態團購與倒垃圾機制，可加入或新增自己專屬的天地。</h5>
                 <a class="btn btn-secondary" href="#">Begin Free Trial<i class="ti-arrow-right"></i></a>
             </div>
@@ -14,3 +29,21 @@
 
     </div>
 </div>
+@section Scripts {
+    <script>
+        let acc = document.getElementsByClassName("accordion");
+        let i;
+
+        for (i = 0; i < acc.length; i++) {
+          acc[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var panel = this.nextElementSibling;
+            if (panel.style.maxHeight) {
+              panel.style.maxHeight = null;
+            } else {
+              panel.style.maxHeight = panel.scrollHeight + "px";
+            }
+          });
+        }
+    </script>
+}

@@ -7,7 +7,7 @@
     <div class="col-2 column-main pb-2">
         <div class="row">
             <div class="border-bottom-dark col-12">
-                <h5>搜尋團購</h5>
+                <h5 onclick="fillDemo()">搜尋團購</h5>
             </div>
             <div class="col-12">
                 <div class="form-group">
@@ -43,15 +43,13 @@
         <div class="column-btn py-1">
             <button class="btn btn-primary" onclick="searchStart()">搜尋</button>
             <a class="btn btn-primary" href="/ChatMessageRecords/Index">查看紀錄</a>
-            <button class="btn btn-primary" onclick="fillDemo()">DEMO</button>
-            <button class="btn btn-primary" onclick="test()">test</button>
         </div>
     </div>
     @*result column*@
     <div class="col-2">
         <div class="column-main" style="height:68vh">
             <div class="border-bottom-dark">
-                <h5>搜尋結果</h5>
+                <h5 onclick="test()">搜尋結果</h5>
             </div>
             <div id="searchResult">
                 @*@for (int i = 0; i < 5; i++) {
