@@ -25,6 +25,7 @@ namespace LeSheTuanGo.Controllers
         {
             iv_host = host;
             db = context;
+            zczcz;
         }
 
         public IActionResult Login(string from = "Home/Index")
