@@ -1,4 +1,5 @@
 ﻿using GeoCoordinatePortable;
+using LeSheTuanGo.Models;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using System;
 using System.Collections.Generic;
@@ -39,6 +40,16 @@ namespace LeSheTuanGo.Controllers {
             //follow db type: short
             short distance = (short)spotA.GetDistanceTo(spotB);
             return distance;
+        }
+
+        public static void newNotofication(List<int> memberID,string notificationContent,int groupType,int groupID)
+        {
+            Notification notification = new Notification();
+
+            foreach (int id in memberID)
+            {
+
+            }
         }
     }
 }
