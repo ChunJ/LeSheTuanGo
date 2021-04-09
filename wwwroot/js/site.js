@@ -70,3 +70,21 @@ function formatDatetime(inputString) {
 //        }
 //    )
 //}
+function payment() {
+    $.ajax({
+        url: "/Shopping/change?" + $('#formCreditCard').serialize(),
+        type: "get",
+        success: function (data) {
+            $.each(data, function (key, item) {
+                const formElement = document.getElementById("formCreditCard")
+                formElement[15].value = item[0].checkMacValue
+                formElement[1].value = item[0].merchantTradeNo
+                formElement[2].value = item[0].merchantTradeDate
+                formElement[10].value = item[0].returnURL
+                formElement[7].value = item[0].returnURL
+                formElement[4].value = item[0].totalAmount
+                formElement[6].value = item[0].itemName
+            })
+        }
+    })
+}
