@@ -23,10 +23,11 @@ namespace LeSheTuanGo.Models
         public virtual DbSet<DistrictRef> DistrictRefs { get; set; }
         public virtual DbSet<GarbageServiceOffer> GarbageServiceOffers { get; set; }
         public virtual DbSet<GarbageServiceUseRecord> GarbageServiceUseRecords { get; set; }
-        public virtual DbSet<GarbageSpotAlert> GarbageSpotAlerts { get; set; }
+        public virtual DbSet<GarbageSpotLike> GarbageSpotLikes { get; set; }
         public virtual DbSet<GarbageTruckSpot> GarbageTruckSpots { get; set; }
         public virtual DbSet<Member> Members { get; set; }
         public virtual DbSet<Notification> Notifications { get; set; }
+        public virtual DbSet<NotifyContent> NotifyContents { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<OrderBuyRecord> OrderBuyRecords { get; set; }
         public virtual DbSet<Product> Products { get; set; }
@@ -36,15 +37,11 @@ namespace LeSheTuanGo.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-//            if (!optionsBuilder.IsConfigured)
-//            {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-//                optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=Midterm;Integrated Security=True");
-//                //optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=Midterm");
-
-//                //optionsBuilder.UseSqlServer("Server=tcp:msit129azureserver.database.windows.net,1433;Initial Catalog=Midterm;Persist Security Info=False;User ID=saya;Password=!QAZ2wsx;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
-
-//            }
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=Midterm;Integrated Security=True");
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -252,24 +249,25 @@ namespace LeSheTuanGo.Models
                     .HasConstraintName("FK_GarbageEmptySubscribes_Members");
             });
 
-            modelBuilder.Entity<GarbageSpotAlert>(entity =>
+            modelBuilder.Entity<GarbageSpotLike>(entity =>
             {
-                entity.HasKey(e => e.AlertId);
+                entity.HasKey(e => e.LikeId)
+                    .HasName("PK_GarbageSpotAlerts");
 
-                entity.Property(e => e.AlertId).HasColumnName("AlertID");
+                entity.Property(e => e.LikeId).HasColumnName("LikeID");
 
                 entity.Property(e => e.GarbageTruckSpotId).HasColumnName("GarbageTruckSpotID");
 
                 entity.Property(e => e.MemberId).HasColumnName("MemberID");
 
                 entity.HasOne(d => d.GarbageTruckSpot)
-                    .WithMany(p => p.GarbageSpotAlerts)
+                    .WithMany(p => p.GarbageSpotLikes)
                     .HasForeignKey(d => d.GarbageTruckSpotId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_GarbageSpotAlerts_GarbageTruckSpots");
 
                 entity.HasOne(d => d.Member)
-                    .WithMany(p => p.GarbageSpotAlerts)
+                    .WithMany(p => p.GarbageSpotLikes)
                     .HasForeignKey(d => d.MemberId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Notifications_Members");
@@ -364,17 +362,36 @@ namespace LeSheTuanGo.Models
 
                 entity.Property(e => e.NotifyId).HasColumnName("NotifyID");
 
+                entity.Property(e => e.ContentId).HasColumnName("ContentID");
+
                 entity.Property(e => e.MemberId).HasColumnName("MemberID");
 
-                entity.Property(e => e.NotifyMessage).IsRequired();
-
                 entity.Property(e => e.SentTime).HasColumnType("datetime");
+
+                entity.Property(e => e.SourceId).HasColumnName("SourceID");
+
+                entity.HasOne(d => d.Content)
+                    .WithMany(p => p.Notifications)
+                    .HasForeignKey(d => d.ContentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Notifications_NotifyContents");
 
                 entity.HasOne(d => d.Member)
                     .WithMany(p => p.Notifications)
                     .HasForeignKey(d => d.MemberId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Notifications_Members1");
+            });
+
+            modelBuilder.Entity<NotifyContent>(entity =>
+            {
+                entity.HasKey(e => e.ContentId);
+
+                entity.Property(e => e.ContentId)
+                    .ValueGeneratedNever()
+                    .HasColumnName("ContentID");
+
+                entity.Property(e => e.ContentText).IsRequired();
             });
 
             modelBuilder.Entity<Order>(entity =>
@@ -507,7 +524,7 @@ namespace LeSheTuanGo.Models
 
                 entity.Property(e => e.RouteName)
                     .IsRequired()
-                    .HasMaxLength(10);
+                    .HasMaxLength(50);
 
                 entity.Property(e => e.Schedule)
                     .HasMaxLength(10)

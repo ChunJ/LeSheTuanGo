@@ -9,7 +9,7 @@ namespace LeSheTuanGo.Models
     {
         public GarbageTruckSpot()
         {
-            GarbageSpotAlerts = new HashSet<GarbageSpotAlert>();
+            GarbageSpotLikes = new HashSet<GarbageSpotLike>();
         }
 
         public int GarbageTruckSpotId { get; set; }
@@ -23,6 +23,6 @@ namespace LeSheTuanGo.Models
 
         public virtual DistrictRef District { get; set; }
         public virtual Route Route { get; set; }
-        public virtual ICollection<GarbageSpotAlert> GarbageSpotAlerts { get; set; }
+        public virtual ICollection<GarbageSpotLike> GarbageSpotLikes { get; set; }
     }
 }

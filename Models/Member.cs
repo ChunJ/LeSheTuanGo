@@ -12,7 +12,7 @@ namespace LeSheTuanGo.Models
             ChatMessageRecords = new HashSet<ChatMessageRecord>();
             GarbageServiceOffers = new HashSet<GarbageServiceOffer>();
             GarbageServiceUseRecords = new HashSet<GarbageServiceUseRecord>();
-            GarbageSpotAlerts = new HashSet<GarbageSpotAlert>();
+            GarbageSpotLikes = new HashSet<GarbageSpotLike>();
             Notifications = new HashSet<Notification>();
             OrderBuyRecords = new HashSet<OrderBuyRecord>();
             Orders = new HashSet<Order>();
@@ -37,7 +37,7 @@ namespace LeSheTuanGo.Models
         public virtual ICollection<ChatMessageRecord> ChatMessageRecords { get; set; }
         public virtual ICollection<GarbageServiceOffer> GarbageServiceOffers { get; set; }
         public virtual ICollection<GarbageServiceUseRecord> GarbageServiceUseRecords { get; set; }
-        public virtual ICollection<GarbageSpotAlert> GarbageSpotAlerts { get; set; }
+        public virtual ICollection<GarbageSpotLike> GarbageSpotLikes { get; set; }
         public virtual ICollection<Notification> Notifications { get; set; }
         public virtual ICollection<OrderBuyRecord> OrderBuyRecords { get; set; }
         public virtual ICollection<Order> Orders { get; set; }

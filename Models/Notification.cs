@@ -9,9 +9,13 @@ namespace LeSheTuanGo.Models
     {
         public int NotifyId { get; set; }
         public int MemberId { get; set; }
-        public string NotifyMessage { get; set; }
+        public int ContentId { get; set; }
         public DateTime SentTime { get; set; }
+        public byte SourceType { get; set; }
+        public int SourceId { get; set; }
+        public bool Checked { get; set; }
 
+        public virtual NotifyContent Content { get; set; }
         public virtual Member Member { get; set; }
     }
 }
