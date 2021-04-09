@@ -1,9 +1,78 @@
-﻿.container {
-    width: 100vw;
-    height: 95%;
-    border: 1px solid;
-    margin:auto;
+﻿
+#chat {
+    position: relative;
+    width: 100%;
+    height: 90%;
+    padding: 10px;
+    overflow: auto;
 }
+
+#detail {
+    margin: 10px;
+}
+
+#chatheader {
+    background: #3498db;
+    color: #FFFFFF;
+}
+
+.sideheader {
+    background: #2980b9;
+    color: #FFFFFF;
+}
+
+#inputbox {
+    position: absolute;
+    bottom: 0;
+}
+
+#link_btn div {
+    border-top: 1px solid lightgray;
+    border-bottom: 1px solid lightgray;
+}
+
+    #link_btn div:hover {
+        background-color: lightgray;
+        cursor: pointer;
+    }
+
+.self {
+    float: right;
+    width: 60%;
+    text-align: right;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+    .self > div div {
+        display: inline-block;
+        word-break: break-all;
+        background: #3F51B5 none repeat scroll 0 0;
+        border-radius: 5px;
+        font-size: 14px;
+        margin: 0;
+        color: #fff;
+        padding: 5px 10px 5px 12px;
+    }
+
+.other {
+    float: left;
+    text-align: left;
+    width: 60%;
+    padding-bottom: 10px;
+}
+
+    .other > div div {
+        display: inline-block;
+        word-break: break-all;
+        background-color: lightgreen;
+        border-radius: 3px;
+        color: #646464;
+        font-size: 14px;
+        margin: 0;
+        padding: 5px 10px 5px 12px;
+    }
+
 
 img {
     max-width: 100%;
@@ -26,15 +95,6 @@ img {
     overflow: hidden;
 }
 
-.top_spac {
-    margin: 20px 0 0;
-}
-
-
-.recent_heading {
-    float: left;
-    width: 40%;
-}
 
 .srch_bar {
     display: inline-block;
@@ -49,58 +109,9 @@ img {
     margin-bottom:10px;
 }
 
-.recent_heading h4 {
-    color: #05728f;
-    font-size: 21px;
-    margin: auto;
-}
-
-.srch_bar input {
-    border: 1px solid #cdcdcd;
-    border-width: 0 0 1px 0;
-    width: 80%;
-    padding: 2px 0 4px 6px;
-    background: none;
-}
-
-.srch_bar .input-group-addon button {
-    background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
-    border: medium none;
-    padding: 0;
-    color: #707070;
-    font-size: 18px;
-}
-
-.srch_bar .input-group-addon {
-    margin: 0 0 0 -27px;
-}
-
-.chat_ib h5 {
-    font-size: 15px;
-    color: #464646;
-    margin: 0 0 8px 0;
-}
-
-    .chat_ib h5 span {
-        font-size: 13px;
-        float: right;
-    }
-
-.chat_ib p {
-    font-size: 14px;
-    color: #989898;
-    margin: auto
-}
-
 .chat_img {
     float: left;
     width: 11%;
-}
-
-.chat_ib {
-    float: left;
-    padding: 0 0 0 15px;
-    width: 88%;
 }
 
 .chat_people {
