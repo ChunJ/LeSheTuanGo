@@ -32,18 +32,40 @@
 @section Scripts {
     <script>
         let acc = document.getElementsByClassName("accordion");
-        let i;
+        let lastPanel = null;
 
-        for (i = 0; i < acc.length; i++) {
-          acc[i].addEventListener("click", function() {
-            this.classList.toggle("active");
-            var panel = this.nextElementSibling;
-            if (panel.style.maxHeight) {
-              panel.style.maxHeight = null;
-            } else {
-              panel.style.maxHeight = panel.scrollHeight + "px";
-            }
+        for (let i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function () {
+                let panel = this.nextElementSibling;
+                if (this.classList.contains("active")) {
+                    this.classList.remove("active");
+                    panel.style.maxHeight = null;
+                    if (lastPanel == this) {
+                        //repeat on active
+                        lastPanel = null;
+                    }
+                } else {
+                    this.classList.add("active");
+                    panel.style.maxHeight = panel.scrollHeight + "px";
+                    if (lastPanel != null) {
+                        lastPanel.classList.remove("active");
+                        lastPanel.nextElementSibling.style.maxHeight = null;
+                    }
+                    lastPanel = this
+                }
           });
         }
+
+        //for (let i = 0; i < acc.length; i++) {
+        //  acc[i].addEventListener("click", function() {
+        //    this.classList.toggle("active");
+        //    let panel = this.nextElementSibling;
+        //    if (panel.style.maxHeight) {
+        //      panel.style.maxHeight = null;
+        //    } else {
+        //      panel.style.maxHeight = panel.scrollHeight + "px";
+        //    }
+        //  });
+        //}
     </script>
 }
