@@ -1,20 +1,20 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "";
     ViewData["bgImage"] = "/images/Others/wallpaperflare.jpg";
 }
 
 <div class="container">
     <div class="row align-items-center vh-80">
         <div class="col-6">
-            <button class="accordion">Section 1</button>
+            <button class="accordion"><h5>Section 1</h5></button>
             <div class="panel">
                 <p>Lorem ipsum...</p>
             </div>
-            <button class="accordion">Section 2</button>
+            <button class="accordion"><h5>Section 2</h5></button>
             <div class="panel">
                 <p>Lorem ipsum...</p>
             </div>
-            <button class="accordion">Section 3</button>
+            <button class="accordion"><h5>Section 3</h5></button>
             <div class="panel">
                 <p>Lorem ipsum...</p>
             </div>
@@ -55,17 +55,5 @@
                 }
           });
         }
-
-        //for (let i = 0; i < acc.length; i++) {
-        //  acc[i].addEventListener("click", function() {
-        //    this.classList.toggle("active");
-        //    let panel = this.nextElementSibling;
-        //    if (panel.style.maxHeight) {
-        //      panel.style.maxHeight = null;
-        //    } else {
-        //      panel.style.maxHeight = panel.scrollHeight + "px";
-        //    }
-        //  });
-        //}
     </script>
 }

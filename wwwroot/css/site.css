@@ -104,6 +104,7 @@ html {
     font-size: .75rem
 }
 
+/*not used by service and order*/ 
 .search-item{
     background-color:#fff;
     cursor:pointer;
@@ -111,7 +112,7 @@ html {
 .search-item:hover{
     background-color:#dbf2ff
 }
-.main-frame {
+.wide-bar {
     width: 100%;
     padding-right: 15px;
     padding-left: 15px;
@@ -128,8 +129,13 @@ html {
     height: 2.5rem;
     z-index: 500;
 }
-.mainPT {
+.main-body {
+    width: 100%;
     padding-top: 2.5rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
 }
 .rem-4 {
     width: 4rem;
@@ -138,7 +144,7 @@ html {
     display: inline-block;
 }
 .column-main {
-    /*height: calc(100vh - 9rem);*/ 
+    height: 100%;
     overflow-y: auto;
     overflow-x:hidden;
 }

@@ -1,17 +1,17 @@
 ﻿@using System;
 @{
     Layout = "_layoutWide";
-    ViewData["Title"] = "搜尋倒垃圾服務";
+    ViewData["Title"] = "搜尋服務 - ";
     int[] sizeNumber = new int[7] { 3, 5, 14, 25, 33, 75, 120 };
 }
-<div class="row">
+<div class="row h-100">
     @*search column*@
-    <div class="col-2">
-        <div class="row column-main" style="height:90vh">
+    <div class="col-2 column-main pb-2">
+        <div class="row">
             <div class="border-bottom-dark col-12">
                 <h5 onclick="fillDemo()">搜尋團購</h5>
             </div>
-            <div class="col-12">
+            <div class="col-12 pb-4">
                 <div class="form-group">
                     <label>城市</label>
                     <select id="CityId" class="form-control" onchange="getDistrict('#DistrictId')" asp-items="ViewBag.City"></select>
@@ -56,53 +56,39 @@
     
     @*result column*@
     <div class="col-2">
-        <div class="column-main" style="height:50vh">
+        <div class="column-main">
             <div class="border-bottom-dark">
                 <h5 onclick="test()">搜尋結果</h5>
             </div>
             <div id="searchResult">
                 @*@for (int i = 0; i < 5; i++) {
-                    <div class="p-2 w-100 search-item border-bottom" onclick="test()">
-                        <p>台北市大安區信義路四段2號</p>
-                        <div class="w-100"><div class="rem-4">截止時間</div><span class="px-1">:</span>2021年05月20號</div>
-                        <div class="w-100"><div class="rem-4">距離</div><span class="px-1">:</span>532 公尺</div>
-                    </div>
-                    }*@
+            <div class="accordion-go" onclick="accorClick(this)">
+                <p>台北市大安區信義路四段2號</p>
             </div>
-        </div>
-        <div class="border-bottom-dark"></div>
-        <div class="invisible column-main" id="detailView" style="height:35vh">
-            <div id="detailInfo">
-                <div class="w-100"><div class="rem-4">地點</div><span class="px-1">:</span><span id="info">台北市大安區</span></div>
-                <div class="w-100"><div class="rem-4">距離</div><span class="px-1">:</span><span id="info">532</span> 公尺</div>
-                <div class="w-100"><div class="rem-4">截止時間</div><span class="px-1">:</span><span id="info">2021年05月20號</span></div>
-            </div>
-            <form method="post" action="/ServiceUse/Join">
-                <div id="formInput">
-                    <input hidden="hidden" name="GarbageServiceOfferId" value="" />
-                    <input hidden="hidden" name="ComeDistrictId" value="" />
-                    <input hidden="hidden" name="ComeAddress" value="" />
-                    <div class="form-group form-check">
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="checkbox" name="NeedCome" value="true" />
-                            是否需要到府服務?
-                        </label>
-                    </div>
-                </div>
-                <div class="w-50" id="sizeInputGroup2">
+            <div class="accordion-panel">
+                <form method="post" action="/Buy/Join">
+                    <input hidden name="OrderId" value="" />
+                    <input hidden name="ComeDistrictId" value="" />
+                    <input hidden name="ComeAddress" value="" />
                     @for (int i = 0; i < sizeNumber.Length; i++) {
-                        <div class="form-group d-none">
+                        <div class="form-group">
                             <label>@sizeNumber[i] 公升</label>
                             <input class="form-control" name="@("L"+sizeNumber[i]+"count")" type="number" min="0" value="" />
                         </div>
                     }
-                </div>
-                <div class="column-btn">
-                    <div class="form-group">
-                        <input type="submit" value="加入" class="btn btn-primary" />
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" name="NeedCome" value="true" />
+                            是否需要宅配服務?
+                        </label>
                     </div>
-                </div>
-            </form>
+                    <div class="form-group">
+                        <input type="submit" value="購買" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+        }*@
+            </div>
         </div>
     </div>
     @*map column*@
@@ -115,20 +101,21 @@
     <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBircB99P_RvzxWdQT-hk40-h3Ofzlb_vQ&callback=showMap&libraries=&v=weekly"async></script>
     <script>
+        let bagSize = [3, 5, 14, 25, 33, 75, 120];
         let cityS = document.querySelector("#CityId");
         let distS = document.querySelector("#DistrictId");
         let addressIn = document.querySelector("#addressInput");
         let distanceS = document.querySelector("#distance");
         let result = document.querySelector("#searchResult");
-        let detailView = document.querySelector("#detailView");
+        //let detailView = document.querySelector("#detailView");
         let mapDiv = document.querySelector("#map");
         let sizeInputG1 = document.querySelectorAll("#sizeInputGroup1>div");
         let sizeCountG1 = document.querySelectorAll("#sizeInputGroup1>div>input");
         //for detail and submit
-        let infoGroup = document.querySelectorAll("#detailInfo span#info");
-        let formInputs = document.querySelectorAll("#formInput input");
-        let sizeInputG2 = document.querySelectorAll("#sizeInputGroup2>div");
-        let sizeCountG2 = document.querySelectorAll("#sizeInputGroup2>div>input");
+        //let infoGroup = document.querySelectorAll("#detailInfo span#info");
+        //let formInputs = document.querySelectorAll("#formInput input");
+        //let sizeInputG2 = document.querySelectorAll("#sizeInputGroup2>div");
+        //let sizeCountG2 = document.querySelectorAll("#sizeInputGroup2>div>input");
         //other variable
         let lastAddress = "";
         let lastDistrict = 0;
@@ -136,6 +123,8 @@
         let fList = [];
         let map;
         let markers = [];
+        let AccornList = [];
+        let lastAccord = null;
     
         window.onload = function () {
             cityS.value = @ViewData["CityId"];
@@ -151,39 +140,60 @@
             addressIn.value = "信義路四段2號";
             distS.value = 5;
         }
-        //function sizeInputSwitch1(id) {
-        //    if (event.target.checked == true) {
-        //        sizeInputG1[id].classList.remove("d-none");
-        //        sizeCountG1[id].value = 1;
-        //    } else {
-        //        sizeInputG1[id].classList.add("d-none");
-        //        sizeCountG1[id].value = 0;
-        //    }
-        //}
-        function searchStart() {
-            detailView.classList.add("invisible");
-        //send new request if address is changed
-        if (distS.value == lastDistrict && addressIn.value == lastAddress) {
-            filterResult();
-        } else {
-            lastDistrict = distS.value;
-            lastAddress = addressIn;
-            $.get(
-                "/ServiceUse/Search",
-                {
-                    DistrictInput: distS.value,
-                    addressInput: addressIn.value
-                },
-                function (data, status) {
-                    if (status == "success") {
-                        //console.log(data);
-                        queryList = JSON.parse(data);
-                        filterResult();
-                    }
-                }
-            )
+        //not used
+        function sizeInputSwitch1(id) {
+            if (event.target.checked == true) {
+                sizeInputG1[id].classList.remove("d-none");
+                sizeCountG1[id].value = 1;
+            } else {
+                sizeInputG1[id].classList.add("d-none");
+                sizeCountG1[id].value = 0;
+            }
         }
-    }
+        function accorClick(accor) {
+            let panel = accor.nextElementSibling;
+            console.log(accor);
+            if (accor.classList.contains("accordion-active")) {
+                accor.classList.remove("accordion-active");
+                panel.style.maxHeight = null;
+                if (lastAccord == accor) {
+                    //repeat on active
+                    lastAccord = null;
+                }
+            } else {
+                accor.classList.add("accordion-active");
+                panel.style.maxHeight = panel.scrollHeight + "px";
+                if (lastAccord != null) {
+                    lastAccord.classList.remove("accordion-active");
+                    lastAccord.nextElementSibling.style.maxHeight = null;
+                }
+                lastAccord = accor
+            }
+        }
+        function searchStart() {
+            lastAccord = null
+            //send new request if address is changed
+            if (distS.value == lastDistrict && addressIn.value == lastAddress) {
+                filterResult();
+            } else {
+                lastDistrict = distS.value;
+                lastAddress = addressIn;
+                $.get(
+                    "/ServiceUse/Search",
+                    {
+                        DistrictInput: distS.value,
+                        addressInput: addressIn.value
+                    },
+                    function (data, status) {
+                        if (status == "success") {
+                            //console.log(data);
+                            queryList = JSON.parse(data);
+                            filterResult();
+                        }
+                    }
+                )
+            }
+        }
         function filterResult() {
             ////add cango filter test
             fList = [];
@@ -203,24 +213,54 @@
             showResult();
         }
         function showResult() {
-            //console.log("filter = "+fList)
             //implement page count here
-            let htmlString = "";
             if (fList.length == 0) {
-                htmlString = `<h4>沒有符合條件的搜尋結果</h4>`;
+                result.innerHTML = `<h4>沒有符合條件的搜尋結果</h4>`;
             } else {
+                let htmlString = "";
                 //format datetime and distance
                 for (let i = 0; i < fList.length; i++) {
                     //use the index in filterList as id, so we can just get offer info from filterList later.
-                    htmlString += `<div class="p-2 w-100 search-item border-bottom" onclick="getDetail(${i})">`;
-                    htmlString += `<p>${fList[i].CityName}${fList[i].DistrictName}${fList[i].Address}</p>`;
-                    htmlString += `<div class="w-100"><div class="rem-4">截止時間</div><span class="px-1">:</span>${formatDatetime(fList[i].EndTime)}</div>`;
-                    //htmlString += `<div class="w-100"><div class="rem-4">距離</div><span class="px-1">:</span>${parseInt(fList[i].Distance, 10)} 公尺</div>`;
-                    htmlString += `<div class="w-100"><div class="rem-4">到府服務</div><span class="px-1">:</span>${fList[i].CanGo?"有":"不"}提供</div></div>`;
+                    htmlString += `<div class="accordion-go" onclick="accorClick(this)">`;
+                    htmlString += `${fList[i].CityName}${fList[i].DistrictName}${fList[i].Address}`;
+                    htmlString += `</div>`;
+                    //htmlString += `<div class="w-100"><div class="rem-4">宅配服務</div><span class="px-1">:</span>${fList[i].CanGo?"有":"不"}提供</div></div>`;
+                    htmlString += `<div class="accordion-panel"><form method="post" action="/ServiceUse/Join">`;
+                    htmlString += `<div class="py-2"><div class="w-100"><div class="rem-4">截止時間</div><span class="px-1">:</span>${formatDatetime(fList[i].EndTime)}</div>`;
+                    htmlString += `<div class="w-100"><div class="rem-4">距離</div><span class="px-1">:</span>${parseInt(fList[i].Distance, 10)} 公尺</div></div>`;
+                    htmlString += `<input hidden name="GarbageServiceOfferId" value="${fList[i].GarbageServiceOfferId}" />`;
+                    htmlString += `<input hidden name="ComeDistrictId" value="${distS.value}" />`;
+                    htmlString += `<input hidden name="ComeAddress" value="${addressIn.value}" />`;
+                    let avail = [
+                        fList[i].L3available,
+                        fList[i].L5available,
+                        fList[i].L14available,
+                        fList[i].L25available,
+                        fList[i].L33available,
+                        fList[i].L75available,
+                        fList[i].L120available
+                    ];
+                    for (let j = 0; j < avail.length; j++) {
+                        if (avail[j] > 0) {
+                            htmlString += `<div class="form-group"><label>${bagSize[j]} 公升</label><input class="form-control" name="${'L' + bagSize[j] + 'count'}" type="number" min="0" value="${sizeCountG1[j].value}" max="${avail[j]}"/></div>`;
+                        } else {
+                            htmlString += `<input hidden name="${'L' + bagSize[j] + 'count'}" type="number" value="0"/>`;
+                        }
+                    }
+                    if (fList[i].CanGo) {
+                        htmlString += `<div class="form-group form-check"><label class="form-check-label">`;
+                        htmlString += `<input class="form-check-input" type="checkbox" name="NeedCome" value="true" />`;//fill checked
+                        htmlString += `是否需要到府服務?</label></div>`;
+                    } else {
+                        htmlString += `<input hidden type="checkbox" name="NeedCome" value="true"/>`;
+                        htmlString += `<p>不提供到府服務</p>`;
+                    }
+                    htmlString += `<div class="form-group"><input type="submit" value="加入" class="btn btn-primary" /></div></form></div>`;
                 }
                 showAllMap();
+                result.innerHTML = htmlString;
+                AccornList = result.querySelectorAll("div.accordion-go");
             }
-            result.innerHTML = htmlString;
         }
         function getDetail(id) {
         //fill view + update map + turn visible
@@ -283,9 +323,9 @@
                 });
                 marker.addListener("click", () => {
                     console.log(markers[i].title);
-                    //console.log(markers[i].label.text);
                     //document.getElementById(markers[i].label.text).scrollIntoView();
-                    getDetail(marker.label.text);
+                    //getDetail(marker.label.text);
+                    accorClick(AccornList[marker.label.text]);
                 });
                 markers.push(marker);
             }

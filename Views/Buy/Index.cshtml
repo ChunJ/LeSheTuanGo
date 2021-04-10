@@ -1,8 +1,8 @@
 ﻿@{
     Layout = "_layoutWide";
-    ViewData["Title"] = "搜尋團購";
+    ViewData["Title"] = "搜尋團購 - ";
 }
-<div class="row">
+<div class="row h-100">
     @*search column*@
     <div class="col-2 column-main pb-2">
         <div class="row">
@@ -47,47 +47,38 @@
     </div>
     @*result column*@
     <div class="col-2">
-        <div class="column-main" style="height:68vh">
+        <div class="column-main">
             <div class="border-bottom-dark">
                 <h5 onclick="test()">搜尋結果</h5>
             </div>
             <div id="searchResult">
                 @*@for (int i = 0; i < 5; i++) {
-                    <div class="p-2 w-100 search-item border-bottom" onclick="test()">
+                    <div class="accordion-go" onclick="accorClick(this)">
                         <p>台北市大安區信義路四段2號</p>
                         <div class="w-100"><div class="rem-4">截止時間</div><span class="px-1">:</span>2021年05月20號</div>
                         <div class="w-100"><div class="rem-4">距離</div><span class="px-1">:</span>532 公尺</div>
                     </div>
-                    }*@
-            </div>
-        </div>
-        <div class="border-bottom-dark"></div>
-        <div class="invisible" id="detailView">
-            <div id="detailInfo">
-                <div class="w-100"><div class="rem-4">地點</div><span class="px-1">:</span><span id="info">台北市大安區</span></div>
-                <div class="w-100"><div class="rem-4">距離</div><span class="px-1">:</span><span id="info">532</span> 公尺</div>
-                <div class="w-100"><div class="rem-4">截止時間</div><span class="px-1">:</span><span id="info">2021年05月20號</span></div>
-            </div>
-            <form method="post" action="/Buy/Join">
-                <div id="formInput">
-                    <input hidden=hidden name="OrderId" value="" />
-                    <input hidden=hidden name="ComeDistrictId" value="" />
-                    <input hidden=hidden name="ComeAddress" value="" />
-                    <div class="form-group form-check">
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="checkbox" name="NeedCome" value="true" />
-                            是否需要宅配服務?
-                        </label>
+                    <div class="accordion-panel">
+                        <form method="post" action="/Buy/Join">
+                            <input hidden name="OrderId" value="" />
+                            <input hidden name="ComeDistrictId" value="" />
+                            <input hidden name="ComeAddress" value="" />
+                            <div class="form-group form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="checkbox" name="NeedCome" value="true"/>
+                                    是否需要宅配服務?
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control" name="Count" type="number" placeholder="購買量" min="0" value="" max=""/>
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="購買" class="btn btn-primary" />
+                            </div>
+                        </form>
                     </div>
-                    <div class="form-group">
-                        <label>購買量</label>
-                        <input class="form-control" name="Count" type="number" min="0" value="" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <input type="submit" value="加入" class="btn btn-primary" />
-                </div>
-            </form>
+                }*@
+            </div>
         </div>
     </div>
     @*map column*@
@@ -109,10 +100,7 @@
         //for search result
         let result = document.querySelector("#searchResult");
         //for detail and submit
-        let detailView = document.querySelector("#detailView");
         let mapDiv = document.querySelector("#map");
-        let infoGroup = document.querySelectorAll("#detailInfo span#info");
-        let formInputs = document.querySelectorAll("#formInput input");
         //other variable
         let lastAddress = "";
         let lastDistrict = 0;
@@ -120,6 +108,29 @@
         let fList = [];
         let markers = [];
         let map;
+        let AccornList = [];
+        let lastAccord = null;
+
+        function accorClick(accor) {
+            let panel = accor.nextElementSibling;
+            console.log(accor);
+            if (accor.classList.contains("accordion-active")) {
+                accor.classList.remove("accordion-active");
+                panel.style.maxHeight = null;
+                if (lastAccord == accor) {
+                    //repeat on active
+                    lastAccord = null;
+                }
+            } else {
+                accor.classList.add("accordion-active");
+                panel.style.maxHeight = panel.scrollHeight + "px";
+                if (lastAccord != null) {
+                    lastAccord.classList.remove("accordion-active");
+                    lastAccord.nextElementSibling.style.maxHeight = null;
+                }
+                lastAccord = accor
+            }
+        }
         
         window.onload = function () {
             cityS.value = @ViewData["CityId"];
@@ -139,7 +150,7 @@
 
         }
         function searchStart() {
-            detailView.classList.add("invisible");
+            lastAccord = null
             //send new request if address is changed
             if (distS.value == lastDistrict && addressIn.value == lastAddress) {
                 filterResult();
@@ -177,43 +188,58 @@
         }
         function showResult() {
             //implement page count here
-            let htmlString = "";
             if (fList.length == 0) {
-                htmlString = `<h4>沒有符合條件的搜尋結果</h4>`;
+                result.innerHTML = `<h4>沒有符合條件的搜尋結果</h4>`;
             } else {
-                //format datetime and distance
+                let htmlString = "";
                 for (let i = 0; i < fList.length; i++) {
                     //use the index in filterList as id, so we can just get offer info from filterList later.
-                    htmlString += `<div class="p-2 w-100 search-item border-bottom" onclick="getDetail(${i})">`;
-                    htmlString += `<p>${fList[i].CityName}${fList[i].DistrictName}${fList[i].Address}</p>`;
-                    htmlString += `<div class="w-100"><div class="rem-4">截止時間</div><span class="px-1">:</span>${formatDatetime(fList[i].EndTime)}</div>`;
-                    //htmlString += `<div class="w-100"><div class="rem-4">距離</div><span class="px-1">:</span>${parseInt(fList[i].Distance, 10)} 公尺</div>`;
-                    htmlString += `<div class="w-100"><div class="rem-4">宅配服務</div><span class="px-1">:</span>${fList[i].CanGo?"有":"不"}提供</div></div>`;
+                    htmlString += `<div class="accordion-go" onclick="accorClick(this)">`;
+                    htmlString += `${fList[i].CityName}${fList[i].DistrictName}${fList[i].Address}`;
+                    htmlString += `</div>`;
+                    //htmlString += `<div class="w-100"><div class="rem-4">宅配服務</div><span class="px-1">:</span>${fList[i].CanGo?"有":"不"}提供</div></div>`;
+                    htmlString += `<div class="accordion-panel"><form method="post" action="/Buy/Join">`;
+                    htmlString += `<div class="py-2"><div class="w-100"><div class="rem-4">截止時間</div><span class="px-1">:</span>${formatDatetime(fList[i].EndTime)}</div>`;
+                    htmlString += `<div class="w-100"><div class="rem-4">距離</div><span class="px-1">:</span>${parseInt(fList[i].Distance, 10)} 公尺</div></div>`;
+                    htmlString += `<input hidden name="OrderId" value="${fList[i].OrderId}" />`;
+                    htmlString += `<input hidden name="ComeDistrictId" value="${distS.value}" />`;
+                    htmlString += `<input hidden name="ComeAddress" value="${addressIn.value}" />`;
+                    htmlString += `<div class="form-group"><label>購買量</label><input class="form-control" name="Count" type="number" min="0" value="${count.value}" max="${fList[i].AvailableCount}"/></div>`;
+                    if (fList[i].CanGo) {
+                        htmlString += `<div class="form-group form-check"><label class="form-check-label">`;
+                        htmlString += `<input class="form-check-input" type="checkbox" name="NeedCome" value="true" />`;//fill checked
+                        htmlString += `是否需要宅配服務?</label></div>`;
+                    } else {
+                        htmlString += `<input hidden type="checkbox" name="NeedCome" value="true"/>`;
+                        htmlString += `<p>本服務不提供宅配服務</p>`;
+                    }
+                    htmlString += `<div class="form-group"><input type="submit" value="購買" class="btn btn-primary" /></div></form></div>`;
                 }
                 showAllMap();
+                result.innerHTML = htmlString;
+                AccornList = result.querySelectorAll("div.accordion-go");
             }
-            result.innerHTML = htmlString;
         }
-        function getDetail(id) {
-        //fill view + update map + turn visible
-            infoGroup[0].innerText = fList[id].Address;
-            infoGroup[1].innerText = parseInt(fList[id].Distance, 10);
-            infoGroup[2].innerText = formatDatetime(fList[id].EndTime);
-            formInputs[0].value = fList[id].OrderId;
-            formInputs[1].value = fList[id].DistrictId;
-            formInputs[2].value = fList[id].Address;
-            if (fList[id].CanGo) {
-                //need to use the filter option
-                formInputs[3].checked = false;
-                formInputs[3].disabled = false;
-            } else {
-                formInputs[3].checked = false;
-                formInputs[3].disabled = true;
-            }
-            formInputs[4].value = count.value;
-            //showMap(fList[id].Latitude, fList[id].Longitude);
-            detailView.classList.remove("invisible");
-        }
+        //function getDetail(id) {
+        ////fill view + update map + turn visible
+        //    infoGroup[0].innerText = fList[id].Address;
+        //    infoGroup[1].innerText = parseInt(fList[id].Distance, 10);
+        //    infoGroup[2].innerText = formatDatetime(fList[id].EndTime);
+        //    formInputs[0].value = fList[id].OrderId;
+        //    formInputs[1].value = fList[id].DistrictId;
+        //    formInputs[2].value = fList[id].Address;
+        //    if (fList[id].CanGo) {
+        //        //need to use the filter option
+        //        formInputs[3].checked = false;
+        //        formInputs[3].disabled = false;
+        //    } else {
+        //        formInputs[3].checked = false;
+        //        formInputs[3].disabled = true;
+        //    }
+        //    formInputs[4].value = count.value;
+        //    //showMap(fList[id].Latitude, fList[id].Longitude);
+        //    detailView.classList.remove("invisible");
+        //}
         function showMap(lat, lng) {
             let coor = new google.maps.LatLng(lat, lng);
             let mbr = new google.maps.LatLng(25.0339400, 121.5435000);  //fixed for now
@@ -258,25 +284,25 @@
                 });
                 marker.addListener("click", () => {
                     console.log(markers[i].title);
-                    //console.log(markers[i].label.text);
                     //document.getElementById(markers[i].label.text).scrollIntoView();
-                    getDetail(marker.label.text);
+                    //getDetail(marker.label.text);
+                    accorClick(AccornList[marker.label.text]);
                 });
                 markers.push(marker);
             }
         }
-        const eqfeed_callback = function (results) {
-            //Loop through the results array and place a marker for each
-            //set of coordinates.
-            for (let i = 0; i < results.features.length; i++) {
-                const coords = results.features[i].geometry.coordinates;
-                const latLng = new google.maps.LatLng(coords[1], coords[0]);
-                new google.maps.Marker({
-                    position: latLng,
-                    map: map,
-                });
-            }
-        };
+        //const eqfeed_callback = function (results) {
+        //    //Loop through the results array and place a marker for each
+        //    //set of coordinates.
+        //    for (let i = 0; i < results.features.length; i++) {
+        //        const coords = results.features[i].geometry.coordinates;
+        //        const latLng = new google.maps.LatLng(coords[1], coords[0]);
+        //        new google.maps.Marker({
+        //            position: latLng,
+        //            map: map,
+        //        });
+        //    }
+        //};
     </script>
 }
 
