@@ -372,13 +372,26 @@
                         }
                     }
 
-                    if (document.getElementById('tdFav276')) {
-                        console.log(document.getElementById('tdFav276').innerHTML);
-                        document.getElementById('tdFav276').innerHTML = '';
-                        if (userFav.length) {
-                            console.log(userFav[1]);
+                    if (userFav.length) {
+                        for (let i = 0; i < userFav.length; i++) {
+                            if (document.getElementById(`tdFav${userFav[i]}`)) {
+                                document.getElementById(`tdFav${userFav[i]}`).innerHTML = '';
+                            }
                         }
                     }
+
+
+                    //if (document.getElementById('tdFav276')) {
+                    //    console.log(document.getElementById('tdFav276').innerHTML);
+                    //    document.getElementById('tdFav276').innerHTML = '';
+                    //    if (userFav.length) {
+                    //        userFav0.forEach((element) => {
+                    //            console.log(element);
+                    //            console.log(eval(`document.getElementById('tdFav${element}').innerHTML`));
+                    //        });
+                            
+                    //    }
+                    //}
                     
                             //'<tr id="' + js[i]["GarbageTruckSpotId"] + '">'
                             //+ '<td id="thFav' + js[i]["GarbageTruckSpotId"] + '"><label onclick="addFav()">♥️</label></td>'
