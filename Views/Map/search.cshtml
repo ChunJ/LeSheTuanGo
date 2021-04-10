@@ -372,6 +372,13 @@
                         }
                     }
 
+                    if (document.getElementById('tdFav276')) {
+                        console.log(document.getElementById('tdFav276').innerHTML);
+                        document.getElementById('tdFav276').innerHTML = '';
+                        if (userFav.length) {
+                            console.log(userFav[1]);
+                        }
+                    }
                     
                             //'<tr id="' + js[i]["GarbageTruckSpotId"] + '">'
                             //+ '<td id="thFav' + js[i]["GarbageTruckSpotId"] + '"><label onclick="addFav()">♥️</label></td>'
