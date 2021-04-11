@@ -63,5 +63,6 @@ namespace LeSheTuanGo.Controllers {
             var list = db.Orders.Where(o => o.HostMemberId == userId).ToList();
             return View(list);
         }
+        
     }
 }

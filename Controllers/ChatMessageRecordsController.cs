@@ -120,9 +120,10 @@ namespace LeSheTuanGo.Controllers
                         n.CanGo,
                         n.GoRange.RangeInMeters,
                         n.OrderDescription,
+                        n.MaxCount,
                         n.AvailableCount,
-                        count=0,
-                    });
+                        self = true,
+                    }) ; 
                     var i = order.ToList();
                     return JsonConvert.SerializeObject(order.ToList());
 
@@ -139,8 +140,10 @@ namespace LeSheTuanGo.Controllers
                         n.Order.CanGo,
                         n.Order.GoRange.RangeInMeters,
                         n.Order.OrderDescription,
+                        n.Order.MaxCount,
                         n.Order.AvailableCount,
                         n.Count,
+                        self = false,
                     }) ;
                     var i = order.ToList();
                     return JsonConvert.SerializeObject(order.ToList());
@@ -148,9 +151,77 @@ namespace LeSheTuanGo.Controllers
             }
             else
             {
-                var garbage = _context.GarbageServiceOffers.Where(n => n.GarbageServiceId == orderId);
-                var i = garbage.ToList();
-                return JsonConvert.SerializeObject(garbage.ToList());
+                if (hostid == memberID)
+                {
+                    var garbage = _context.GarbageServiceOffers.Where(n => n.GarbageServiceId == orderId).Select(n => new
+                    {
+                        n.GarbageServiceId,
+                        n.Address,
+                        n.District.City.CityName,
+                        n.District.DistrictName,
+                        n.CanGo,
+                        n.GoRange.RangeInMeters,
+                        n.L3maxCount,
+                        n.L3available,
+                        n.L5maxCount,
+                        n.L5available,
+                        n.L14maxCount,
+                        n.L14available,
+                        n.L25maxCount,
+                        n.L25available,
+                        n.L33maxCount,
+                        n.L33available,
+                        n.L75maxCount,
+                        n.L75available,
+                        n.L120maxCount,
+                        n.L120available,
+                        self = true,
+                    });
+                    var i = garbage.ToList();
+                    return JsonConvert.SerializeObject(garbage.ToList());
+
+                }
+                else
+                {
+                    var garbage = _context.GarbageServiceUseRecords.Where(n => n.GarbageServiceOffer.GarbageServiceId == orderId && n.MemberId == memberID).Select(n => new
+                    {
+                        n.GarbageServiceOffer.GarbageServiceId,
+                        n.GarbageServiceOffer.Address,
+                        n.GarbageServiceOffer.District.City.CityName,
+                        n.GarbageServiceOffer.District.DistrictName,
+                        n.GarbageServiceOffer.CanGo,
+                        n.GarbageServiceOffer.GoRange.RangeInMeters,
+                        n.GarbageServiceOffer.L3maxCount,
+                        n.GarbageServiceOffer.L3available,
+                        n.GarbageServiceOffer.L5maxCount,
+                        n.GarbageServiceOffer.L5available,
+                        n.GarbageServiceOffer.L14maxCount,
+                        n.GarbageServiceOffer.L14available,
+                        n.GarbageServiceOffer.L25maxCount,
+                        n.GarbageServiceOffer.L25available,
+                        n.GarbageServiceOffer.L33maxCount,
+                        n.GarbageServiceOffer.L33available,
+                        n.GarbageServiceOffer.L75maxCount,
+                        n.GarbageServiceOffer.L75available,
+                        n.GarbageServiceOffer.L120maxCount,
+                        n.GarbageServiceOffer.L120available,
+                        n.L3count,
+                        n.L5count,
+                        n.L14count,
+                        n.L25count,
+                        n.L33count,
+                        n.L75count,
+                        n.L120count,
+                        n.NeedCome,
+                        ComeDistrictName=n.ComeDistrict.DistrictName,
+                        ComeCityName=n.ComeDistrict.City.CityName,
+                        n.ComeAddress,
+                        self = false,
+                    });
+                    var i = garbage.ToList();
+                    return JsonConvert.SerializeObject(garbage.ToList());
+                }
+
             }
 
         }
