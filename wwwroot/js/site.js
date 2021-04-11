@@ -34,8 +34,8 @@ function fillProduct(cateId, prodTagId, callBack) {
             if (status == "success") {
                 let stringList = data.split(",");
                 let htmlString = "";
-                for (let i = 0; i < stringList.length; i += 2) {
-                    htmlString += `<option value=${stringList[i]}>${stringList[i + 1]}</option>`;
+                for (let i = 0; i < stringList.length; i += 3) {
+                    htmlString += `<option imgPath=${stringList[i+2]} value=${stringList[i]}>${stringList[i + 1]}</option>`;
                 }
                 document.querySelector(prodTagId).innerHTML = htmlString;
                 if (callBack) callBack();

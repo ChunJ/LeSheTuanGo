@@ -157,12 +157,67 @@
                     txt += "<input type='hidden' id='OrderId' value='" + oid + "'/>"
                     if (gt == 1) {
                         for (let i = 0; i < s.length; i++) {
-                            txt += `<label>團編號：${ s[i].OrderId } </label><br />`;
-                            txt += `<label>地址： ${s[i].Address} </label><br />`;
-                            //txt += `<label>商品名稱： ${s[i].Address} </label>`;
+                            txt += `<div>團購編號：${s[i].OrderId } </div><br />`;
+                            txt += `<div>商品名稱： ${s[i].ProductName} </div><br />`;
+                            txt += `<div>商品敘述： ${s[i].OrderDescription} </div><br />`;
+                            txt += `<div>地址： ${s[i].CityName}${s[i].DistrictName}${s[i].Address} </div><br />`;
+                            let cango = s[i].CanGo == true ? "是" : "否";
+                            txt += `<div>是否到府服務： ${cango} </div><br />`;
+                            if (cango == "是") {
+                                txt += `<div>可服務距離： ${s[i].RangeInMeters} </div><br />`;
+                            }
+                            txt += `<div>目標購買數量： ${s[i].MaxCount} </div><br />`;
+                            txt += `<div>剩餘數量： ${s[i].AvailableCount} </div><br />`;
+                            if (s[i].Count != undefined) {
+                                txt += `<div>您的購買數量： ${s[i].Count} </div><br />`;
+                            }
                         }
                     }
                     else if (gt == 2) {
+                        for (let i = 0; i < s.length; i++) {
+                            txt += `<div>倒垃圾團編號：${s[i].GarbageServiceId} </div><br />`;
+                            txt += `<div>開團者地址： ${s[i].CityName}${s[i].DistrictName}${s[i].Address} </div><br />`;
+                            let cango = s[i].CanGo == true ? "是" : "否";
+                            txt += `<div>是否到府服務： ${cango} </div><br />`;
+                            if (cango == "是") {
+                                txt += `<div>可服務距離： ${s[i].RangeInMeters} </div><br />`;
+                            }
+                            if (s[i].L3maxCount != 0) {
+                                let str = s[i].L3count == 0 || s[i].L3count == undefined ? "" : `, 您已委託 ${s[i].L3count}個`;
+                                txt += `<div>L3&nbsp;&nbsp;：可收 ${s[i].L3maxCount}個 , 尚可收 ${s[i].L3available}個 ${str}</div><br />`;
+                            }
+                            if (s[i].L5maxCount != 0) {
+                                let str = s[i].L5count == 0 || s[i].L5count == undefined ? "" : `, 您已委託 ${s[i].L5count}個`;
+                                txt += `<div>L5&nbsp;&nbsp;：可收 ${s[i].L5maxCount}個 , 尚可收 ${s[i].L5available}個 ${str}</div><br />`;
+                            }
+                            if (s[i].L14maxCount != 0) {
+                                let str = s[i].L14count == 0 || s[i].L14count == undefined ? "" : `, 您已委託 ${s[i].L14count}個`;
+                                txt += `<div>L14：可收 ${s[i].L14maxCount}個 , 尚可收 ${s[i].L14available}個 ${str}</div><br />`;
+                            }
+                            if (s[i].L25maxCount != 0) {
+                                let str = s[i].L25count == 0 || s[i].L25count == undefined ? "" : `, 您已委託 ${s[i].L25count}個`;
+                                txt += `<div>L25：可收 ${s[i].L25maxCount}個 , 尚可收 ${s[i].L25available}個 ${str}</div><br />`;
+                            }
+                            if (s[i].L33maxCount != 0) {
+                                let str = s[i].L33count == 0 || s[i].L33count == undefined ? "" : `, 您已委託 ${s[i].L33count}個`;
+                                txt += `<div>L33：可收 ${s[i].L33maxCount}個 , 尚可收 ${s[i].L33available}個 ${str}</div><br />`;
+                            }
+                            if (s[i].L75maxCount != 0) {
+                                let str = s[i].L75count == 0 || s[i].L75count == undefined ? "" : `, 您已委託 ${s[i].L75count}個`;
+                                txt += `<div>L75：可收 ${s[i].L75maxCount}個 , 尚可收 ${s[i].L75available}個 ${str}</div><br />`;
+                            }
+                            if (s[i].L120maxCount != 0) {
+                                let str = s[i].L120count == 0 || s[i].L120count == undefined ? "" : `, 您已委託 ${s[i].L120count}個`;
+                                txt += `<div>L120：可收 ${s[i].L120maxCount}個 , 尚可收 ${s[i].L120available}個 ${str}</div><br />`;
+                            }
+                            if (s[i].NeedCome == true) {
+                                txt += `<div>是否到府服務： 是 </div><br />`;
+                                txt += `<div>到府服務地址： ${s[i].ComeCityName}${s[i].ComeDistrictName}${s[i].ComeAddress} </div><br />`;
+                            }
+                            else if (s[i].NeedCome == false) {
+                                txt += `<div>是否到府服務： 否 </div><br />`;
+                            }
+                        }
                     }
 
                     $("#detail").html(txt);
@@ -184,7 +239,6 @@
                     $("#chat").html(txt);
                     $("#chat").scrollTop($('#chat').prop("scrollHeight"));
                     $(`#link_btn div[id=btn${oid}]`).addClass("active_chat").siblings().removeClass("active_chat");
-
                     document.getElementById("btnSend").disabled = false;
                 },
             })
@@ -204,7 +258,7 @@
                     }
                     else if (gt == 2) {
                         for (let i = 0; i < s.length; i++) {
-                            txt += `<div class="p-2 w-100 text-center" id="btn${s[i].GarbageServiceId}" data-hostid= onclick="chatGetOrder(${s[i].GarbageServiceId} , ${gt} ,'${s[i].EndTime}(編號：${s[i].GarbageServiceId}  )',${s[i].HostMemberId})"> ${s[i].EndTime} (編號：${s[i].GarbageServiceId})</div>`
+                            txt += `<div class="p-2 w-100 text-center" id="btn${s[i].GarbageServiceId}" data-hostid=${s[i].HostMemberId} onclick="chatGetOrder(${s[i].GarbageServiceId} , ${gt} ,'${s[i].EndTime}(編號：${s[i].GarbageServiceId}  )',${s[i].HostMemberId})"> ${s[i].EndTime} (編號：${s[i].GarbageServiceId})</div>`
                         }
                     }
                     $("#link_btn").html(txt).promise().done(function () {

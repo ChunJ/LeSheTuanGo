@@ -1,359 +1,360 @@
 ﻿@model LeSheTuanGo.ViewModels.MemberViewModel
 
 @{
-    ViewData["Create"] = "Create";
+    ViewData["Create"] = "註冊 - ";
 }
-<div style="
-    border: hidden 5px #5B5B5B;
-    border-radius: 10px 15px;
-    padding: 30px 20px;
-    margin: 0px auto;
-    width: 600px">
-    <h3 style="text-align:center" onclick="demo()">建立您的樂社團GO帳號</h3>
-    <div class="row" >
-        <div class="col-xs-12 col-sm-6 col-md-8" style="margin:0px auto">
-            <hr />
-            <form asp-action="Create" id="form" enctype="multipart/form-data">
-                <div asp-validation-summary="ModelOnly"></div>
-                <div class="row">
-                    <div class="col-xs-12 col-sm-6">
+<div class="row align-items-center h-75">
+    <div class="col-4 offset-4 rounded-panel pt-2">
+        <h3 style="text-align:center" onclick="demo()">建立您的樂社團GO帳號</h3>
+        <hr />
+        <form asp-action="Create" id="form" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly"></div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
                         <label asp-for="FirstName" class="control-label" id="labelFirstName"></label>
                         <input asp-for="FirstName" class="form-control" id="txtFirstName" />
+                        <span asp-validation-for="FirstName" style="color:red" id="spanFirstName"></span>
                     </div><!--FirstName-->
-                    <div class="col-xs-12 col-sm-6">
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
                         <label asp-for="LastName" class="control-label" id="labelLastName"></label>
                         <input asp-for="LastName" class="form-control" id="txtLastName" onblur="checkName()" />
                         @*<span asp-validation-for="LastName" style="color:red" id="spanLastName"></span>*@
                     </div><!--LastName-->
                 </div>
-                <span asp-validation-for="FirstName" style="color:red" id="spanFirstName"> </span>
-
-                <div class="form-group" style="margin-top:15px">
-                    <label asp-for="DateOfBirth" class="control-label" id="labelBirth"></label>
-                    <input type="date" asp-for="DateOfBirth" class="form-control" id="txtBirth" value="2000-01-01" min="1930-01-01" />
-                    <span asp-validation-for="DateOfBirth" style="color:red" id="spanBirth"></span>
-                </div><!--DateOfBirth-->
-                <!--<div class="col-xs-12 col-sm-6">
-            <label asp-for="image" class="control-label" id="labelImage"></label>
-            <input type="file" asp-for="image" id="txtImage" accept=".png, .jpg, .jpeg" onchange="imageShow()" />
-            <span asp-validation-for="image" style="color:red" id="spanImage"></span>
-            <img width="200" id="uploadPreview" />
-        </div>-->
-                <!--image-->
-
-                <div class="form-group">
-                    <label asp-for="Email" class="control-label" id="labelEmail"></label>
-                    <input asp-for="Email" class="form-control" id="txtEmail" onblur="checkEmail()" />
-                    <span asp-validation-for="Email" style="color:red" id="spanEmail"></span>
-                </div><!--Email-->
-                <div class="row">
-                    <div class="col-xs-12 col-sm-6">
-                        <label asp-for="Password" class="control-label" id="labelPassword"></label>
-                        <input asp-for="Password" class="form-control" id="txtPassword" />
-                    </div>
-                    <div class="col-xs-12 col-sm-6">
-                        <label class="control-label" id="labelPasswordCheck">確認密碼</label>
-                        <input type="text" class="form-control" id="txtPasswordCheck" onblur="checkPassword()" />
-                    </div>
-                    <!--Password-->
-                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="DateOfBirth" class="control-label" id="labelBirth"></label>
+                <input type="date" asp-for="DateOfBirth" class="form-control" id="txtBirth" value="2000-01-01" min="1930-01-01" />
+                <span asp-validation-for="DateOfBirth" style="color:red" id="spanBirth"></span>
+            </div><!--DateOfBirth-->
+            <!--<div class="col-xs-12 col-sm-6">
+        <label asp-for="image" class="control-label" id="labelImage"></label>
+        <input type="file" asp-for="image" id="txtImage" accept=".png, .jpg, .jpeg" onchange="imageShow()" />
+        <span asp-validation-for="image" style="color:red" id="spanImage"></span>
+        <img width="200" id="uploadPreview" />
+    </div>-->
+            <!--image-->
+            <div class="form-group">
+                <label asp-for="Email" class="control-label" id="labelEmail"></label>
+                <input asp-for="Email" class="form-control" id="txtEmail" onblur="checkEmail()" />
+                <span asp-validation-for="Email" style="color:red" id="spanEmail"></span>
+            </div><!--Email-->
+            <div class="form-group">
+                <label asp-for="Password" class="control-label" id="labelPassword"></label>
+                <input asp-for="Password" class="form-control" id="txtPassword" />
                 <span asp-validation-for="Password" style="color:red" id="spanPassword"></span>
-
-                <div class="form-group" style="margin-top:15px">
-                    <label asp-for="Address" class="control-label" id="labelAddress"></label>
-                    <br />
-                    <select id="selectCity" onchange="getDistrict('#selectDistric')" asp-items="ViewBag.City">
-                        <option hidden id="optionCity">請選擇</option>
-                    </select>
-                    <select id="selectDistric" asp-for="DistrictId">
-                        <option hidden id="optionCity">請選擇</option>
-                    </select>
-                    <input asp-for="Address" class="form-control" id="txtAddress" onblur="checkAddress()" />
-                    <span asp-validation-for="Address" style="color:red" id="spanAddress"></span>
-                </div><!--Address-->
-                <div class="form-group">
-                    <input type="button" value="送出" class="btn btn-primary" onclick="checkValue()" style="width:25%"/>
+            </div>
+            <div class="form-group">
+                <label class="control-label" id="labelPasswordCheck">確認密碼</label>
+                <input type="text" class="form-control" id="txtPasswordCheck" onblur="checkPassword()" />
+            </div><!--Password-->
+            <div class="row">
+                <label asp-for="Address" class="control-label col-12" id="labelAddress"></label>
+                <div class="col-6">
+                    <div class="form-group">
+                        <select id="selectCity" class="form-control" onchange="getDistrict('#selectDistric')" asp-items="ViewBag.City">
+                            <option hidden id="optionCity">縣市</option>
+                        </select>
+                    </div>
                 </div>
-            </form>
-        </div>
+                <div class="col-6" >
+                    <div class="form-group">
+                        <select id="selectDistric" class="form-control" asp-for="DistrictId">
+                            <option hidden id="optionCity">鄉鎮市區</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <input asp-for="Address" placeholder="街道" class="form-control" id="txtAddress" onblur="checkAddress()" />
+                <span asp-validation-for="Address" style="color:red" id="spanAddress"></span>
+            </div><!--Address-->
+            <div class="form-group">
+                <input type="button" value="送出" class="btn btn-primary w-100" onclick="checkValue()"/>
+            </div>
+        </form>
     </div>
 </div>
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    <script>
+        var flagName = false, flagPassword = false, flagEmail = false, flagAddress = false;
+        function checkValue() {
+            checkName();
+            checkPassword();
+            checkEmail();
+            checkAddress();
+            setTimeout(function () {
+                if (flagName && flagPassword && flagEmail && flagAddress) {
+                    document.getElementById("form").submit();
+                } else {
+                    return;
+                }
+            }, "500");
 
-<script>
-    var flagName = false, flagPassword = false, flagEmail = false, flagAddress = false;
-    function checkValue() {
-        checkName();
-        checkPassword();
-        checkEmail();
-        checkAddress();
-        setTimeout(function () {
-            if (flagName && flagPassword && flagEmail && flagAddress) {
-                document.getElementById("form").submit();
-            } else {
+        }//檢查全部
+
+        function isName(Name) {
+            for (let i = 0; i < Name.value.length; i++) {
+                let ch = Name.value.charAt(i);
+                let chCode = Name.value.charCodeAt(i);
+                if (!(chCode >= 0x4E00 && chCode <= 0x9FFF)) { //如果不是中文
+                    if (!((ch >= "a" && ch <= "z") || (ch >= "A" && ch <= "Z"))) //如果不是英文
+                        return false;
+                    else
+                        continue;
+                } else
+                    continue;
+            }
+            return true;
+        }//ok
+        function checkName() {
+            let txtFirstName = document.getElementById("txtFirstName");
+            let txtLastName = document.getElementById("txtLastName");
+            let labelFirstName = document.getElementById("labelFirstName");
+            let labelLastName = document.getElementById("labelLastName");
+            let spanFirstName = document.getElementById("spanFirstName");
+            let spanLastName = document.getElementById("spanFirstName");
+            if (txtFirstName.value == "" || txtLastName.value == "") {
+                spanFirstName.innerHTML = "請輸入中英文";
+                spanFirstName.style.color = "red";
+                labelFirstName.style.color = "red";
+                txtFirstName.style.borderColor = "red";
+                labelLastName.style.color = "red";
+                txtLastName.style.borderColor = "red";
+                flagName = false;
                 return;
             }
-        }, "500");
-
-    }//檢查全部
-
-    function isName(Name) {
-        for (let i = 0; i < Name.value.length; i++) {
-            let ch = Name.value.charAt(i);
-            let chCode = Name.value.charCodeAt(i);
-            if (!(chCode >= 0x4E00 && chCode <= 0x9FFF)) { //如果不是中文
-                if (!((ch >= "a" && ch <= "z") || (ch >= "A" && ch <= "Z"))) //如果不是英文
-                    return false;
-                else
-                    continue;
-            } else
-                continue;
-        }
-        return true;
-    }//ok
-    function checkName() {
-        let txtFirstName = document.getElementById("txtFirstName");
-        let txtLastName = document.getElementById("txtLastName");
-        let labelFirstName = document.getElementById("labelFirstName");
-        let labelLastName = document.getElementById("labelLastName");
-        let spanFirstName = document.getElementById("spanFirstName");
-        let spanLastName = document.getElementById("spanFirstName");
-        if (txtFirstName.value == "" || txtLastName.value == "") {
-            spanFirstName.innerHTML = "請輸入中英文";
-            spanFirstName.style.color = "red";
-            labelFirstName.style.color = "red";
-            txtFirstName.style.borderColor = "red";
-            labelLastName.style.color = "red";
-            txtLastName.style.borderColor = "red";
-            flagName = false;
-            return;
-        }
-        if (isName(txtFirstName)) {
-            labelFirstName.style.color = "green";
-            txtFirstName.style.borderColor = "green";
-            spanFirstName.style.color = "green";
-            spanFirstName.innerHTML = "可用";
-            flagName = true;
-        } else {
-            labelFirstName.style.color = "red";
-            txtFirstName.style.borderColor = "red";
-            spanFirstName.style.color = "red";
-            spanFirstName.innerHTML = "請輸入中英文";
-            flagName = false;
-            return;
-        }
-
-        if (isName(txtLastName)) {
-            labelLastName.style.color = "green";
-            txtLastName.style.borderColor = "green";
-            spanLastName.style.color = "green";
-            spanLastName.innerHTML = "可用";
-            flagName = true;
-        } else {
-            labelLastName.style.color = "red";
-            txtLastName.style.borderColor = "red";
-            spanLastName.style.color = "red";
-            spanLastName.innerHTML = "請輸入中英文";
-            flagName = false;
-            return;
-        }
-    }//ok
-    function isPassword(pwd) {
-        var isMatch = pwd.value.match(/^.*(?=.{4,20})(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?!.*[^\x21-\x7e]).*$/)
-        if (isMatch) {
-            return true;
-        } else {
-            return false;
-        }
-    }//ok
-    function checkPassword() {
-        let txtPassword = document.getElementById("txtPassword");
-        let labelPassword = document.getElementById("labelPassword");
-        let spanPassword = document.getElementById("spanPassword");
-
-        let txtPasswordCheck = document.getElementById("txtPasswordCheck");
-        let labelPasswordCheck = document.getElementById("labelPasswordCheck");
-        let spanPasswordCheck = document.getElementById("spanPasswordCheck");
-
-        if (txtPassword.value == "") {
-            spanPassword.innerHTML = "不能為空";
-            labelPassword.style.color = "red";
-            spanPassword.style.color = "red";
-            txtPassword.style.borderColor = "red";
-            flagPassword = false;
-            return;
-        }
-        if (isPassword(txtPassword)) {
-            spanPassword.innerHTML = "可用";
-            labelPassword.style.color = "green";
-            spanPassword.style.color = "green";
-            txtPassword.style.borderColor = "green";
-            flagPassword = true;
-
-        } else {
-            spanPassword.innerHTML = "請輸入4~20位大小寫英數字";
-            labelPassword.style.color = "red";
-            spanPassword.style.color = "red";
-            txtPassword.style.borderColor = "red";
-            flagPassword = false;
-            return;
-        }
-        //驗證確認密碼
-        if (txtPassword.value != txtPasswordCheck.value) {
-            labelPasswordCheck.style.color = "red";
-            txtPasswordCheck.style.borderColor = "red";
-            spanPassword.innerHTML = "與密碼不同";
-            spanPassword.style.color = "red";
-            flagPassword = false;
-            return;
-        } else {
-            labelPasswordCheck.style.color = "green";
-            txtPasswordCheck.style.borderColor = "green";
-            spanPassword.innerHTML = "";
-            flagPassword = true;
-        }
-
-    }//ok
-    function isEmail(Email) {
-        var isMatch = Email.value.match(/\b(^(\S+@@).+((\.com)|(\.net)|(\.edu)|(\.mil)|(\.gov)|(\.org)|(\..{2,2}))$)\b/)
-        if (isMatch) {
-            return true;
-        } else {
-            return false;
-        }
-    }//ok
-    function checkRepeatEmail(Email) {
-        $.ajax({
-            url: "/Member/checkRepeatEmail?createEmail=" + Email.value,
-            type: "Get",
-            success: function (flag) {
-                let js = JSON.parse(flag);
-                if (js == "Yes") {
-                    spanEmail.innerHTML = "此Email已註冊過,或嘗試<a href='/Member/Login'>登入</a>";
-                    labelEmail.style.color = "red";
-                    spanEmail.style.color = "red";
-                    txtEmail.style.borderColor = "red";
-                    flagEmail = false;
-                } else {
-                    flagEmail = true;
-                    spanEmail.innerHTML = "可用";
-                    labelEmail.style.color = "green";
-                    spanEmail.style.color = "green";
-                    txtEmail.style.borderColor = "green";
-                }
+            if (isName(txtFirstName)) {
+                labelFirstName.style.color = "green";
+                txtFirstName.style.borderColor = "green";
+                spanFirstName.style.color = "green";
+                spanFirstName.innerHTML = "可用";
+                flagName = true;
+            } else {
+                labelFirstName.style.color = "red";
+                txtFirstName.style.borderColor = "red";
+                spanFirstName.style.color = "red";
+                spanFirstName.innerHTML = "請輸入中英文";
+                flagName = false;
+                return;
             }
-        });
-    }//ok
-    function checkEmail() {
-        let txtEmail = document.getElementById("txtEmail");
-        let labelEmail = document.getElementById("labelEmail");
-        let spanEmail = document.getElementById("spanEmail");
-        if (txtEmail.value == "") {
-            spanEmail.innerHTML = "不能為空";
-            labelEmail.style.color = "red";
-            spanEmail.style.color = "red";
-            txtEmail.style.borderColor = "red";
-            flagEmail = false;
-            return;
-        }//如果為空
 
-        if (isEmail(txtEmail)) {
-            spanEmail.innerHTML = "格式正確";
-            labelEmail.style.color = "green";
-            spanEmail.style.color = "green";
-            txtEmail.style.borderColor = "green";
-            checkRepeatEmail(txtEmail);
-        } else {
-            spanEmail.innerHTML = "請輸入正確Email格式";
-            labelEmail.style.color = "red";
-            spanEmail.style.color = "red";
-            txtEmail.style.borderColor = "red";
-            flagEmail = false;
-            return;
-        }//是否為正確Email格式
+            if (isName(txtLastName)) {
+                labelLastName.style.color = "green";
+                txtLastName.style.borderColor = "green";
+                spanLastName.style.color = "green";
+                spanLastName.innerHTML = "可用";
+                flagName = true;
+            } else {
+                labelLastName.style.color = "red";
+                txtLastName.style.borderColor = "red";
+                spanLastName.style.color = "red";
+                spanLastName.innerHTML = "請輸入中英文";
+                flagName = false;
+                return;
+            }
+        }//ok
+        function isPassword(pwd) {
+            var isMatch = pwd.value.match(/^.*(?=.{4,20})(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?!.*[^\x21-\x7e]).*$/)
+            if (isMatch) {
+                return true;
+            } else {
+                return false;
+            }
+        }//ok
+        function checkPassword() {
+            let txtPassword = document.getElementById("txtPassword");
+            let labelPassword = document.getElementById("labelPassword");
+            let spanPassword = document.getElementById("spanPassword");
 
-    }//ok
-    function isAddress(Address) {
-        for (let i = 0; i < Address.value.length; i++) {
-            let ch = Address.value.charAt(i);
-            let chCode = Address.value.charCodeAt(i);
-            if (!(chCode >= 0x4E00 && chCode <= 0x9FFF)) {
-                if (!((ch >= "a" && ch <= "z") || (ch >= "A" && ch <= "Z"))) {
-                    if (!((ch >= "(" && ch <= "-") || (ch >= 0 && ch <= 9))) {
-                        return false;
+            let txtPasswordCheck = document.getElementById("txtPasswordCheck");
+            let labelPasswordCheck = document.getElementById("labelPasswordCheck");
+            let spanPasswordCheck = document.getElementById("spanPasswordCheck");
+
+            if (txtPassword.value == "") {
+                spanPassword.innerHTML = "不能為空";
+                labelPassword.style.color = "red";
+                spanPassword.style.color = "red";
+                txtPassword.style.borderColor = "red";
+                flagPassword = false;
+                return;
+            }
+            if (isPassword(txtPassword)) {
+                spanPassword.innerHTML = "可用";
+                labelPassword.style.color = "green";
+                spanPassword.style.color = "green";
+                txtPassword.style.borderColor = "green";
+                flagPassword = true;
+
+            } else {
+                spanPassword.innerHTML = "請輸入4~20位大小寫英數字";
+                labelPassword.style.color = "red";
+                spanPassword.style.color = "red";
+                txtPassword.style.borderColor = "red";
+                flagPassword = false;
+                return;
+            }
+            //驗證確認密碼
+            if (txtPassword.value != txtPasswordCheck.value) {
+                labelPasswordCheck.style.color = "red";
+                txtPasswordCheck.style.borderColor = "red";
+                spanPassword.innerHTML = "與密碼不同";
+                spanPassword.style.color = "red";
+                flagPassword = false;
+                return;
+            } else {
+                labelPasswordCheck.style.color = "green";
+                txtPasswordCheck.style.borderColor = "green";
+                spanPassword.innerHTML = "";
+                flagPassword = true;
+            }
+
+        }//ok
+        function isEmail(Email) {
+            var isMatch = Email.value.match(/\b(^(\S+@@).+((\.com)|(\.net)|(\.edu)|(\.mil)|(\.gov)|(\.org)|(\..{2,2}))$)\b/)
+            if (isMatch) {
+                return true;
+            } else {
+                return false;
+            }
+        }//ok
+        function checkRepeatEmail(Email) {
+            $.ajax({
+                url: "/Member/checkRepeatEmail?createEmail=" + Email.value,
+                type: "Get",
+                success: function (flag) {
+                    let js = JSON.parse(flag);
+                    if (js == "Yes") {
+                        spanEmail.innerHTML = "此Email已註冊過,或嘗試<a href='/Member/Login'>登入</a>";
+                        labelEmail.style.color = "red";
+                        spanEmail.style.color = "red";
+                        txtEmail.style.borderColor = "red";
+                        flagEmail = false;
                     } else {
-                        continue;
+                        flagEmail = true;
+                        spanEmail.innerHTML = "可用";
+                        labelEmail.style.color = "green";
+                        spanEmail.style.color = "green";
+                        txtEmail.style.borderColor = "green";
                     }
+                }
+            });
+        }//ok
+        function checkEmail() {
+            let txtEmail = document.getElementById("txtEmail");
+            let labelEmail = document.getElementById("labelEmail");
+            let spanEmail = document.getElementById("spanEmail");
+            if (txtEmail.value == "") {
+                spanEmail.innerHTML = "不能為空";
+                labelEmail.style.color = "red";
+                spanEmail.style.color = "red";
+                txtEmail.style.borderColor = "red";
+                flagEmail = false;
+                return;
+            }//如果為空
+
+            if (isEmail(txtEmail)) {
+                spanEmail.innerHTML = "格式正確";
+                labelEmail.style.color = "green";
+                spanEmail.style.color = "green";
+                txtEmail.style.borderColor = "green";
+                checkRepeatEmail(txtEmail);
+            } else {
+                spanEmail.innerHTML = "請輸入正確Email格式";
+                labelEmail.style.color = "red";
+                spanEmail.style.color = "red";
+                txtEmail.style.borderColor = "red";
+                flagEmail = false;
+                return;
+            }//是否為正確Email格式
+
+        }//ok
+        function isAddress(Address) {
+            for (let i = 0; i < Address.value.length; i++) {
+                let ch = Address.value.charAt(i);
+                let chCode = Address.value.charCodeAt(i);
+                if (!(chCode >= 0x4E00 && chCode <= 0x9FFF)) {
+                    if (!((ch >= "a" && ch <= "z") || (ch >= "A" && ch <= "Z"))) {
+                        if (!((ch >= "(" && ch <= "-") || (ch >= 0 && ch <= 9))) {
+                            return false;
+                        } else {
+                            continue;
+                        }
+                    } else
+                        continue
                 } else
-                    continue
-            } else
-                continue;
+                    continue;
+            }
+            return true;
+        }//ok
+        function checkAddress() {
+            let txtAddress = document.getElementById("txtAddress");
+            let labelAddress = document.getElementById("labelAddress");
+            let spanAddress = document.getElementById("spanAddress");
+
+            let selectDistric = document.getElementById("selectDistric");
+            let selectCity = document.getElementById("selectCity");
+
+            if (selectCity.options.selectedIndex == 0) {
+                selectCity.style.borderColor = "red";
+                selectDistric.style.borderColor = "red";
+                flagAddress = false;
+                return;
+            } else {
+                selectCity.style.borderColor = "green";
+                selectDistric.style.borderColor = "green";
+                flagAddress = true;
+            }
+
+            if (txtAddress.value == "") {
+                spanAddress.innerHTML = "不能為空";
+                labelAddress.style.color = "red";
+                spanAddress.style.color = "red";
+                txtAddress.style.borderColor = "red";
+                flagAddress = false;
+                return;
+            }
+            if (isAddress(txtAddress)) {
+                spanAddress.innerHTML = "";
+                labelAddress.style.color = "green";
+                spanAddress.style.color = "green";
+                txtAddress.style.borderColor = "green";
+                flagAddress = true;
+            } else {
+                spanAddress.innerHTML = "請輸入正確地址格式";
+                labelAddress.style.color = "red";
+                spanAddress.style.color = "red";
+                txtAddress.style.borderColor = "red";
+                flagAddress = false;
+                return;
+            }
+
+        }//ok
+        function imageShow() {
+            var file = document.querySelector("#txtImage").files[0]
+            var newfile = new File([file], new Date().getTime() + ".jpg", { type: "image/jpeg" });
+            var reader = new FileReader();
+            reader.onload = function (oFREvent) {
+                document.querySelector("#uploadPreview").src = oFREvent.target.result;
+            };
+            reader.readAsDataURL(newfile);
+            console.log(reader);
+        }//ok
+
+        //demo鍵
+        function demo() {
+            document.getElementById("txtFirstName").value = "Chen";
+            document.getElementById("txtLastName").value = "Jerry";
+            document.getElementById("txtEmail").value = "YuChen789@gmail.com";
+            document.getElementById("txtPassword").value = "Password123";
+            document.getElementById("txtPasswordCheck").value = "Password123";
+            document.getElementById("txtAddress").value = "復興南路資策會";
         }
-        return true;
-    }//ok
-    function checkAddress() {
-        let txtAddress = document.getElementById("txtAddress");
-        let labelAddress = document.getElementById("labelAddress");
-        let spanAddress = document.getElementById("spanAddress");
+    </script>
+}
 
-        let selectDistric = document.getElementById("selectDistric");
-        let selectCity = document.getElementById("selectCity");
-
-        if (selectCity.options.selectedIndex == 0) {
-            selectCity.style.borderColor = "red";
-            selectDistric.style.borderColor = "red";
-            flagAddress = false;
-            return;
-        } else {
-            selectCity.style.borderColor = "green";
-            selectDistric.style.borderColor = "green";
-            flagAddress = true;
-        }
-
-        if (txtAddress.value == "") {
-            spanAddress.innerHTML = "不能為空";
-            labelAddress.style.color = "red";
-            spanAddress.style.color = "red";
-            txtAddress.style.borderColor = "red";
-            flagAddress = false;
-            return;
-        }
-        if (isAddress(txtAddress)) {
-            spanAddress.innerHTML = "";
-            labelAddress.style.color = "green";
-            spanAddress.style.color = "green";
-            txtAddress.style.borderColor = "green";
-            flagAddress = true;
-        } else {
-            spanAddress.innerHTML = "請輸入正確地址格式";
-            labelAddress.style.color = "red";
-            spanAddress.style.color = "red";
-            txtAddress.style.borderColor = "red";
-            flagAddress = false;
-            return;
-        }
-
-    }//ok
-    function imageShow() {
-        var file = document.querySelector("#txtImage").files[0]
-        var newfile = new File([file], new Date().getTime() + ".jpg", { type: "image/jpeg" });
-        var reader = new FileReader();
-        reader.onload = function (oFREvent) {
-            document.querySelector("#uploadPreview").src = oFREvent.target.result;
-        };
-        reader.readAsDataURL(newfile);
-        console.log(reader);
-    }//ok
-
-    //demo鍵
-    function demo() {
-        document.getElementById("txtFirstName").value = "Chen";
-        document.getElementById("txtLastName").value = "Jerry";
-        document.getElementById("txtEmail").value = "YuChen789@gmail.com";
-        document.getElementById("txtPassword").value = "Password123";
-        document.getElementById("txtPasswordCheck").value = "Password123";
-        document.getElementById("txtAddress").value = "復興南路資策會";
-    }
-</script>

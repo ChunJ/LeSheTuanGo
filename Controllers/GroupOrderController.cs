@@ -26,8 +26,10 @@ namespace LeSheTuanGo.Controllers {
             ViewData["DistrictId"] = user.DistrictId;
             ViewData["CityId"] = user.District.CityId;
 
-            ViewData["CategoryId"] = 1;
-            ViewData["ProductId"] = 1;
+            Product p = db.Products.First();
+            ViewData["CategoryId"] = p.CategoryId;
+            ViewData["ProductId"] = p.ProductId;
+            ViewData["ProductImage"] = p.ProductImagePath;
             ViewData["Category"] = new SelectList(db.CategoryRefs, "CategoryId", "CategoryName");
             ViewData["City"] = new SelectList(db.CityRefs, "CityId", "CityName");
             ViewData["GoRange"] = new SelectList(db.RangeRefs, "RangeId", "RangeInMeters");
@@ -61,5 +63,6 @@ namespace LeSheTuanGo.Controllers {
             var list = db.Orders.Where(o => o.HostMemberId == userId).ToList();
             return View(list);
         }
+        
     }
 }

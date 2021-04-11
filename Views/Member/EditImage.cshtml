@@ -1,9 +1,11 @@
 ﻿@model LeSheTuanGo.ViewModels.MemberViewModel
-
-<div style="border:hidden 5px black; margin:0px 200px; ">
-    <h1 style="text-align: center">變更照片</h1>
-    <div class="col-md-6 col-md-offset-3" style="margin:0 auto">
-    <hr />
+@{
+    ViewData["Title"] = "變更照片 - ";
+}
+<div class="row align-items-center h-75">
+    <div class="col-4 offset-4 rounded-panel pt-2">
+        <h1 style="text-align: center">變更照片</h1>
+        <hr />
         <form asp-action="EditImage" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="MemberId" />
@@ -11,20 +13,17 @@
                 <input type="file" asp-for="image" id="txtImage" accept=".png, .jpg, .jpeg" onchange="imageShow()" />
                 <span asp-validation-for="image" style="color:red" id="spanImage"></span>
             </div><!--image-->
-            <img src="@Model.ProfileImagePath" width="300" id="uploadPreview" />
+            <img src="@Model.ProfileImagePath" class="w-100" id="uploadPreview" />
             <br />
             <div class="form-group">
-                <input type="submit" value="送出" class="btn btn-primary" style="width:25%"/>
+                <input type="submit" value="送出" class="btn btn-primary w-100" />
             </div>
-
-
         </form>
     </div>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
 <script type="text/javascript">
     function imageShow() {
         var file = document.querySelector("#txtImage").files[0]
@@ -37,3 +36,5 @@
         console.log(reader);
     }
 </script>
+}
+

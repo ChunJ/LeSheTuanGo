@@ -16,7 +16,11 @@
                 </div>
                 <div class="form-group">
                     <label>商品名稱</label>
-                    <select id="ProductId" class="form-control"></select>
+                    <select id="ProductId" class="form-control" onchange="showProdImage()"></select>
+                </div>
+                <div class="form-group">
+                    <label>商品圖片</label>
+                    <image id="prodImage" class="srch-product-image" src="@ViewData["ProductImage"]"></image>
                 </div>
                 <div class="form-group">
                     <label>城市</label>
@@ -93,7 +97,7 @@
         let distS = document.querySelector("#DistrictId");
         let cateS = document.querySelector("#CategotyId");
         let prodS = document.querySelector("#ProductId");
-        let prodImage;
+        let prodImage = document.querySelector("#prodImage");
         let addressIn = document.querySelector("#addressInput");
         let distanceS = document.querySelector("#distance");
         let count = document.querySelector("#count");
@@ -111,6 +115,27 @@
         let AccornList = [];
         let lastAccord = null;
 
+        window.onload = function () {
+            cityS.value = @ViewData["CityId"];
+            fillDistrict(@ViewData["CityId"], "#DistrictId", function () {
+                distS.value = @ViewData["DistrictId"];
+            });
+            cateS.value = @ViewData["CategoryId"];
+            fillProduct(@ViewData["CategoryId"], "#ProductId", function () {
+                distS.value = @ViewData["ProductId"];
+            });
+        }
+        function fillDemo() {
+            addressIn.value = "信義路四段2號";
+            distS.value = 5;
+        }
+        function test() {
+
+        }
+        function showProdImage() {
+            let t = event.target;
+            prodImage.src = t.options[t.selectedIndex].getAttribute("imgPath");
+        }
         function accorClick(accor) {
             let panel = accor.nextElementSibling;
             console.log(accor);
@@ -130,24 +155,6 @@
                 }
                 lastAccord = accor
             }
-        }
-        
-        window.onload = function () {
-            cityS.value = @ViewData["CityId"];
-            fillDistrict(@ViewData["CityId"], "#DistrictId", function () {
-                distS.value = @ViewData["DistrictId"];
-            });
-            cateS.value = @ViewData["CategoryId"];
-            fillProduct(@ViewData["CategoryId"], "#ProductId", function () {
-            distS.value = @ViewData["ProductId"];
-        });
-        }
-        function fillDemo() {
-            addressIn.value = "信義路四段2號";
-            distS.value = 5;
-        }
-        function test() {
-
         }
         function searchStart() {
             lastAccord = null
