@@ -27,9 +27,22 @@ namespace LeSheTuanGo.Controllers
             iv_context = midtermContext;
         }
 
-        public string favorite(int mem, int spot)
+        public string AdjFavorite(int mem, int spot, byte type)
         {
-            return "用來對memberId增加/刪除spotId";
+            if (type==0) //+spot
+            {
+                var AdjSpot = new GarbageSpotLike { MemberId = mem, GarbageTruckSpotId = spot, MinutesBeforeNotify = 0, NotifyMe = false };
+                iv_context.Add(AdjSpot);
+                iv_context.SaveChanges();
+                return "您已成功新增";
+            }
+            else //-spot; type=1
+            {
+                var AdjSpot = iv_context.GarbageSpotLikes.Where(s => s.MemberId == mem && s.GarbageTruckSpotId == spot).First();
+                iv_context.Remove(AdjSpot);
+                iv_context.SaveChanges();
+                return "您已成功移除";
+            }
         }
 
         public string ifSpotExist(int mem, int spot)
