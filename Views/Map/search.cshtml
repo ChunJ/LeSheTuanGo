@@ -496,7 +496,7 @@
             document.getElementById("content").remove();
             var ele = document.createElement("tbody");
             ele.id = "content";
-            js = js0.sort(function (a, b) {
+            js = js.sort(function (a, b) {
                 return a.ArrivalTime < b.ArrivalTime ? timeOrder : -1 * timeOrder;
             });
             if (currentUser == 0) {
@@ -561,7 +561,7 @@
             document.getElementById("content").remove();
             var ele = document.createElement("tbody");
             ele.id = "content";
-            js = js0.sort(function (a, b) {
+            js = js.sort(function (a, b) {
                 return a.distance < b.distance ? distanceOrder : -1 * distanceOrder;
             });
             if (currentUser == 0) {
