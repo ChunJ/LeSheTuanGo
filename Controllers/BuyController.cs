@@ -28,8 +28,10 @@ namespace LeSheTuanGo.Controllers {
                 ViewData["DistrictId"] = 1;
                 ViewData["CityId"] = 1;
             }
-            ViewData["CategoryId"] = 1;
-            ViewData["ProductId"] = 1;
+            Product p = db.Products.First();
+            ViewData["CategoryId"] = p.CategoryId;
+            ViewData["ProductId"] = p.ProductId;
+            ViewData["ProductImage"] = p.ProductImagePath;
             ViewData["GoRange"] = new SelectList(db.RangeRefs, "RangeId", "RangeInMeters");
             ViewData["City"] = new SelectList(db.CityRefs, "CityId", "CityName");
             ViewData["Category"] = new SelectList(db.CategoryRefs, "CategoryId", "CategoryName");

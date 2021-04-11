@@ -15,7 +15,7 @@
     <meta charset="utf-8" />
     <meta name="google" content="notranslate" /> @*解決chrome跳翻譯*@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - 樂社團Go</title>
+    <title>@ViewData["Title"]樂社團Go</title>
     @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />*@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="~/css/site.css" />
@@ -111,10 +111,12 @@
             </nav>
         </div>
     </header>
-    <div class="container main-body vh-100">
-        <main role="main" class="h-100 pb-3 pt-1">
-            @RenderBody()
-        </main>
+    <div class="main-body vh-100 column-main">
+        <div class="container h-100">
+            <main role="main" class="h-100 pb-3 pt-1">
+                @RenderBody()
+            </main>
+        </div>
     </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

@@ -33,6 +33,7 @@ namespace LeSheTuanGo.Controllers {
             foreach (var dis in productList) {
                 sb.Append(dis.ProductId + ",");
                 sb.Append(dis.ProductName + ",");
+                sb.Append(dis.ProductImagePath + ",");
             }
             if (sb.Length != 0) {
                 sb.Remove(sb.Length - 1, 1);

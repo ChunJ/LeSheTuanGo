@@ -4,24 +4,44 @@
 }
 <form asp-action="Index">
     <div class="border-bottom-dark mb-2">
-        <h2>新增購物團</h2>
+        <h2 onclick="test()">新增購物團</h2>
     </div>
-    <div class="row w-50 pb-5">
+    <div class="row w-50">
         <div class="col-6">
             <div class="form-group">
                 <label>商品類別</label>
                 <select id="CategoryId" class="form-control" onchange="getProduct('#ProductId')" asp-items="ViewBag.Category"></select>
             </div>
-        </div>
-        <div class="col-6">
             <div class="form-group">
                 <label for="ProductId">商品名稱</label>
-                <select asp-for="ProductId" class="form-control"></select>
+                <select asp-for="ProductId" class="form-control" onchange="showProdImage()"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="MaxCount">目標購買數量</label>
+                <input asp-for="MaxCount" class="form-control" />
+                <span asp-validation-for="MaxCount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UnitPrice">每單位價格</label>
+                <input asp-for="UnitPrice" class="form-control" />
+                <span asp-validation-for="UnitPrice" class="text-danger"></span>
             </div>
         </div>
         <div class="col-6">
+            <div class="d-flex flex-column h-100">
+                <div>
+                    <label>商品示意圖</label>
+                </div>
+                <div class="flex-grow-1">
+                    <image id="prodImage" class="product-image" src="@ViewData["ProductImage"]"></image>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row w-50 pb-5">
+        <div class="col-6">
             <div class="form-group">
-                <label>城市</label>
+                <label>縣市</label>
                 <select id="CityId" class="form-control" onchange="getDistrict('#DistrictId')" asp-items="ViewBag.City"></select>
             </div>
         </div>
@@ -33,23 +53,9 @@
         </div>
         <div class="col-12">
             <div class="form-group">
-                <label asp-for="Address">地址</label>
+                <label asp-for="Address">街道地址</label>
                 <input asp-for="Address" value=@ViewData["Address"] class="form-control" />
                 <span asp-validation-for="Address" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="col-6">
-            <div class="form-group">
-                <label asp-for="MaxCount">目標購買數量</label>
-                <input asp-for="MaxCount" class="form-control" />
-                <span asp-validation-for="MaxCount" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="col-6">
-            <div class="form-group">
-                <label asp-for="UnitPrice">每單位價格</label>
-                <input asp-for="UnitPrice" class="form-control" />
-                <span asp-validation-for="UnitPrice" class="text-danger"></span>
             </div>
         </div>
         <div class="col-6">
@@ -77,34 +83,36 @@
             </div>
         </div>
     </div>
-    <div class="column-btn py-1">
+    <div class="column-btn py-1 w-50">
             <input type="submit" value="新增" class="btn btn-primary" />
             <a class="btn btn-primary" href="/ChatMessageRecords/Index">查看紀錄</a>
-            <input type="button" value="test" class="btn btn-primary" onclick="test();" />
     </div>
 </form>
 
-
 @section Scripts {
     <script>
-    let cityS = document.querySelector("#CityId");
-    let distS = document.querySelector("#DistrictId");
-    let cateS = document.querySelector("#CategoryId");
-    let prodS = document.querySelector("#ProductId");
+        let cityS = document.querySelector("#CityId");
+        let distS = document.querySelector("#DistrictId");
+        let cateS = document.querySelector("#CategoryId");
+        let prodS = document.querySelector("#ProductId");
+        let prodImage = document.querySelector("#prodImage");
         window.onload = function () {
-        cateS.value = @ViewData["CategoryId"];
-        fillProduct(@ViewData["CategoryId"], "#ProductId", function () {
-            distS.value = @ViewData["ProductId"];
-        });
-        cityS.value = @ViewData["CityId"];
-        fillDistrict(@ViewData["CityId"], "#DistrictId", function () {
-            distS.value = @ViewData["DistrictId"];
-        });
-    }
-    function test() {
-        console.log(distS.value);
-        console.log(distS);
-    }
+            cateS.value = @ViewData["CategoryId"];
+            fillProduct(@ViewData["CategoryId"], "#ProductId", function () {
+                prodS.value = @ViewData["ProductId"];
+            });
+            cityS.value = @ViewData["CityId"];
+            fillDistrict(@ViewData["CityId"], "#DistrictId", function () {
+                distS.value = @ViewData["DistrictId"];
+            });
+        }
+        function test() {
+            prodImage.src = "/images/ProductImages/test3.jpg";
+        }
+        function showProdImage() {
+            let t = event.target;
+            prodImage.src = t.options[t.selectedIndex].getAttribute("imgPath");
+        }
     </script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
