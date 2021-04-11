@@ -158,3 +158,21 @@ html {
 .border-bottom-dark {
     border-bottom: 1px solid #c0c4c8 !important;
 }
+.rounded-panel {
+    border-radius: 0.5rem
+}
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #ccc;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #8f8f8f;
+}

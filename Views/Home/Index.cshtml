@@ -2,58 +2,15 @@
     ViewData["Title"] = "";
     ViewData["bgImage"] = "/images/Others/wallpaperflare.jpg";
 }
-
-<div class="container">
-    <div class="row align-items-center vh-80">
-        <div class="col-6">
-            <button class="accordion"><h5>Section 1</h5></button>
-            <div class="panel">
-                <p>Lorem ipsum...</p>
-            </div>
-            <button class="accordion"><h5>Section 2</h5></button>
-            <div class="panel">
-                <p>Lorem ipsum...</p>
-            </div>
-            <button class="accordion"><h5>Section 3</h5></button>
-            <div class="panel">
-                <p>Lorem ipsum...</p>
-            </div>
+<div class="row align-items-center vh-80">
+    <div class="col-6 offset-6">
+        <div class="banner_content">
+            <h3>樂活社區，全民動起來。</h3>
+            <h5>短距離的社區型態團購與倒垃圾機制，可加入或新增自己專屬的天地。</h5>
+            <a class="btn btn-secondary" href="#">Begin Free Trial</a>
         </div>
-        <div class="col-6">
-            <div class="banner_content">
-                <h3>樂活社區，全民動起來。</h3>
-                <h5>短距離的社區型態團購與倒垃圾機制，可加入或新增自己專屬的天地。</h5>
-                <a class="btn btn-secondary" href="#">Begin Free Trial<i class="ti-arrow-right"></i></a>
-            </div>
-        </div>
-
     </div>
 </div>
-@section Scripts {
-    <script>
-        let acc = document.getElementsByClassName("accordion");
-        let lastPanel = null;
 
-        for (let i = 0; i < acc.length; i++) {
-            acc[i].addEventListener("click", function () {
-                let panel = this.nextElementSibling;
-                if (this.classList.contains("active")) {
-                    this.classList.remove("active");
-                    panel.style.maxHeight = null;
-                    if (lastPanel == this) {
-                        //repeat on active
-                        lastPanel = null;
-                    }
-                } else {
-                    this.classList.add("active");
-                    panel.style.maxHeight = panel.scrollHeight + "px";
-                    if (lastPanel != null) {
-                        lastPanel.classList.remove("active");
-                        lastPanel.nextElementSibling.style.maxHeight = null;
-                    }
-                    lastPanel = this
-                }
-          });
-        }
-    </script>
+@section Scripts {
 }

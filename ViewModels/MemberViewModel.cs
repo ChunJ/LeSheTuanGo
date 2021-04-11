@@ -31,11 +31,11 @@ namespace LeSheTuanGo.ViewModels
         //}
         public int MemberId { get { return iv_Member.MemberId; } set { iv_Member.MemberId = value; } }
 
-        [DisplayName("姓")]
+        [DisplayName("姓氏")]
         [Required(ErrorMessage = "不能為空")]
         public string FirstName { get {return iv_Member.FirstName; } set {iv_Member.FirstName = value; } }
 
-        [DisplayName("名")]
+        [DisplayName("名字")]
         [Required(ErrorMessage = "不能為空")]
         public string LastName { get {return iv_Member.LastName; } set {iv_Member.LastName = value; } }
 
@@ -66,7 +66,7 @@ namespace LeSheTuanGo.ViewModels
         [DisplayName("照片")]
         public string ProfileImagePath { get { return iv_Member.ProfileImagePath; } set { iv_Member.ProfileImagePath = value; } }
        
-        [DisplayName("生日")]
+        [DisplayName("出生日期")]
         public DateTime DateOfBirth { get { return iv_Member.DateOfBirth; } set { iv_Member.DateOfBirth = value; } }
 
         [DisplayName("照片")]

@@ -1,10 +1,10 @@
 ﻿@model LeSheTuanGo.ViewModels.MemberViewModel
 @{
-    ViewData["Title"] = "登入";
+    ViewData["Title"] = "登入 - ";
 }
-<div style="border:hidden 5px black; margin:0px 100px; ">
-    <h1 style="text-align: center" onclick="demo()">登入</h1>
-    <div class="col-md-6 col-md-offset-3" style="margin:0 auto">
+<div class="row align-items-center h-75">
+    <div class="col-4 offset-4 rounded-panel pt-2">
+        <h1 style="text-align: center" onclick="demo()">登入</h1>
         <hr />
         <form asp-action="Login" id="form">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -18,119 +18,117 @@
                 <label asp-for="Password" class="control-label" id="labelPassword"></label>
                 <input asp-for="Password" class="form-control" id="txtPassword" />
                 <span asp-validation-for="Password" class="text-danger" id="spanPassword"></span>
+                <a class="text-decoration-none text-black-50" asp-action="forgetPassword">忘記密碼?</a>
             </div>
             <div class="form-group">
-                <input type="button" value="登入" class="btn btn-primary" onclick="checkLogin()" style="width:23%"/>
-                <a asp-action="Create" type="button" class="btn btn-success" style="width:23%">註冊</a>
-                <a asp-action="forgetPassword" type="button" class="btn btn-danger" style="width:23%">忘記密碼</a>
+                <input type="button" value="登入" class="btn btn-primary w-100" onclick="checkLogin()" />
+                <p>還沒有帳號嗎? <a asp-action="Create" class="text-decoration-none text-black-50">點我註冊</a></p>
             </div>
             @*<div class="g-recaptcha" data-sitekey="6LdLl4UaAAAAAJHIzFhcfwmN2Gui1oNs9L-3lEJM"></div>*@
-        </form> 
+        </form>
     </div>
 </div>
 
-
-<script src="https://www.google.com/recaptcha/api.js"></script>
-<script>
-    let txtEmail = document.getElementById("txtEmail");
-    let spanEmail = document.getElementById("spanEmail");
-    let labelEmail = document.getElementById("labelEmail");
-    let txtPassword = document.getElementById("txtPassword");
-    let spanPassword = document.getElementById("spanPassword");
-    let labelPassword = document.getElementById("labelPassword");
-    let form = document.getElementById("form");
-    function checkLogin() {
-        if (!isNull())
-            return;
-        isUser(txtEmail, txtPassword);
-    }//ok
-    function isUser(Email, Password) {
-        $.ajax({
-            url: "/Member/checkLogin?inputEmail=" + Email.value + "&inputPassword=" + Password.value,
-            type: "Get",
-            success: function (returnMessage) {
-                let js = JSON.parse(returnMessage);
-                if (js != "not User" && js != "incorrect" && js != "not Validate") {
-                    labelEmail.style.color = "green";
-                    txtEmail.style.borderColor = "green";
-                    labelPassword.style.color = "green";
-                    txtPassword.style.borderColor = "green";
-                    form.submit();
-                } else if (js == "not User") {
-                    spanEmail.innerHTML = "此Email尚未註冊,或嘗試<a href='/Member/Create'>註冊</a>?";
-                    spanPassword.innerHTML = "";
-                    labelEmail.style.color = "red";
-                    txtEmail.style.borderColor = "red";
-                } else if (js == "incorrect") {
-                    spanEmail.innerHTML = "";
-                    spanPassword.innerHTML = "密碼錯誤";
-                    labelPassword.style.color = "red";
-                    txtPassword.style.borderColor = "red";
-                } else if (js == "not Validate") {
-                    spanEmail.innerHTML = "Email驗證尚未通過,或<a onclick='reSendEmail()' href='#'>重新發送驗證信</a >?";
-                    spanPassword.innerHTML = "";
-                    labelEmail.style.color = "red";
-                    txtEmail.style.borderColor = "red";
-                }
-            }
-        });
-    }//ok
-    function isNull() {
-        if (txtEmail.value == "" && txtPassword.value == "") {
-            spanEmail.innerHTML = "不可為空";
-            spanPassword.innerHTML = "不可為空";
-            labelEmail.style.color = "red";
-            labelPassword.style.color = "red";
-            txtEmail.style.borderColor = "red";
-            txtPassword.style.borderColor = "red";
-            return false;
-        }
-        if (txtEmail.value == "") {
-            spanEmail.innerHTML = "不可為空";
-            labelEmail.style.color = "red";
-            txtEmail.style.borderColor = "red";
-            return false;
-        }
-        if (txtPassword.value == "") {
-            spanPassword.innerHTML = "不可為空";
-            labelPassword.style.color = "red";
-            txtPassword.style.borderColor = "red";
-            return false;
-        } else
-            return true;
-    }//ok
-    function reSendEmail() {
-        $.ajax({
-            url: "/Member/reSendEmail?Email=" + txtEmail.value,
-            type: "Get",
-            success: function (resalt) {
-                let js = JSON.parse(resalt);
-                if (js == "not find")
-                    alert("查無Email");
-                else if (js == "success")
-                    alert("已寄出!");
-            }
-        })
-    }//ok
-    //demo
-    function demo() {
-        txtEmail.value = "YuChen789@gmail.com";
-        txtPassword.value = "Password123";
-    }
-    //$captcha = $_POST['g-recaptcha-response'];
-    //$secretKey = "6LdLl4UaAAAAAJHIzFhcfwmN2Gui1oNs9L";
-    //$ip = $_SERVER['REMOTE_ADDR'];
-
-    //$url = 'https://www.google.com/recaptcha/api/siteverify?secret='.urlencode($secretKey).  '&response='.urlencode($captcha);
-    //$response = file_get_contents($url);
-    //$responseKeys = json_decode($response, true);
-
-    //if ($responseKeys["success"]) {// success
-    //} else {// error
-    //}
-    //todo
-</script>
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+    <script>
+        let txtEmail = document.getElementById("txtEmail");
+        let spanEmail = document.getElementById("spanEmail");
+        let labelEmail = document.getElementById("labelEmail");
+        let txtPassword = document.getElementById("txtPassword");
+        let spanPassword = document.getElementById("spanPassword");
+        let labelPassword = document.getElementById("labelPassword");
+        let form = document.getElementById("form");
+        function checkLogin() {
+            if (!isNull())
+                return;
+            isUser(txtEmail, txtPassword);
+        }//ok
+        function isUser(Email, Password) {
+            $.ajax({
+                url: "/Member/checkLogin?inputEmail=" + Email.value + "&inputPassword=" + Password.value,
+                type: "Get",
+                success: function (returnMessage) {
+                    let js = JSON.parse(returnMessage);
+                    if (js != "not User" && js != "incorrect" && js != "not Validate") {
+                        labelEmail.style.color = "green";
+                        txtEmail.style.borderColor = "green";
+                        labelPassword.style.color = "green";
+                        txtPassword.style.borderColor = "green";
+                        form.submit();
+                    } else if (js == "not User") {
+                        spanEmail.innerHTML = "此Email尚未註冊,或嘗試<a href='/Member/Create'>註冊</a>?";
+                        spanPassword.innerHTML = "";
+                        labelEmail.style.color = "red";
+                        txtEmail.style.borderColor = "red";
+                    } else if (js == "incorrect") {
+                        spanEmail.innerHTML = "";
+                        spanPassword.innerHTML = "密碼錯誤";
+                        labelPassword.style.color = "red";
+                        txtPassword.style.borderColor = "red";
+                    } else if (js == "not Validate") {
+                        spanEmail.innerHTML = "Email驗證尚未通過,或<a onclick='reSendEmail()' href='#'>重新發送驗證信</a >?";
+                        spanPassword.innerHTML = "";
+                        labelEmail.style.color = "red";
+                        txtEmail.style.borderColor = "red";
+                    }
+                }
+            });
+        }//ok
+        function isNull() {
+            if (txtEmail.value == "" && txtPassword.value == "") {
+                spanEmail.innerHTML = "不可為空";
+                spanPassword.innerHTML = "不可為空";
+                labelEmail.style.color = "red";
+                labelPassword.style.color = "red";
+                txtEmail.style.borderColor = "red";
+                txtPassword.style.borderColor = "red";
+                return false;
+            }
+            if (txtEmail.value == "") {
+                spanEmail.innerHTML = "不可為空";
+                labelEmail.style.color = "red";
+                txtEmail.style.borderColor = "red";
+                return false;
+            }
+            if (txtPassword.value == "") {
+                spanPassword.innerHTML = "不可為空";
+                labelPassword.style.color = "red";
+                txtPassword.style.borderColor = "red";
+                return false;
+            } else
+                return true;
+        }//ok
+        function reSendEmail() {
+            $.ajax({
+                url: "/Member/reSendEmail?Email=" + txtEmail.value,
+                type: "Get",
+                success: function (resalt) {
+                    let js = JSON.parse(resalt);
+                    if (js == "not find")
+                        alert("查無Email");
+                    else if (js == "success")
+                        alert("已寄出!");
+                }
+            })
+        }//ok
+        //demo
+        function demo() {
+            txtEmail.value = "YuChen789@gmail.com";
+            txtPassword.value = "Password123";
+        }
+                                        //$captcha = $_POST['g-recaptcha-response'];
+                                        //$secretKey = "6LdLl4UaAAAAAJHIzFhcfwmN2Gui1oNs9L";
+                                        //$ip = $_SERVER['REMOTE_ADDR'];
+
+                                        //$url = 'https://www.google.com/recaptcha/api/siteverify?secret='.urlencode($secretKey).  '&response='.urlencode($captcha);
+                                        //$response = file_get_contents($url);
+                                        //$responseKeys = json_decode($response, true);
+
+                                        //if ($responseKeys["success"]) {// success
+                                        //} else {// error
+                                        //}
+                                        //todo
+    </script>
 }
