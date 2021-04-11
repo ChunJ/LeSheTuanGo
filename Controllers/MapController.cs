@@ -34,14 +34,14 @@ namespace LeSheTuanGo.Controllers
                 var AdjSpot = new GarbageSpotLike { MemberId = mem, GarbageTruckSpotId = spot, MinutesBeforeNotify = 0, NotifyMe = false };
                 iv_context.Add(AdjSpot);
                 iv_context.SaveChanges();
-                return "您已成功新增";
+                return "您已成功新增：";
             }
             else //-spot; type=1
             {
                 var AdjSpot = iv_context.GarbageSpotLikes.Where(s => s.MemberId == mem && s.GarbageTruckSpotId == spot).First();
                 iv_context.Remove(AdjSpot);
                 iv_context.SaveChanges();
-                return "您已成功移除";
+                return "您已成功移除：";
             }
         }
 

@@ -181,7 +181,7 @@
     <select id="rangeLevel" onchange="">
         <option hidden>請選擇</option>
         <option>300</option>
-        <option>30000</option>
+        @*<option>30000</option>*@
         <option>200</option>
         <option>100</option>
     </select>
@@ -322,8 +322,8 @@
             type: "GET",
             success: function (spotJsonString) {
                 console.log(this.url);
-                userFav0 = JSON.parse(spotJsonString);
-                userFav = userFav0;
+                userFav = JSON.parse(spotJsonString);
+                //userFav = userFav0;
                 console.log(userFav);
             }
         })
@@ -378,7 +378,7 @@
                                 }
                             }
                         }
-                        document.getElementById("thFav0").innerText = "新增收藏";
+                        document.getElementById("thFav0").innerText = "收藏";
                     }
 
 
@@ -438,8 +438,13 @@
                     js = js0;
                     let tbodycont = document.getElementById("content");
                     tbodycont.innerHTML = "";
-                    latNow = js[0]["addLat"];
-                    lngNow = js[0]["addLng"];
+                    if (typeof js[0]=='object') {
+                        latNow = js[0]["addLat"];
+                        lngNow = js[0]["addLng"];
+                    } else {
+                        latNow = 25;
+                        lngNow = 121;
+                    }
                     initMap(js, "l");
                     //console.log(js[0]["addLat"]);
                     //console.log(js[0]["addLng"]);
@@ -478,7 +483,7 @@
             })
             document.getElementById("thOrderTime").innerText = "到達時間☰";
             document.getElementById("thOrderDistance").innerText = "距離（公尺）☰";
-            document.getElementById("thFav0").innerText = "移除收藏";
+            document.getElementById("thFav0").innerText = "移除";
         }
 
         function clearContent() {
@@ -491,7 +496,7 @@
             document.getElementById("content").remove();
             var ele = document.createElement("tbody");
             ele.id = "content";
-            js = js.sort(function (a, b) {
+            js = js0.sort(function (a, b) {
                 return a.ArrivalTime < b.ArrivalTime ? timeOrder : -1 * timeOrder;
             });
             if (currentUser == 0) {
@@ -556,7 +561,7 @@
             document.getElementById("content").remove();
             var ele = document.createElement("tbody");
             ele.id = "content";
-            js = js.sort(function (a, b) {
+            js = js0.sort(function (a, b) {
                 return a.distance < b.distance ? distanceOrder : -1 * distanceOrder;
             });
             if (currentUser == 0) {
@@ -624,8 +629,13 @@
             console.log(typeof $('#selectDistric :selected').text());
             console.log(typeof $('#txtAddress').val());
 
-            init300M($('#selectCity :selected').text() + $('#selectDistric :selected').text() + $('#txtAddress').val(), 'add');
-            document.getElementById('lblSource').innerText = '您輸入的新地址';
+            if ($('#selectCity :selected').index() != 0) {
+                init300M($('#selectCity :selected').text() + $('#selectDistric :selected').text() + $('#txtAddress').val(), 'add');
+                document.getElementById('lblSource').innerText = '您輸入的新地址';
+            }
+            else {
+                alert('請檢查搜尋條件！');
+            }
         }
 
         function filter() {
@@ -767,26 +777,43 @@
         function removeFav() {
             console.log('removed');
             console.log(event.target.parentNode.parentNode.id);
+            var target = event.target.parentNode.parentNode.id;
             $.ajax({
                 url: "/map/AdjFavorite?mem=" + currentUser + '&spot=' + event.target.parentNode.parentNode.id + '&type=1',
                 type: "GET",
+                async: false,
                 success: function (result) {
-                    alert(result);
+                    alert(result+$(`#${target} td`).eq(1).text());
                 }
             });
+            //initFav();
 
-            document.getElementById(event.target.parentNode.parentNode.id).innerHTML = '';
-            initFav();
+            for (var i = 0; i < js0.length; i++) {
+                if (js0[i]["GarbageTruckSpotId"] == event.target.parentNode.parentNode.id) {
+                    js0.splice(i, 1);
+                    console.log(js0);
+                    initMap(js0,'l');
+                }
+            }
+
+            for (var i = 0; i < userFav.length; i++) {
+                if (userFav[i] == event.target.parentNode.parentNode.id) {
+                    userFav.splice(i, 1);
+                }
+            }
+
+            document.getElementById(target).innerHTML = '';
         }
 
         function addFav() {
             console.log('added');
             console.log(event.target.parentNode.parentNode.id);
+            var target = event.target.parentNode.parentNode.id;
             $.ajax({
                 url: "/map/AdjFavorite?mem=" + currentUser + '&spot=' + event.target.parentNode.parentNode.id + '&type=0',
                 type: "GET",
                 success: function (result) {
-                    alert(result);
+                    alert(result + $(`#${target} td`).eq(1).text());
                 }
             });
             document.getElementById(`tdFav${event.target.parentNode.parentNode.id}`).innerHTML = '';
