@@ -123,7 +123,7 @@ namespace LeSheTuanGo.Controllers
                         n.MaxCount,
                         n.AvailableCount,
                         self = true,
-                    }) ; 
+                    });
                     var i = order.ToList();
                     return JsonConvert.SerializeObject(order.ToList());
 
@@ -144,7 +144,7 @@ namespace LeSheTuanGo.Controllers
                         n.Order.AvailableCount,
                         n.Count,
                         self = false,
-                    }) ;
+                    });
                     var i = order.ToList();
                     return JsonConvert.SerializeObject(order.ToList());
                 }
@@ -213,8 +213,8 @@ namespace LeSheTuanGo.Controllers
                         n.L75count,
                         n.L120count,
                         n.NeedCome,
-                        ComeDistrictName=n.ComeDistrict.DistrictName,
-                        ComeCityName=n.ComeDistrict.City.CityName,
+                        ComeDistrictName = n.ComeDistrict.DistrictName,
+                        ComeCityName = n.ComeDistrict.City.CityName,
                         n.ComeAddress,
                         self = false,
                     });
@@ -256,6 +256,49 @@ namespace LeSheTuanGo.Controllers
 
         }
 
+
+        public async Task<string[]> editOrder(int grouptype, int orderid, int memberid)
+        {
+            string[] ls = new string[3];
+            memberID = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
+            ls[1] = JsonConvert.SerializeObject(await _context.RangeRefs.Select(n => n).ToListAsync());
+            ls[2] = JsonConvert.SerializeObject(await _context.CityRefs.Select(n => n).ToListAsync());
+            if (grouptype == 1)
+            {
+                return ls;
+            }
+            else
+            {
+                if (memberID == memberid)
+                {
+                    var garbageServiceOffer = await _context.GarbageServiceOffers.Where(n => n.GarbageServiceId == orderid).Select(n => new
+                    {
+                        n.GarbageServiceId,
+                        n.Address,
+                        n.CanGo,
+                        n.DistrictId,
+                        n.EndTime,
+                        n.GoRangeId,
+                        n.HostMemberId,
+                        n.IsActive,
+                        n.L3maxCount,
+                        n.L5maxCount,
+                        n.L14maxCount,
+                        n.L25maxCount,
+                        n.L33maxCount,
+                        n.L75maxCount,
+                        n.L120maxCount,
+                        n.StartTime,
+                        n.ServiceTypeId,
+                    }).ToListAsync();
+                    var ss = JsonConvert.SerializeObject(garbageServiceOffer);
+                    ls[0] = ss;
+                    return ls;
+                }
+                return ls;
+            }
+
+        }
         #region 無用僅佔存的code
 
         // GET: ChatMessageRecords/Details/5

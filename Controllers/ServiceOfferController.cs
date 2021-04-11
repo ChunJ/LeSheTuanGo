@@ -50,7 +50,6 @@ namespace LeSheTuanGo.Controllers
                 var latlong = cUtility.addressToLatlong(address);
                 g.Latitude = latlong[0];
                 g.Longitude = latlong[1];
-                //A
                 g.IsActive = true;
                 g.gso.L3available = g.L3maxCount;
                 g.gso.L5available = g.L5maxCount;

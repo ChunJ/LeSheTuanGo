@@ -64,6 +64,9 @@
 </div>
 
 
+
+
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script src="~/js/signalr/dist/browser/signalr.js"></script>
@@ -217,6 +220,7 @@
                             else if (s[i].NeedCome == false) {
                                 txt += `<div>是否到府服務： 否 </div><br />`;
                             }
+                            txt +=`<button id="edit" onclick="editorder()">編輯</button>`
                         }
                     }
 
@@ -291,6 +295,56 @@
                 data: { message: message, orderid: orderid, memberid: gmemberid, grouptype: grouptype },
             });
         })
+
+        //編輯案件
+        function editorder() {
+            let orderid = $("#OrderId").val();
+            let grouptype = $("#rec_grouptype").val();
+            $.ajax({
+                url: "/ChatMessageRecords/editOrder",
+                data: { grouptype: grouptype, orderid: orderid, memberid: gmemberid},
+                type: "GET",
+                success: function (data) {
+                    let txt = "";
+                    let detail = JSON.parse(data[0]);
+                    let range = JSON.parse(data[1]);
+                    let city = JSON.parse(data[2]);
+
+                        //city
+                        let citytxt = "<div><label>縣市：</label><select id='city' onchange=getDistrict('#DistrictId')>";
+                        
+                        for (let i = 0; i < city.length; i++) {
+                            citytxt += `<option value=${city[i].CityId}>${city[i].CityName}</option>`
+                        }
+                    citytxt += `</select>&nbsp;&nbsp;&nbsp;`;
+
+                    //district
+                    citytxt += "<label>鄉鎮市區：</label><select id='DistrictId'></select></div>"
+
+                    //address
+                    citytxt += `<input type="text" value="" placeholder="請輸入地址"/>`;
+
+                        //range
+                        let rangetxt = "<div><label>可服務距離：</label><select id='range'>";
+                        
+                        for (let i = 0; i < range.length; i++) {
+                            rangetxt += `<option value=${range[i].RangeId}>${range[i].RangeInMeters}</option>`
+                        }
+                    rangetxt += "</select></div>"
+
+                    //other option
+                    txt += `<label>結束時間：</label><input type="datetime" id="endtime"/></div>`
+
+                        let s = JSON.parse(data[0]);
+                        for (let i = 0; i < s.length; i++) {
+                        }
+
+                    $("#detail").html(citytxt + rangetxt+txt);
+
+
+                },
+            })
+        }
 
     </script>
 }
