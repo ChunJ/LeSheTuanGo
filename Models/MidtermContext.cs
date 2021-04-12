@@ -30,6 +30,7 @@ namespace LeSheTuanGo.Models
         public virtual DbSet<NotifyContent> NotifyContents { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<OrderBuyRecord> OrderBuyRecords { get; set; }
+        public virtual DbSet<Payment> Payments { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<RangeRef> RangeRefs { get; set; }
         public virtual DbSet<Route> Routes { get; set; }
@@ -37,11 +38,11 @@ namespace LeSheTuanGo.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-//            if (!optionsBuilder.IsConfigured)
-//            {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-//                optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=Midterm;Integrated Security=True");
-//            }
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=Midterm;Integrated Security=True");
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -480,6 +481,43 @@ namespace LeSheTuanGo.Models
                     .HasForeignKey(d => d.OrderId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_OrderSubscribes_GroupOrders");
+            });
+
+            modelBuilder.Entity<Payment>(entity =>
+            {
+                entity.Property(e => e.PaymentId).HasColumnName("PaymentID");
+
+                entity.Property(e => e.CheckMacValue)
+                    .IsRequired()
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ItemName)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.MemberId).HasColumnName("MemberID");
+
+                entity.Property(e => e.MerchantTradeDate)
+                    .IsRequired()
+                    .HasMaxLength(20)
+                    .IsUnicode(false)
+                    .IsFixedLength(true);
+
+                entity.Property(e => e.MerchantTradeNo)
+                    .IsRequired()
+                    .HasMaxLength(20)
+                    .IsUnicode(false)
+                    .IsFixedLength(true);
+
+                entity.Property(e => e.TradeDesc)
+                    .IsRequired()
+                    .HasMaxLength(200);
+
+                entity.HasOne(d => d.Member)
+                    .WithMany(p => p.Payments)
+                    .HasForeignKey(d => d.MemberId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Payments_Members");
             });
 
             modelBuilder.Entity<Product>(entity =>
