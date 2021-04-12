@@ -257,7 +257,7 @@ namespace LeSheTuanGo.Controllers
         }
 
         //A
-        public async Task<string[]> editOrder(int grouptype, int orderid, int memberid)
+        public async Task<string[]> editOrder(int grouptype, int orderid, int memberid,bool self)
         {
             string[] ls = new string[3];
             memberID = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
@@ -269,7 +269,7 @@ namespace LeSheTuanGo.Controllers
             }
             else
             {
-                if (memberID == memberid)
+                if (self)
                 {
                     var garbageServiceOffer = await _context.GarbageServiceOffers.Where(n => n.GarbageServiceId == orderid).Select(n => new
                     {

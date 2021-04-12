@@ -60,8 +60,9 @@
 <div class="col-4 inbox_people">
     <h3 class="sideheader text-center">詳細資訊</h3>
     <input type="hidden" id="oid" />
-    <input type="hidden" id="gt"/>
-    <input type="hidden" id="hid"/>
+    <input type="hidden" id="gt" />
+    <input type="hidden" id="hid" />
+    <input type="hidden" id="self" />
     <div id="detail"></div>
 
 </div>
@@ -126,6 +127,7 @@
             $("#oid").val(oid);
             $("#gt").val(gt);
             $("#hid").val(hid);
+
             var group = gt.toString()+'_'+oid.toString();
             if (connection.connectionState != "Connected") {
                 connection.start().then(function () {
@@ -201,6 +203,94 @@
                 },
             })
         }
+        //取得明細
+        function getdetail(oid, gt, hid) {
+            var urlorder = "/ChatMessageRecords/chatGetOrderDetail";
+            $.ajax({
+                url: urlorder,
+                type: "GET",
+                data: {
+                    orderId: oid,
+                    grouptype: gt,
+                    hostid: hid,
+                },
+                success: function (data) {
+                    var s = JSON.parse(data);
+                    var txt = "";
+                    txt += "<input type='hidden' id='OrderId' value='" + oid + "'/>"
+                    if (gt == 1) {
+                        for (let i = 0; i < s.length; i++) {
+                            txt += `<div>團購編號：${s[i].OrderId} </div><br />`;
+                            txt += `<div>商品名稱： ${s[i].ProductName} </div><br />`;
+                            txt += `<div>商品敘述： ${s[i].OrderDescription} </div><br />`;
+                            txt += `<div>地址： ${s[i].CityName}${s[i].DistrictName}${s[i].Address} </div><br />`;
+                            let cango = s[i].CanGo == true ? "是" : "否";
+                            txt += `<div>是否到府服務： ${cango} </div><br />`;
+                            if (cango == "是") {
+                                txt += `<div>可服務距離： ${s[i].RangeInMeters} </div><br />`;
+                            }
+                            txt += `<div>目標購買數量： ${s[i].MaxCount} </div><br />`;
+                            txt += `<div>剩餘數量： ${s[i].AvailableCount} </div><br />`;
+                            if (s[i].Count != undefined) {
+                                txt += `<div>您的購買數量： ${s[i].Count} </div><br />`;
+                            }
+                            $("#self").val(s[i].self);
+                        }
+                    }
+                    else if (gt == 2) {
+                        for (let i = 0; i < s.length; i++) {
+                            txt += `<div>倒垃圾團編號：${s[i].GarbageServiceId} </div><br />`;
+                            txt += `<div>開團者地址： ${s[i].CityName}${s[i].DistrictName}${s[i].Address} </div><br />`;
+                            let cango = s[i].CanGo == true ? "是" : "否";
+                            txt += `<div>是否到府服務： ${cango} </div><br />`;
+                            if (cango == "是") {
+                                txt += `<div>可服務距離： ${s[i].RangeInMeters} </div><br />`;
+                            }
+                            if (s[i].L3maxCount != 0) {
+                                let str = s[i].L3count == 0 || s[i].L3count == undefined ? "" : `, 您已委託 ${s[i].L3count}個`;
+                                txt += `<div>L3&nbsp;&nbsp;：可收 ${s[i].L3maxCount}個 , 尚可收 ${s[i].L3available}個 ${str}</div><br />`;
+                            }
+                            if (s[i].L5maxCount != 0) {
+                                let str = s[i].L5count == 0 || s[i].L5count == undefined ? "" : `, 您已委託 ${s[i].L5count}個`;
+                                txt += `<div>L5&nbsp;&nbsp;：可收 ${s[i].L5maxCount}個 , 尚可收 ${s[i].L5available}個 ${str}</div><br />`;
+                            }
+                            if (s[i].L14maxCount != 0) {
+                                let str = s[i].L14count == 0 || s[i].L14count == undefined ? "" : `, 您已委託 ${s[i].L14count}個`;
+                                txt += `<div>L14：可收 ${s[i].L14maxCount}個 , 尚可收 ${s[i].L14available}個 ${str}</div><br />`;
+                            }
+                            if (s[i].L25maxCount != 0) {
+                                let str = s[i].L25count == 0 || s[i].L25count == undefined ? "" : `, 您已委託 ${s[i].L25count}個`;
+                                txt += `<div>L25：可收 ${s[i].L25maxCount}個 , 尚可收 ${s[i].L25available}個 ${str}</div><br />`;
+                            }
+                            if (s[i].L33maxCount != 0) {
+                                let str = s[i].L33count == 0 || s[i].L33count == undefined ? "" : `, 您已委託 ${s[i].L33count}個`;
+                                txt += `<div>L33：可收 ${s[i].L33maxCount}個 , 尚可收 ${s[i].L33available}個 ${str}</div><br />`;
+                            }
+                            if (s[i].L75maxCount != 0) {
+                                let str = s[i].L75count == 0 || s[i].L75count == undefined ? "" : `, 您已委託 ${s[i].L75count}個`;
+                                txt += `<div>L75：可收 ${s[i].L75maxCount}個 , 尚可收 ${s[i].L75available}個 ${str}</div><br />`;
+                            }
+                            if (s[i].L120maxCount != 0) {
+                                let str = s[i].L120count == 0 || s[i].L120count == undefined ? "" : `, 您已委託 ${s[i].L120count}個`;
+                                txt += `<div>L120：可收 ${s[i].L120maxCount}個 , 尚可收 ${s[i].L120available}個 ${str}</div><br />`;
+                            }
+                            if (s[i].NeedCome == true) {
+                                txt += `<div>是否到府服務： 是 </div><br />`;
+                                txt += `<div>到府服務地址： ${s[i].ComeCityName}${s[i].ComeDistrictName}${s[i].ComeAddress} </div><br />`;
+                            }
+                            else if (s[i].NeedCome == false) {
+                                txt += `<div>是否到府服務： 否 </div><br />`;
+                            }
+                            txt += `<button id="edit" onclick="editorder()">編輯</button>`
+                            $("#self").val(s[i].self);
+                        }
+                    }
+
+                    $("#detail").html(txt);
+                },
+            })
+        }
+
 
             //發訊息
         $('#btnSend').click(function () {
@@ -228,7 +318,7 @@
             let grouptype = $("#rec_grouptype").val();
             $.ajax({
                 url: "/ChatMessageRecords/editOrder",
-                data: { grouptype: grouptype, orderid: orderid, memberid: gmemberid},
+                data: { grouptype: grouptype, orderid: orderid, memberid: gmemberid, self: $("#self").val()},
                 type: "GET",
                 success: function (data) {
 
@@ -237,7 +327,6 @@
                     let city = JSON.parse(data[2]);
 
                         //city
-                    //let citytxt = "<form id='detaileditor' method='post' action='/ChatMessageRecords/EditGarbageOffer'><div><label>縣市：</label><select id='city' onchange=getDistrict('#DistrictId')>";
                     let citytxt = "";
                         for (let i = 0; i < city.length; i++) {
                             citytxt += `<option value=${city[i].CityId}>${city[i].CityName}</option>`
@@ -247,22 +336,6 @@
                         rangetxt += `<option value=${range[i].RangeId}>${range[i].RangeInMeters}</option>`
                     }
 
-
-                    //citytxt += `</select>&nbsp;&nbsp;&nbsp;`;
-
-                    //district
-                    //citytxt += "<label>鄉鎮市區：</label><select id='DistrictId' name='DistrictId'></select></div>"
-
-                    //address
-                    //citytxt += `<div><label>地址：</label><input type="text" value="" id='Address' name='Address' placeholder="請輸入地址"/></div>`;
-
-                        //range
-                        //let rangetxt = "<div><label>可服務距離：</label><select id='range'>";
-
-                    //rangetxt += "</select></div>"
-
-                    //other option
-                    //txt += `<label>結束時間：</label><input class="form-control" type="datetime-local" data-val="true" id="EndTime" name="EndTime" value=""></div><button type="submit">儲存</button></form>`
 
                     //很長的框架
                     let txt = `
@@ -385,10 +458,6 @@
                                                                         `;
 
 
-
-
-                    //$("#detail").html(citytxt + rangetxt+txt);
-
                     $("#detail").html(txt).promise().done(function () {
 
                         for (let i = 0; i < detail.length; i++) {
@@ -422,91 +491,7 @@
             })
         }
 
-        //取得明細
-        function getdetail(oid,gt,hid) {
-            var urlorder = "/ChatMessageRecords/chatGetOrderDetail";
-            $.ajax({
-                url: urlorder,
-                type: "GET",
-                data: {
-                    orderId: oid,
-                    grouptype: gt,
-                    hostid: hid,
-                },
-                success: function (data) {
-                    var s = JSON.parse(data);
-                    var txt = "";
-                    txt += "<input type='hidden' id='OrderId' value='" + oid + "'/>"
-                    if (gt == 1) {
-                        for (let i = 0; i < s.length; i++) {
-                            txt += `<div>團購編號：${s[i].OrderId} </div><br />`;
-                            txt += `<div>商品名稱： ${s[i].ProductName} </div><br />`;
-                            txt += `<div>商品敘述： ${s[i].OrderDescription} </div><br />`;
-                            txt += `<div>地址： ${s[i].CityName}${s[i].DistrictName}${s[i].Address} </div><br />`;
-                            let cango = s[i].CanGo == true ? "是" : "否";
-                            txt += `<div>是否到府服務： ${cango} </div><br />`;
-                            if (cango == "是") {
-                                txt += `<div>可服務距離： ${s[i].RangeInMeters} </div><br />`;
-                            }
-                            txt += `<div>目標購買數量： ${s[i].MaxCount} </div><br />`;
-                            txt += `<div>剩餘數量： ${s[i].AvailableCount} </div><br />`;
-                            if (s[i].Count != undefined) {
-                                txt += `<div>您的購買數量： ${s[i].Count} </div><br />`;
-                            }
-                        }
-                    }
-                    else if (gt == 2) {
-                        for (let i = 0; i < s.length; i++) {
-                            txt += `<div>倒垃圾團編號：${s[i].GarbageServiceId} </div><br />`;
-                            txt += `<div>開團者地址： ${s[i].CityName}${s[i].DistrictName}${s[i].Address} </div><br />`;
-                            let cango = s[i].CanGo == true ? "是" : "否";
-                            txt += `<div>是否到府服務： ${cango} </div><br />`;
-                            if (cango == "是") {
-                                txt += `<div>可服務距離： ${s[i].RangeInMeters} </div><br />`;
-                            }
-                            if (s[i].L3maxCount != 0) {
-                                let str = s[i].L3count == 0 || s[i].L3count == undefined ? "" : `, 您已委託 ${s[i].L3count}個`;
-                                txt += `<div>L3&nbsp;&nbsp;：可收 ${s[i].L3maxCount}個 , 尚可收 ${s[i].L3available}個 ${str}</div><br />`;
-                            }
-                            if (s[i].L5maxCount != 0) {
-                                let str = s[i].L5count == 0 || s[i].L5count == undefined ? "" : `, 您已委託 ${s[i].L5count}個`;
-                                txt += `<div>L5&nbsp;&nbsp;：可收 ${s[i].L5maxCount}個 , 尚可收 ${s[i].L5available}個 ${str}</div><br />`;
-                            }
-                            if (s[i].L14maxCount != 0) {
-                                let str = s[i].L14count == 0 || s[i].L14count == undefined ? "" : `, 您已委託 ${s[i].L14count}個`;
-                                txt += `<div>L14：可收 ${s[i].L14maxCount}個 , 尚可收 ${s[i].L14available}個 ${str}</div><br />`;
-                            }
-                            if (s[i].L25maxCount != 0) {
-                                let str = s[i].L25count == 0 || s[i].L25count == undefined ? "" : `, 您已委託 ${s[i].L25count}個`;
-                                txt += `<div>L25：可收 ${s[i].L25maxCount}個 , 尚可收 ${s[i].L25available}個 ${str}</div><br />`;
-                            }
-                            if (s[i].L33maxCount != 0) {
-                                let str = s[i].L33count == 0 || s[i].L33count == undefined ? "" : `, 您已委託 ${s[i].L33count}個`;
-                                txt += `<div>L33：可收 ${s[i].L33maxCount}個 , 尚可收 ${s[i].L33available}個 ${str}</div><br />`;
-                            }
-                            if (s[i].L75maxCount != 0) {
-                                let str = s[i].L75count == 0 || s[i].L75count == undefined ? "" : `, 您已委託 ${s[i].L75count}個`;
-                                txt += `<div>L75：可收 ${s[i].L75maxCount}個 , 尚可收 ${s[i].L75available}個 ${str}</div><br />`;
-                            }
-                            if (s[i].L120maxCount != 0) {
-                                let str = s[i].L120count == 0 || s[i].L120count == undefined ? "" : `, 您已委託 ${s[i].L120count}個`;
-                                txt += `<div>L120：可收 ${s[i].L120maxCount}個 , 尚可收 ${s[i].L120available}個 ${str}</div><br />`;
-                            }
-                            if (s[i].NeedCome == true) {
-                                txt += `<div>是否到府服務： 是 </div><br />`;
-                                txt += `<div>到府服務地址： ${s[i].ComeCityName}${s[i].ComeDistrictName}${s[i].ComeAddress} </div><br />`;
-                            }
-                            else if (s[i].NeedCome == false) {
-                                txt += `<div>是否到府服務： 否 </div><br />`;
-                            }
-                            txt += `<button id="edit" onclick="editorder()">編輯</button>`
-                        }
-                    }
 
-                    $("#detail").html(txt);
-                },
-            })
-        }
 
         //儲存編輯(ServiceOffer)
         function saveedit() {
