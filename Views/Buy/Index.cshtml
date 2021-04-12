@@ -2,96 +2,117 @@
     Layout = "_layoutWide";
     ViewData["Title"] = "搜尋團購 - ";
 }
-<div class="row h-100">
+<div class="d-flex h-100">
     @*search column*@
-    <div class="col-4 column-main pb-2">
-        <div class="row">
-            <div class="border-bottom-dark col-12">
-                <h5 onclick="fillDemo()">搜尋團購</h5>
+    <div class="col-4 p-2 h-100">
+        <div class="rounded-panel bg-go-light h-100">
+            <div class="header-block">
+                <h4 class="m-0" onclick="fillDemo()">搜尋團購</h4>
             </div>
-            <div class="col-12">
-                <div class="form-group">
-                    <label>商品類型</label>
-                    <select id="CategotyId" class="form-control" onchange="getProduct('#ProductId')" asp-items="ViewBag.Category"></select>
+            <div class="row p-3 h-100 column-main" style="align-content:flex-start">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>商品類型</label>
+                        <select id="CategotyId" class="form-control" onchange="getProduct('#ProductId')" asp-items="ViewBag.Category"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>商品名稱</label>
+                        <select id="ProductId" class="form-control" onchange="showProdImage()"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>購買個數</label>
+                        <input class="form-control" id="count" type="number" value="0" min="0" />
+                    </div>
+                    <div class="form-group">
+                        <label for="distance" class="control-label">搜尋距離</label>
+                        <select class="form-control" asp-items="ViewBag.GoRange" id="distance"></select>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>商品名稱</label>
-                    <select id="ProductId" class="form-control" onchange="showProdImage()"></select>
+                <div class="col-6">
+                    <div class="d-flex flex-column h-100">
+                        <div>
+                            <label>商品示意圖</label>
+                        </div>
+                        <div class="flex-grow-1">
+                            <image id="prodImage" class="product-image" src="@ViewData["ProductImage"]"></image>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>商品圖片</label>
-                    <image id="prodImage" class="srch-product-image" src="@ViewData["ProductImage"]"></image>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>縣市</label>
+                        <select id="CityId" class="form-control" onchange="getDistrict('#DistrictId')" asp-items="ViewBag.City"></select>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>城市</label>
-                    <select id="CityId" class="form-control" onchange="getDistrict('#DistrictId')" asp-items="ViewBag.City"></select>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>鄉鎮市區</label>
+                        <select name="DistrictId" id="DistrictId" class="form-control"></select>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>鄉鎮市區</label>
-                    <select name="DistrictId" id="DistrictId" class="form-control"></select>
+                <div class="col-12">
+                    <div class="form-group">
+                        <label>地址</label>
+                        <input class="form-control" id="addressInput" type="text" value=@ViewData["Address"] />
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>地址</label>
-                    <input class="form-control" id="addressInput" type="text" value=@ViewData["Address"] />
-                </div>
-                <div class="form-group">
-                    <label for="distance" class="control-label">距離</label>
-                    <select class="form-control" asp-items="ViewBag.GoRange" id="distance"></select>
-                </div>
-                <div class="form-group">
-                    <label>購買個數</label>
-                    <input class="form-control" id="count" type="number" value="0" min="0" />
+                <div style="height:10rem"></div>
+            </div>
+            <div class="py-2 sink">
+                <div class="d-flex">
+                    <div class="w-50 pl-2 pr-1">
+                        <button class="btn btn-primary w-100" onclick="searchStart()">搜尋</button>
+                    </div>
+                    <div class="w-50 pl-1 pr-2">
+                        <a class="btn btn-primary w-100" href="/ChatMessageRecords/Index">查看紀錄</a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="column-btn py-1">
-            <button class="btn btn-primary" onclick="searchStart()">搜尋</button>
-            <a class="btn btn-primary" href="/ChatMessageRecords/Index">查看紀錄</a>
-        </div>
+        </div> 
     </div>
     @*result column*@
-    <div class="col-2">
-        <div class="column-main">
-            <div class="border-bottom-dark">
-                <h5 onclick="test()">搜尋結果</h5>
+    <div class="result-col-2 py-2 h-100">
+        <div class="rounded-panel bg-go-light h-100">
+            <div class="header-block">
+                <h4 class="m-0" onclick="test()">搜尋結果</h4>
             </div>
             <div id="searchResult">
                 @*@for (int i = 0; i < 5; i++) {
-                    <div class="accordion-go" onclick="accorClick(this)">
-                        <p>台北市大安區信義路四段2號</p>
-                        <div class="w-100"><div class="rem-4">截止時間</div><span class="px-1">:</span>2021年05月20號</div>
-                        <div class="w-100"><div class="rem-4">距離</div><span class="px-1">:</span>532 公尺</div>
-                    </div>
-                    <div class="accordion-panel">
-                        <form method="post" action="/Buy/Join">
-                            <input hidden name="OrderId" value="" />
-                            <input hidden name="ComeDistrictId" value="" />
-                            <input hidden name="ComeAddress" value="" />
-                            <div class="form-group form-check">
-                                <label class="form-check-label">
-                                    <input class="form-check-input" type="checkbox" name="NeedCome" value="true"/>
-                                    是否需要宅配服務?
-                                </label>
-                            </div>
-                            <div class="form-group">
-                                <input class="form-control" name="Count" type="number" placeholder="購買量" min="0" value="" max=""/>
-                            </div>
-                            <div class="form-group">
-                                <input type="submit" value="購買" class="btn btn-primary" />
-                            </div>
-                        </form>
-                    </div>
-                }*@
+                <div class="accordion-go" onclick="accorClick(this)">
+                    <p>台北市大安區信義路四段2號</p>
+                    <div class="w-100"><div class="rem-4">截止時間</div><span class="px-1">:</span>2021年05月20號</div>
+                    <div class="w-100"><div class="rem-4">距離</div><span class="px-1">:</span>532 公尺</div>
+                </div>
+                <div class="accordion-panel">
+                    <form method="post" action="/Buy/Join">
+                        <input hidden name="OrderId" value="" />
+                        <input hidden name="ComeDistrictId" value="" />
+                        <input hidden name="ComeAddress" value="" />
+                        <div class="form-group form-check">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="checkbox" name="NeedCome" value="true"/>
+                                是否需要宅配服務?
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" name="Count" type="number" placeholder="購買量" min="0" value="" max=""/>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="購買" class="btn btn-primary" />
+                        </div>
+                    </form>
+                </div>
+            }*@
             </div>
-        </div>
+        </div> 
     </div>
     @*map column*@
-    <div class="col-6">
-        <div id="map" style="height: 100%;width: 100%;"></div>
+    <div class="col-6 p-2">
+        <div id="map" class="rounded-panel" style="height: 100%;width: 100%;"></div>
     </div>
 </div>
 @section Scripts {
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBircB99P_RvzxWdQT-hk40-h3Ofzlb_vQ&callback=showMap&libraries=&v=weekly" async></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBircB99P_RvzxWdQT-hk40-h3Ofzlb_vQ&callback=initMap&libraries=&v=weekly" async></script>
     <script>
         let cityS = document.querySelector("#CityId");
         let distS = document.querySelector("#DistrictId");
@@ -220,7 +241,7 @@
                         htmlString += `<input hidden type="checkbox" name="NeedCome" value="true"/>`;
                         htmlString += `<p>本服務不提供宅配服務</p>`;
                     }
-                    htmlString += `<div class="form-group"><input type="submit" value="購買" class="btn btn-primary" /></div></form></div>`;
+                    htmlString += `<div class="form-group"><input type="submit" value="購買" class="btn btn-primary w-100" /></div></form></div>`;
                 }
                 showAllMap();
                 result.innerHTML = htmlString;
@@ -298,6 +319,15 @@
                 markers.push(marker);
             }
         }
+        function initMap() {
+            let mbr = new google.maps.LatLng(25.0339400, 121.5435000);  //fixed for now
+            map = new google.maps.Map(mapDiv,
+                {
+                    center: mbr,
+                    zoom: 17,
+                });
+        }
+        
         //const eqfeed_callback = function (results) {
         //    //Loop through the results array and place a marker for each
         //    //set of coordinates.
