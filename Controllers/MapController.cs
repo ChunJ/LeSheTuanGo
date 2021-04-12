@@ -118,8 +118,11 @@ namespace LeSheTuanGo.Controllers
         {
             return View();
         }
-
-        public IActionResult search()
+        public IActionResult Index() {
+            ViewData["CityId"] = new SelectList(iv_context.CityRefs, "CityId", "CityName");
+            return View();
+        }
+        public IActionResult searchOld()
         {
             ViewData["CityId"] = new SelectList(iv_context.CityRefs, "CityId", "CityName");
             return View();
@@ -199,11 +202,6 @@ namespace LeSheTuanGo.Controllers
 
             //return View(garbageTruckSpotViewModels);
             ViewData["CityId"] = new SelectList(iv_context.CityRefs, "CityId", "CityName");
-            return View();
-        }
-
-        public IActionResult Index()
-        {
             return View();
         }
         

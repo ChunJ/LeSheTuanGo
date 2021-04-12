@@ -4,44 +4,63 @@
     ViewData["Title"] = "搜尋服務 - ";
     int[] sizeNumber = new int[7] { 3, 5, 14, 25, 33, 75, 120 };
 }
-<div class="row h-100">
+<div class="d-flex h-100">
     @*search column*@
-    <div class="col-4 column-main pb-2">
-        <div class="row">
-            <div class="border-bottom-dark col-12">
-                <h5 onclick="fillDemo()">搜尋團購</h5>
+    <div class="col-4 p-2 h-100">
+        <div class="rounded-panel bg-go-light h-100">
+            <div class="header-block">
+                <h4 class="m-0" onclick="fillDemo()">搜尋服務</h4>
             </div>
-            <div class="col-12 pb-4">
-                <div class="form-group">
-                    <label>城市</label>
-                    <select id="CityId" class="form-control" onchange="getDistrict('#DistrictId')" asp-items="ViewBag.City"></select>
+            <div class="row p-3 h-100 column-main" style="align-content:flex-start">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>縣市</label>
+                        <select id="CityId" class="form-control" onchange="getDistrict('#DistrictId')" asp-items="ViewBag.City"></select>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>鄉鎮市區</label>
-                    <select name="DistrictId" id="DistrictId" class="form-control"></select>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>鄉鎮市區</label>
+                        <select name="DistrictId" id="DistrictId" class="form-control"></select>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>地址</label>
-                    <input class="form-control" id="addressInput" type="text" value=@ViewData["Address"] />
+                <div class="col-12">
+                    <div class="form-group">
+                        <label>地址</label>
+                        <input class="form-control" id="addressInput" type="text" value=@ViewData["Address"] />
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="distance" class="control-label">距離</label>
-                    <select class="form-control" asp-items="ViewBag.GoRange" id="distance"></select>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label for="distance" class="control-label">距離</label>
+                        <select class="form-control" asp-items="ViewBag.GoRange" id="distance"></select>
+                    </div>
                 </div>
-                <label>垃圾袋尺寸及袋數</label>
-                <div id="sizeInputGroup1">
-                    @for (int i = 0; i < sizeNumber.Length; i++) {
-                        <div class="form-group">
-                            <label>@sizeNumber[i]公升</label>
-                            <input class="form-control" type="number" value="0" min="0" />
-                        </div>
-                    }
+                <div class="col-12">
+                    <label>垃圾袋尺寸及袋數</label>
+                    <div id="sizeInputGroup1" class="row">
+                        @for (int i = 0; i < sizeNumber.Length; i++) {
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label>@sizeNumber[i]公升</label>
+                                    <input class="form-control" type="number" value="0" min="0" />
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="col-12" style="height:5rem"></div>
+            </div>
+            <div class="py-2 sink">
+                <div class="d-flex">
+                    <div class="w-50 pl-2 pr-1">
+                        <button class="btn btn-primary w-100" onclick="searchStart()">搜尋</button>
+                    </div>
+                    <div class="w-50 pl-1 pr-2">
+                        <a class="btn btn-primary w-100" href="/ChatMessageRecords/Index">查看紀錄</a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="column-btn py-1">
-            <button class="btn btn-primary" onclick="searchStart()">搜尋</button>
-            <a class="btn btn-primary" href="/ChatMessageRecords/Index">查看紀錄</a>
         </div>
     </div>
         @*<div class="col-12">
@@ -55,12 +74,12 @@
         </div>*@
     
     @*result column*@
-    <div class="col-2">
-        <div class="column-main">
-            <div class="border-bottom-dark">
-                <h5 onclick="test()">搜尋結果</h5>
+    <div class="result-col-2 py-2 h-100">
+        <div class="rounded-panel bg-go-light h-100">
+            <div class="header-block">
+                <h4 class="m-0" onclick="test()">搜尋結果</h4>
             </div>
-            <div id="searchResult">
+            <div class="column-main" id="searchResult">
                 @*@for (int i = 0; i < 5; i++) {
             <div class="accordion-go" onclick="accorClick(this)">
                 <p>台北市大安區信義路四段2號</p>
@@ -92,14 +111,14 @@
         </div>
     </div>
     @*map column*@
-    <div class="col-6">
-        <div id="map" style="height: 100%;width: 100%;"></div>
+    <div class="col-6 p-2">
+        <div id="map" class="rounded-panel" style="height: 100%;width: 100%;"></div>
     </div>
 </div>
 
 @section Scripts {
     <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBircB99P_RvzxWdQT-hk40-h3Ofzlb_vQ&callback=showMap&libraries=&v=weekly"async></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBircB99P_RvzxWdQT-hk40-h3Ofzlb_vQ&callback=initMap&libraries=&v=weekly"async></script>
     <script>
         let bagSize = [3, 5, 14, 25, 33, 75, 120];
         let cityS = document.querySelector("#CityId");
@@ -111,11 +130,6 @@
         let mapDiv = document.querySelector("#map");
         let sizeInputG1 = document.querySelectorAll("#sizeInputGroup1>div");
         let sizeCountG1 = document.querySelectorAll("#sizeInputGroup1>div>input");
-        //for detail and submit
-        //let infoGroup = document.querySelectorAll("#detailInfo span#info");
-        //let formInputs = document.querySelectorAll("#formInput input");
-        //let sizeInputG2 = document.querySelectorAll("#sizeInputGroup2>div");
-        //let sizeCountG2 = document.querySelectorAll("#sizeInputGroup2>div>input");
         //other variable
         let lastAddress = "";
         let lastDistrict = 0;
@@ -134,7 +148,6 @@
         }
         function test() {
             //showMap(25.03, 121.54);
-            console.log(formInputs);
         }
         function fillDemo() {
             addressIn.value = "信義路四段2號";
@@ -349,6 +362,14 @@
                 title: "服務位置",
                 icon: "https://crd-rubbish.epd.ntpc.gov.tw/maps/images/icon/Icon_LegendD.png",
             });
+        }
+        function initMap() {
+            let mbr = new google.maps.LatLng(25.0339400, 121.5435000);  //fixed for now
+            map = new google.maps.Map(mapDiv,
+                {
+                    center: mbr,
+                    zoom: 17,
+                });
         }
     </script>
 }

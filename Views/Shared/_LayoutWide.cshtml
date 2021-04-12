@@ -50,6 +50,26 @@
             overflow: hidden;
             transition: max-height 0.2s ease-out;
         }
+        /* used by map */
+        .map-btn {
+            display: none; /* Hidden by default */
+            position: absolute; /* Fixed/sticky position */
+            bottom: 0; /*Place the button at the bottom of the page*/
+            right: 51%; /*Place the button 30px from the right*/
+            z-index: 99; /* Make sure it does not overlap */
+            border: none; /* Remove borders */
+            outline: none; /* Remove outline */
+            background-color: red; /* Set a background color */
+            color: white; /* Text color */
+            cursor: pointer; /* Add a mouse pointer on hover */
+            padding: 15px; /* Some padding */
+            border-radius: 10px; /* Rounded corners */
+            font-size: 18px; /* Increase font size */
+        }
+
+        .map-btn:hover {
+            background-color: #555; /* Add a dark-grey background on hover */
+        }
     </style>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
 </head>
@@ -58,7 +78,7 @@
         <div class="wide-bar">
             <nav class="nav navbar-light mb-3">
                 <a class="navbar-brand text-white" asp-area="" asp-controller="Home" asp-action="Index">樂社團GO</a>
-                <a class="nav-link text-white" asp-area="" asp-controller="Map" asp-action="search">集垃地圖</a>
+                <a class="nav-link text-white" asp-area="" asp-controller="Map" asp-action="Index">集垃地圖</a>
                 <div class="dropdown">
                     <a class="nav-link text-white" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         團購
