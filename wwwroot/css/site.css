@@ -201,3 +201,6 @@ html {
     background-color: #f1f1f1;
     width: 100%;
 }
+.h-form-con {
+    height: calc(1.5em + 0.75rem + 2px);
+}

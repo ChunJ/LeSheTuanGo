@@ -6,75 +6,181 @@
 *@
 @{
     Layout = "_layoutWide";
-
+    ViewData["Title"] = "集垃地圖 - ";
     if (Context.Session.GetInt32(cUtility.Current_User_Id) != null) {
         ViewData["currentUserId"] = Context.Session.GetInt32(cUtility.Current_User_Id);
     } else {
         ViewData["currentUserId"] = 0;
     }
 }
+<div class="row h-100">
+    <div class="col-6 h-100 bg-go-light pr-0">
+        <div id="leftSearch" class="column-main h-100 w-100">
+            <button onclick="topFunction()" class="map-btn" id="myBtn" title="Go to top">Top</button>
+            <div class="row">
+                <div class="col-2">
+                    <div class="row">
+                        <div class="col-12">
+                            <button class="btn btn-primary" id="find-me" onclick="geoFindMe()">取得位置</button>
+                        </div>
+                        <div class="col-12">
+                            <a id="status"></a>
+                        </div>
+                        <div class="col-12">
+                            <a id="map-link" href="" target="_blank"></a>  @*target=_blank will open a new tab*@
+                        </div>
+                    </div>
+                </div>
+                <div class="col-9 p-0">
+                    <div class="row">
+                        <div style="width:10%">
+                            <label id="labelAddress">搜尋：</label>
+                        </div>
+                        <div style="width:20%">
+                            <select class="form-control" id="selectCity" onchange="getDistrict('#selectDistric')" asp-items="ViewBag.CityId">
+                                <option hidden id="optionCity">請選擇</option>
+                            </select>
+                        </div>
+                        <div style="width:20%">
+                            <select class="form-control" id="selectDistric">
+                                <option hidden id="optionCity">請選擇</option>
+                            </select>
+                        </div>
+                        <div style="width:40%">
+                            <input class="form-control" id="txtAddress" />
+                        </div>
+                        <div style="width:10%">
+                            <button class="btn btn-primary" onclick="captureSelect()">搜尋</button>
+                        </div>
+                        @*2nd row*@
+                        <div style="width:10%">
+                            <label id="labelAddress">過濾：</label>
+                        </div>
+                        <div style="width:20%">
+                            <select class="form-control" id="rangeLevel" onchange="">
+                                <option hidden>請選擇</option>
+                                <option>300</option>
+                                @*<option>30000</option>*@
+                                <option>200</option>
+                                <option>100</option>
+                            </select>
+                        </div>
+                        <div style="width:10%">
+                            <label>公尺內</label>
+                        </div>
+                        <div style="width:20%">
+                            <select class="form-control" id="selectTimeStart" onchange="">
+                                <option hidden>請選擇</option>
+                                @for (int i = 0; i < 24; i++) {
+                                    <option>@i</option>
+                                }
+                            </select>
+                        </div>
+                        <div style="width:5%">
+                            <label>時起</label>
+                        </div>
+                        <div style="width:20%">
+                            <select class="form-control" id="selectTimeEnd" onchange="">
+                                <option hidden>請選擇</option>
+                                @for (int i = 0; i < 24; i++) {
+                                    <option>@i</option>
+                                }
+                            </select>
+                        </div>
+                        <div style="width:5%">
+                            <label>時迄</label>
+                        </div>
+                        <div style="width:10%">
+                            <button class="btn btn-primary" onclick="filter()">篩選</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-
-@*head*@
-@*<title>Simple Map</title>*@
-<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-<style type="text/css">
-    /* Always set the map height explicitly to define the size of the div
-        * element that contains the map. */
-    #map {
-        height: 100%;
-    }
-
-    /* Optional: Makes the sample page fill the window. */
-    html,
-    main, /*div,*/ /* father/child tags all need css settings to height 100%! */
-    body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-    }
-
-    #myBtn {
-        display: none; /* Hidden by default */
-        position: absolute; /* Fixed/sticky position */
-        bottom: 0; /*Place the button at the bottom of the page*/
-        right: 51%; /*Place the button 30px from the right*/
-        z-index: 99; /* Make sure it does not overlap */
-        border: none; /* Remove borders */
-        outline: none; /* Remove outline */
-        background-color: red; /* Set a background color */
-        color: white; /* Text color */
-        cursor: pointer; /* Add a mouse pointer on hover */
-        padding: 15px; /* Some padding */
-        border-radius: 10px; /* Rounded corners */
-        font-size: 18px; /* Increase font size */
-    }
-
-        #myBtn:hover {
-            background-color: #555; /* Add a dark-grey background on hover */
+            <label>以下結果來自：</label>
+            <label id="lblSource"></label>
+            <button class="btn btn-primary" onclick="(() => {
+        if (currentUser == 0) {
+            console.log(this);
+            console.log(event);
+            alert('請先登入！');
+        } else {
+            initFav();
+            console.log('initFav');
+            document.getElementById('lblSource').innerText = '您的收藏清單';
         }
-</style>
-@*<script>
-      let map;
+        })()">
+                收藏清單（會員專屬）
+            </button>
+            <table class="table" id="table100m" style="float:left;">
+                <tbody id="header">
+                    <tr>
+                        <th id="thFav0">收藏</th>
+                        <th>收集地點</th>
+                        <th onclick="orderByTime()" id="thOrderTime">到達時間☰</th>
+                        <th onclick="orderByDistance()" id="thOrderDistance">距離（公尺）☰</th>
+                        @*<th style="display:none">lat</th>
+                    <th style="display:none">lng</th>*@
+                    </tr>
+                </tbody>
+                <tbody id="content"></tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-6 pl-0">
+        <div id="map" class="w-100 h-100"></div>
+    </div>
+</div>
 
-      function initMap() {
-        map = new google.maps.Map(document.getElementById("map"), {
-          center: { lat: @ViewBag.resultLat, lng: @ViewBag.resultLng },
-          zoom: 18,
-        });
-        new google.maps.Marker({
-              position: { lat: @ViewBag.resultLat, lng: @ViewBag.resultLng },
-              map,
-              animation: google.maps.Animation.DROP,
-              title: "hi",
-              icon: "https://crd-rubbish.epd.ntpc.gov.tw/maps/images/icon/Icon_LegendC.png",
-        });
-      }
-    </script>*@
-<script>
-    let map;
 
-    function initMap(lat, lng, add, spotId) {
+
+@*<button onclick="init100M()">100M</button>*@
+@*<button onclick="clearContent()">100M</button>*@
+
+@section Scripts {
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBircB99P_RvzxWdQT-hk40-h3Ofzlb_vQ&callback=initMap&libraries=&v=weekly" async></script>
+    <script>
+        let map;
+
+        let table100m = document.getElementById("table100m");
+        let tbodycont = document.getElementById("content");
+
+        var currentUser = @ViewData["currentUserId"];
+        var latNow = 0;
+        var lngNow = 0;
+        var js;
+        var js0;  //store material from backend
+        var userFav;
+        var userFav0;
+
+        window.onload = (() => {
+            if (currentUser == 0) {
+                geoFindMe();
+                console.log('geoFindMe()');
+            } else {
+                getSpotNum(currentUser);
+                init300M('', 'mem');
+                console.log('init300M(, mem)');
+                document.getElementById('lblSource').innerText = '您的註冊地址';
+            }
+        })();
+
+        var timeOrder = -1;
+        var distanceOrder = -1;
+
+        function getSpotNum(currentUser) {
+        $.ajax({
+            url: "/map/spotCollectedNum?mem=" + currentUser,
+            type: "GET",
+            success: function (spotJsonString) {
+                console.log(this.url);
+                userFav = JSON.parse(spotJsonString);
+                //userFav = userFav0;
+                console.log(userFav);
+            }
+        })
+    }
+        function initMap(lat, lng, add, spotId) {
 
         if (lng !== "l") {
             var coor = new google.maps.LatLng(lat, lng);
@@ -148,184 +254,6 @@
             }
         }
     }
-</script>
-
-@*/head*@
-
-@*body*@
-
-
-<div id="leftSearch" style="height:100%;width:50%;float:left;" class="column-main">
-    <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
-
-    <button id="find-me" onclick="geoFindMe()">查詢目前位置</button>
-    <a id="status"></a>
-    <br />
-    <a id="map-link" href="" target="_blank"></a>  @*target=_blank will open a new tab*@
-
-    <br />
-    <label id="labelAddress">搜尋新地址：</label>
-    <select id="selectCity" onchange="getDistrict('#selectDistric')" asp-items="ViewBag.CityId">
-        <option hidden id="optionCity">請選擇</option>
-    </select>
-    <select id="selectDistric">
-        <option hidden id="optionCity">請選擇</option>
-    </select>
-    <input id="txtAddress" />
-
-    <button onclick="captureSelect()">搜尋</button>
-    <br />
-    <select id="rangeLevel" onchange="">
-        <option hidden>請選擇</option>
-        <option>300</option>
-        @*<option>30000</option>*@
-        <option>200</option>
-        <option>100</option>
-    </select>
-    <label>公尺內</label>
-    <select id="selectTimeStart" onchange="">
-        <option hidden>請選擇</option>
-        <option>0</option>
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-        <option>4</option>
-        <option>5</option>
-        <option>6</option>
-        <option>7</option>
-        <option>8</option>
-        <option>9</option>
-        <option>10</option>
-        <option>11</option>
-        <option>12</option>
-        <option>13</option>
-        <option>14</option>
-        <option>15</option>
-        <option>16</option>
-        <option>17</option>
-        <option>18</option>
-        <option>19</option>
-        <option>20</option>
-        <option>21</option>
-        <option>22</option>
-        <option>23</option>
-    </select>
-    <label>時起</label>
-    <select id="selectTimeEnd" onchange="">
-        <option hidden>請選擇</option>
-        <option>0</option>
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-        <option>4</option>
-        <option>5</option>
-        <option>6</option>
-        <option>7</option>
-        <option>8</option>
-        <option>9</option>
-        <option>10</option>
-        <option>11</option>
-        <option>12</option>
-        <option>13</option>
-        <option>14</option>
-        <option>15</option>
-        <option>16</option>
-        <option>17</option>
-        <option>18</option>
-        <option>19</option>
-        <option>20</option>
-        <option>21</option>
-        <option>22</option>
-        <option>23</option>
-    </select>
-    <label>時迄</label>
-    <button onclick="filter()">篩選</button>
-    <br />
-    <button onclick="(() => {
-    if (currentUser == 0) {
-        console.log(this);
-        console.log(event);
-        alert('請先登入！');
-    } else {
-        initFav();
-        console.log('initFav');
-        document.getElementById('lblSource').innerText = '您的收藏清單';
-    }
-    })()">
-        收藏清單（會員專屬）
-    </button>
-    <br />
-    <label>以下結果來自：</label>
-    <label id="lblSource"></label>
-    <table class="table" id="table100m" style="float:left;">
-        <tbody id="header">
-            <tr>
-                <th id="thFav0">收藏</th>
-                <th>收集地點</th>
-                <th onclick="orderByTime()" id="thOrderTime">到達時間☰</th>
-                <th onclick="orderByDistance()" id="thOrderDistance">距離（公尺）☰</th>
-                @*<th style="display:none">lat</th>
-                    <th style="display:none">lng</th>*@
-            </tr>
-        </tbody>
-        <tbody id="content"></tbody>
-    </table>
-</div>
-
-@*<button onclick="init100M()">100M</button>*@
-<div id="map" style="height:100%;width:50%;float:left;border-radius:30px"></div>
-@*<button onclick="clearContent()">100M</button>*@
-<br />
-
-@*<button onclick="initMap(@ViewBag.resultLat, @ViewBag.resultLng)">1</button>
-    <button onclick="initMap(@ViewBag.result[1].Latitude, @ViewBag.result[1].Longitude)">2</button>
-    <button onclick="initMap(@ViewBag.result[2].Latitude, @ViewBag.result[2].Longitude)">3</button>*@
-
-<!-- Async script executes immediately and must be after any DOM elements used in callback. -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBircB99P_RvzxWdQT-hk40-h3Ofzlb_vQ&callback=initMap&libraries=&v=weekly"
-        async></script>
-@*<script src="~/lib/jquery/dist/jquery.min.js"></script>*@
-
-<script>
-        let table100m = document.getElementById("table100m");
-        let tbodycont = document.getElementById("content");
-
-        var currentUser = @ViewData["currentUserId"];
-        var latNow = 0;
-        var lngNow = 0;
-        var js;
-        var js0;  //store material from backend
-        var userFav;
-        var userFav0;
-
-        window.onload = (() => {
-            if (currentUser == 0) {
-                geoFindMe();
-                console.log('geoFindMe()');
-            } else {
-                getSpotNum(currentUser);
-                init300M('', 'mem');
-                console.log('init300M(, mem)');
-                document.getElementById('lblSource').innerText = '您的註冊地址';
-            }
-        })();
-
-        var timeOrder = -1;
-        var distanceOrder = -1;
-
-    function getSpotNum(currentUser) {
-        $.ajax({
-            url: "/map/spotCollectedNum?mem=" + currentUser,
-            type: "GET",
-            success: function (spotJsonString) {
-                console.log(this.url);
-                userFav = JSON.parse(spotJsonString);
-                //userFav = userFav0;
-                console.log(userFav);
-            }
-        })
-    }
-
         function init300M(address, source) {
             $.ajax({
                 url: "/map/spotlessthan300m2?address=" + address + "&lat=" + latNow + "&lng=" + lngNow + "&memId=" + currentUser + "&type=" + source,
@@ -415,11 +343,8 @@
                     //}
 
             })
-
             document.getElementById("thOrderTime").innerText = "到達時間☰";
             document.getElementById("thOrderDistance").innerText = "距離（公尺）☰";
-
-
         }
 
         function initFav() {
@@ -748,7 +673,7 @@
 
         }
 
-                            //document.querySelector('#find-me').addEventListener('click', geoFindMe);
+        //document.querySelector('#find-me').addEventListener('click', geoFindMe);
         //Get the button:
         mybutton = document.getElementById("myBtn");
 
@@ -815,14 +740,5 @@
             });
             document.getElementById(`tdFav${event.target.parentNode.parentNode.id}`).innerHTML = '';
         }
-</script>
-
-@*/body*@
-
-@*<!DOCTYPE html>
-    <html>
-    <head>
-    </head>
-    <body onload="">
-    </body>
-    </html>*@
+    </script>
+}
