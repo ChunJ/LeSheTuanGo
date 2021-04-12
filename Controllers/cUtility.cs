@@ -14,7 +14,11 @@ namespace LeSheTuanGo.Controllers {
         public static readonly string Current_User_Name = "Current_User_Name";
         public static readonly string Current_User_Validate = "Current_User_Validate"; //之後會驗證是否通過Email驗證
         public static readonly string Current_User_Profile_Image = "Current_User_Profile_Image";
-
+        public static readonly string MerchantTradeNo = "MerchantTradeNo";
+        public static readonly string MerchantTradeDate = "MerchantTradeDate";
+        public static readonly string TradeDesc = "TradeDesc";
+        public static readonly string ItemName = "ItemName";
+        public static readonly string CheckMacValue = "CheckMacValue";
         //input address and output coordinate[lat, lng] 
         public static decimal[] addressToLatlong(string address) {
             //google api key=AIzaSyBircB99P_RvzxWdQT-hk40-h3Ofzlb_vQ
