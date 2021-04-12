@@ -1,5 +1,7 @@
 ﻿@model LeSheTuanGo.ViewModels.MemberViewModel
-
+@{
+    ViewData["Title"] = "儲值 - ";
+}
 <h4>儲值</h4>
 <hr />
 <div class="row">
@@ -11,15 +13,15 @@
                 <label asp-for="Balance" class="control-label"></label>
                 <div class="row">
                     <div class="col-md-4">
-                        <input type="radio" asp-for="Balance" class="form-control" value="500" onclick="changeProduct(500)"/>
+                        <input type="radio" asp-for="Balance" class="form-control" value="500" onclick="changeProduct(500)" />
                         <label>500</label>
                     </div>
                     <div class="col-md-4">
-                        <input type="radio" asp-for="Balance" class="form-control" value="1000" onclick="changeProduct(1000)"/>
+                        <input type="radio" asp-for="Balance" class="form-control" value="1000" onclick="changeProduct(1000)" />
                         <label>1000</label>
                     </div>
                     <div class="col-md-4">
-                        <input type="radio" asp-for="Balance" class="form-control" value="1500" onclick="changeProduct(1500)"/>
+                        <input type="radio" asp-for="Balance" class="form-control" value="1500" onclick="changeProduct(1500)" />
                         <label>1500</label>
                     </div>
                 </div>
@@ -39,37 +41,37 @@
       action="https://payment-stage.opay.tw/Cashier/AioCheckOut/V5">
 
     @*MerchantID 商店代號:*@
-    <input type="text" name="MerchantID" value="2000132" hidden/><br />
+    <input type="text" name="MerchantID" value="2000132" hidden /><br />
     @*MerchantTradeNo 商店交易編號:*@
-    <input type="text" name="MerchantTradeNo" value="DX202104082122162283" hidden/><br />
+    <input type="text" name="MerchantTradeNo" value="DX202104082122162283" hidden /><br />
     @*MerchantTradeDate 商店交易時間:*@
-    <input type="text" name="MerchantTradeDate" value="2021/04/08 21:22:16" hidden/><br />
+    <input type="text" name="MerchantTradeDate" value="2021/04/08 21:22:16" hidden /><br />
     @*PaymentType 交易類型:*@
-    <input type="text" name="PaymentType" value="aio" hidden/><br />
+    <input type="text" name="PaymentType" value="aio" hidden /><br />
     @*TotalAmount 交易金額:*@
-    <input type="text" name="TotalAmount" value="5" hidden/><br />
+    <input type="text" name="TotalAmount" value="5" hidden /><br />
     @*TradeDesc 交易描述:*@
-    <input type="text" name="TradeDesc" value="建立信用卡測試訂單" hidden/><br />
+    <input type="text" name="TradeDesc" value="建立信用卡測試訂單" hidden /><br />
     @*ItemName 商品名稱:*@
-    <input type="text" name="ItemName" value="MacBook 30元X2#iPhone6s 40元X1" hidden/><br />
+    <input type="text" name="ItemName" value="MacBook 30元X2#iPhone6s 40元X1" hidden /><br />
     @*ReturnURL 付款完成通知回傳網址:*@
-    <input type="text" name="ReturnURL" value="https://developers.opay.tw/AioMock/MerchantReturnUrl" hidden/><br />
+    <input type="text" name="ReturnURL" value="https://developers.opay.tw/AioMock/MerchantReturnUrl" hidden /><br />
     @*ChoosePayment 預設付款方式:*@
-    <input type="text" name="ChoosePayment" value="Credit" hidden/><br />
+    <input type="text" name="ChoosePayment" value="Credit" hidden /><br />
     @*會員商店代碼:*@
-    <input type="text" name="StoreID" value="" hidden/><br />
+    <input type="text" name="StoreID" value="" hidden /><br />
     @*ClientBackURL Client端返回廠商網址:*@
-    <input type="text" name="ClientBackURL" value="https://developers.opay.tw/AioMock/MerchantClientBackUrl" hidden/><br />
+    <input type="text" name="ClientBackURL" value="https://developers.opay.tw/AioMock/MerchantClientBackUrl" hidden /><br />
     @*CreditInstallment 刷卡分期期數:*@
-    <input type="text" name="CreditInstallment" value="" hidden/><br />
+    <input type="text" name="CreditInstallment" value="" hidden /><br />
     @*InstallmentAmount 使用刷卡分期的付款金額:*@
-    <input type="text" name="InstallmentAmount" value="" hidden/><br />
+    <input type="text" name="InstallmentAmount" value="" hidden /><br />
     @*Redeem 信用卡是否使用紅利折抵:*@
-    <input type="text" name="Redeem" value="" hidden/><br />
+    <input type="text" name="Redeem" value="" hidden /><br />
     @*CheckMacValue 簽章類型:*@
-    <input type="text" name="EncryptType" value="1" hidden/><br />
+    <input type="text" name="EncryptType" value="1" hidden /><br />
     @*CheckMacValue 檢查碼:*@
-    <input type="text" name="CheckMacValue" value="E5A45921756D2BCCF2517475DA71AC5804F5D1C2817FD0A3FC2E41C85F85389B" hidden/><br />
+    <input type="text" name="CheckMacValue" value="E5A45921756D2BCCF2517475DA71AC5804F5D1C2817FD0A3FC2E41C85F85389B" hidden /><br />
     <input type="submit" value="購買" />
 </form>
 <script>
@@ -78,7 +80,7 @@
     };
     function changeProduct(item) {
         const formElement = document.getElementById("formCreditCard")
-        formElement[6].value = item+"點";
+        formElement[6].value = item + "點";
         payment();
     }
 </script>
