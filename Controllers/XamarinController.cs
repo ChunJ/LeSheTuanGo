@@ -1,5 +1,6 @@
 ﻿using LeSheTuanGo.Models;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,19 +23,34 @@ namespace LeSheTuanGo.Controllers
             var q = db.Members.Select(n => n);
             return Json(q.ToList());
         }
-        public JsonResult Login(string email , string password)
+        public string Login(string email , string password)
         {
+            string js = "";
             var qMember = db.Members.Where(n => n.Email == email).FirstOrDefault();
             if (qMember == null)
-                return Json("Fail");
+            {
+                js = JsonConvert.SerializeObject("Fail");
+                return js;
+            }
             string sha256Password = sha256(password, qMember.PasswordSalt);
             if (sha256Password != qMember.Password)
-                return Json("Fail");
-            //var qDistrict = db.DistrictRefs.Where(n => n.DistrictId == qMember.DistrictId).FirstOrDefault();
-            //var qCity = db.CityRefs.Where(n => n.CityId == qDistrict.CityId).FirstOrDefault();
-            qMember.Address = qMember.Address;
-
-            return Json(qMember);
+            {
+                js = JsonConvert.SerializeObject("Fail");
+                return js;
+            }
+            //var qDistrict = db.DistrictRefs.Where(n => n.DistrictId == qMember.DistrictId).First();
+            //var qCity = db.CityRefs.Where(n => n.CityId == qDistrict.CityId).First();
+            //qMember.Address = qCity.CityName + qDistrict.DistrictName + qMember.Address;
+            js = JsonConvert.SerializeObject(qMember);
+            return js;
+        }
+        public string getSpot()
+        {
+            var q = from n in db.GarbageTruckSpots
+                    //where n.RouteId == 1
+                    select n;
+            var js = JsonConvert.SerializeObject(q.ToList());
+            return js;
         }
         private string sha256(string inputPwd, string salt)
         {

@@ -387,5 +387,18 @@ namespace LeSheTuanGo.Controllers
 
             MySmtp.Send(mail);
         }
+        public IActionResult InsertRecord()
+        {
+            Payment payment = new Payment();
+            payment.MemberId = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
+            payment.MerchantTradeDate = HttpContext.Session.GetString(cUtility.MerchantTradeDate);
+            payment.MerchantTradeNo=HttpContext.Session.GetString(cUtility.MerchantTradeNo);
+            payment.TradeDesc = "";
+            payment.ItemName = HttpContext.Session.GetString(cUtility.ItemName);
+            payment.CheckMacValue = HttpContext.Session.GetString(cUtility.CheckMacValue);
+            db.Payments.Add(payment);
+            db.SaveChanges();
+            return RedirectToAction("Charge");
+        }
     }
 }

@@ -81,7 +81,7 @@ function payment() {
                 formElement[1].value = item[0].merchantTradeNo
                 formElement[2].value = item[0].merchantTradeDate
                 formElement[10].value = item[0].returnURL
-                formElement[7].value = item[0].returnURL
+                formElement[7].value = item[0].successUrl
                 formElement[4].value = item[0].totalAmount
                 formElement[6].value = item[0].itemName
             })
