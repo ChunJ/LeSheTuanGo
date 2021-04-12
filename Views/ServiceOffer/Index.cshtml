@@ -127,23 +127,7 @@
             $("#L120maxCount").val(0);
         }
 
-        function getDistrictc() {
-            var e = document.getElementById("cityId")
-            var s = e.options[e.selectedIndex].value
-            var url = "/GarbageServiceOffers/getDistrict?cityId=" + s;
-            $.ajax({
-                url: url,
-                type: "GET",
-                success: function (data) {
-                    var s = JSON.parse(data);
-                    var txt = "";
-                    for (let i = 0; i < s.length; i++) {
-                        txt += "<option value='" + s[i].DistrictId + "'>" + s[i].DistrictName + "</option>"
-                    }
-                    $("#DistrictId").html(txt);
-                },
-            })
-        }
+
     </script>
 
     @section Scripts {

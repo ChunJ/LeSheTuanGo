@@ -39,7 +39,7 @@ namespace LeSheTuanGo.Controllers
         {
             if (HttpContext.Session.GetInt32(cUtility.Current_User_Id) == null) return RedirectToAction("Login", "Member");
             g.HostMemberId = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
-            if (g.Address!=null)
+            if (g.Address != null)
             {
                 g.StartTime = DateTime.Now;
                 g.ServiceTypeId = 1;
@@ -70,9 +70,9 @@ namespace LeSheTuanGo.Controllers
         }
 
         #region 縣市區連動用，目前不使用
-        public string getDistrict(string cityId)
+        public string getDistrict(int cityId)
         {
-            var cityref = _context.DistrictRefs.Where(n => n.CityId == int.Parse(cityId)).Select(n=>new { n.DistrictId,n.DistrictName}).ToList();
+            var cityref = _context.DistrictRefs.Where(n => n.CityId == cityId).Select(n => new { n.DistrictId, n.DistrictName }).ToList();
             var s = JsonConvert.SerializeObject(cityref);
             return s;
         }
@@ -97,6 +97,8 @@ namespace LeSheTuanGo.Controllers
             GarbageServiceOffersViewModel gsovm = new GarbageServiceOffersViewModel(garbageServiceOffer);
             return View(gsovm);
         }
+
+
 
         // POST: GarbageServiceOffers/Edit/5
         [HttpPost]
@@ -134,6 +136,19 @@ namespace LeSheTuanGo.Controllers
             ViewData["ServiceTypeId"] = new SelectList(_context.ServiceTypeRefs, "ServiceTypeId", "ServiceName", garbageServiceOffer.ServiceTypeId);
             GarbageServiceOffersViewModel gsovm = new GarbageServiceOffersViewModel(garbageServiceOffer);
             return View(gsovm);
+        }
+
+        //Real Edit
+        public void EditGarbageOffer(int garbageServiceID, GarbageServiceOffer garbageServiceOffer)
+        {
+            if (garbageServiceID == garbageServiceOffer.GarbageServiceId)
+            {
+                decimal[] s = cUtility.addressToLatlong(garbageServiceOffer.Address);
+                garbageServiceOffer.Latitude = s[0];
+                garbageServiceOffer.Longitude = s[1];
+                _context.Update(garbageServiceOffer);
+                _context.SaveChanges();
+            }
         }
 
         // GET: GarbageServiceOffers/Delete/5

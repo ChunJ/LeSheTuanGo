@@ -57,6 +57,25 @@ function formatDatetime(inputString) {
     return `${list[1]}月${list[2]}日${list[3]}點${list[4]}分`;
 }
 
+//小夜版市區連動，測試
+function getDistrictc(disid) {
+    var e = document.getElementById("cityId")
+    var s = e.options[e.selectedIndex].value
+    var url = "/ServiceOffer/getDistrict?cityId=" + s;
+    $.ajax({
+        url: url,
+        type: "GET",
+        success: function (data) {
+            var s = JSON.parse(data);
+            var txt = "";
+            for (let i = 0; i < s.length; i++) {
+                txt += "<option value='" + s[i].DistrictId + "'>" + s[i].DistrictName + "</option>"
+            }
+            $(disid).html(txt);
+        },
+    })
+}
+
 //function getLatLng(addressInput, callBack) {
 //    $.getJSON(
 //        "https://maps.googleapis.com/maps/api/geocode/json?",

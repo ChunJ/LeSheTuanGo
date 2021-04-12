@@ -57,10 +57,14 @@
         </div>
     </div>
     @*column3*@
-    <div class="col-4 inbox_people">
-        <h3 class="sideheader text-center">詳細資訊</h3>
-        <div id="detail"></div>
-    </div>
+<div class="col-4 inbox_people">
+    <h3 class="sideheader text-center">詳細資訊</h3>
+    <input type="hidden" id="oid" />
+    <input type="hidden" id="gt"/>
+    <input type="hidden" id="hid"/>
+    <div id="detail"></div>
+
+</div>
 </div>
 
 
@@ -119,6 +123,9 @@
             //選團
         function chatGetOrder(oid, gt,rn,hid) {
             //加入SignalR聊天室
+            $("#oid").val(oid);
+            $("#gt").val(gt);
+            $("#hid").val(hid);
             var group = gt.toString()+'_'+oid.toString();
             if (connection.connectionState != "Connected") {
                 connection.start().then(function () {
@@ -145,88 +152,7 @@
                 });
             };
             //取得團明細
-            var urlorder = "/ChatMessageRecords/chatGetOrderDetail";
-            $.ajax({
-                url: urlorder,
-                type: "GET",
-                data: {
-                    orderId: oid,
-                    grouptype: gt,
-                    hostid: hid,
-                },
-                success: function (data) {
-                    var s = JSON.parse(data);
-                    var txt = "";
-                    txt += "<input type='hidden' id='OrderId' value='" + oid + "'/>"
-                    if (gt == 1) {
-                        for (let i = 0; i < s.length; i++) {
-                            txt += `<div>團購編號：${s[i].OrderId } </div><br />`;
-                            txt += `<div>商品名稱： ${s[i].ProductName} </div><br />`;
-                            txt += `<div>商品敘述： ${s[i].OrderDescription} </div><br />`;
-                            txt += `<div>地址： ${s[i].CityName}${s[i].DistrictName}${s[i].Address} </div><br />`;
-                            let cango = s[i].CanGo == true ? "是" : "否";
-                            txt += `<div>是否到府服務： ${cango} </div><br />`;
-                            if (cango == "是") {
-                                txt += `<div>可服務距離： ${s[i].RangeInMeters} </div><br />`;
-                            }
-                            txt += `<div>目標購買數量： ${s[i].MaxCount} </div><br />`;
-                            txt += `<div>剩餘數量： ${s[i].AvailableCount} </div><br />`;
-                            if (s[i].Count != undefined) {
-                                txt += `<div>您的購買數量： ${s[i].Count} </div><br />`;
-                            }
-                        }
-                    }
-                    else if (gt == 2) {
-                        for (let i = 0; i < s.length; i++) {
-                            txt += `<div>倒垃圾團編號：${s[i].GarbageServiceId} </div><br />`;
-                            txt += `<div>開團者地址： ${s[i].CityName}${s[i].DistrictName}${s[i].Address} </div><br />`;
-                            let cango = s[i].CanGo == true ? "是" : "否";
-                            txt += `<div>是否到府服務： ${cango} </div><br />`;
-                            if (cango == "是") {
-                                txt += `<div>可服務距離： ${s[i].RangeInMeters} </div><br />`;
-                            }
-                            if (s[i].L3maxCount != 0) {
-                                let str = s[i].L3count == 0 || s[i].L3count == undefined ? "" : `, 您已委託 ${s[i].L3count}個`;
-                                txt += `<div>L3&nbsp;&nbsp;：可收 ${s[i].L3maxCount}個 , 尚可收 ${s[i].L3available}個 ${str}</div><br />`;
-                            }
-                            if (s[i].L5maxCount != 0) {
-                                let str = s[i].L5count == 0 || s[i].L5count == undefined ? "" : `, 您已委託 ${s[i].L5count}個`;
-                                txt += `<div>L5&nbsp;&nbsp;：可收 ${s[i].L5maxCount}個 , 尚可收 ${s[i].L5available}個 ${str}</div><br />`;
-                            }
-                            if (s[i].L14maxCount != 0) {
-                                let str = s[i].L14count == 0 || s[i].L14count == undefined ? "" : `, 您已委託 ${s[i].L14count}個`;
-                                txt += `<div>L14：可收 ${s[i].L14maxCount}個 , 尚可收 ${s[i].L14available}個 ${str}</div><br />`;
-                            }
-                            if (s[i].L25maxCount != 0) {
-                                let str = s[i].L25count == 0 || s[i].L25count == undefined ? "" : `, 您已委託 ${s[i].L25count}個`;
-                                txt += `<div>L25：可收 ${s[i].L25maxCount}個 , 尚可收 ${s[i].L25available}個 ${str}</div><br />`;
-                            }
-                            if (s[i].L33maxCount != 0) {
-                                let str = s[i].L33count == 0 || s[i].L33count == undefined ? "" : `, 您已委託 ${s[i].L33count}個`;
-                                txt += `<div>L33：可收 ${s[i].L33maxCount}個 , 尚可收 ${s[i].L33available}個 ${str}</div><br />`;
-                            }
-                            if (s[i].L75maxCount != 0) {
-                                let str = s[i].L75count == 0 || s[i].L75count == undefined ? "" : `, 您已委託 ${s[i].L75count}個`;
-                                txt += `<div>L75：可收 ${s[i].L75maxCount}個 , 尚可收 ${s[i].L75available}個 ${str}</div><br />`;
-                            }
-                            if (s[i].L120maxCount != 0) {
-                                let str = s[i].L120count == 0 || s[i].L120count == undefined ? "" : `, 您已委託 ${s[i].L120count}個`;
-                                txt += `<div>L120：可收 ${s[i].L120maxCount}個 , 尚可收 ${s[i].L120available}個 ${str}</div><br />`;
-                            }
-                            if (s[i].NeedCome == true) {
-                                txt += `<div>是否到府服務： 是 </div><br />`;
-                                txt += `<div>到府服務地址： ${s[i].ComeCityName}${s[i].ComeDistrictName}${s[i].ComeAddress} </div><br />`;
-                            }
-                            else if (s[i].NeedCome == false) {
-                                txt += `<div>是否到府服務： 否 </div><br />`;
-                            }
-                            txt +=`<button id="edit" onclick="editorder()">編輯</button>`
-                        }
-                    }
-
-                    $("#detail").html(txt);
-                },
-            })
+            getdetail(oid, gt, hid);
             //取得聊天紀錄
             var urlchat = "/ChatMessageRecords/chatGetChat?orderId=" + oid + "&grouptype=" + gt;
             $.ajax({
@@ -235,9 +161,9 @@
                 success: function (data) {
                     var s = JSON.parse(data);
                     var txt = "";
-                        for (let i = 0; i < s.length; i++) {
-                            let msgclass = (s[i].SentMemberId == gmemberid) ? 'self' : 'other';
-                            txt += "<div class='" + msgclass + "'>" + s[i].username + "說：<div><div>" + s[i].Message + "</div></div></div>"
+                    for (let i = 0; i < s.length; i++) {
+                        let msgclass = (s[i].SentMemberId == gmemberid) ? 'self' : 'other';
+                        txt += "<div class='" + msgclass + "'>" + s[i].username + "說：<div><div>" + s[i].Message + "</div></div></div>"
                     }
                     $("#chatheader").text(rn + " 的聊天室");
                     $("#chat").html(txt);
@@ -305,46 +231,314 @@
                 data: { grouptype: grouptype, orderid: orderid, memberid: gmemberid},
                 type: "GET",
                 success: function (data) {
-                    let txt = "";
+
                     let detail = JSON.parse(data[0]);
                     let range = JSON.parse(data[1]);
                     let city = JSON.parse(data[2]);
 
                         //city
-                        let citytxt = "<div><label>縣市：</label><select id='city' onchange=getDistrict('#DistrictId')>";
-                        
+                    //let citytxt = "<form id='detaileditor' method='post' action='/ChatMessageRecords/EditGarbageOffer'><div><label>縣市：</label><select id='city' onchange=getDistrict('#DistrictId')>";
+                    let citytxt = "";
                         for (let i = 0; i < city.length; i++) {
                             citytxt += `<option value=${city[i].CityId}>${city[i].CityName}</option>`
-                        }
-                    citytxt += `</select>&nbsp;&nbsp;&nbsp;`;
+                    }
+                    let rangetxt = "";
+                    for (let i = 0; i < range.length; i++) {
+                        rangetxt += `<option value=${range[i].RangeId}>${range[i].RangeInMeters}</option>`
+                    }
+
+
+                    //citytxt += `</select>&nbsp;&nbsp;&nbsp;`;
 
                     //district
-                    citytxt += "<label>鄉鎮市區：</label><select id='DistrictId'></select></div>"
+                    //citytxt += "<label>鄉鎮市區：</label><select id='DistrictId' name='DistrictId'></select></div>"
 
                     //address
-                    citytxt += `<input type="text" value="" placeholder="請輸入地址"/>`;
+                    //citytxt += `<div><label>地址：</label><input type="text" value="" id='Address' name='Address' placeholder="請輸入地址"/></div>`;
 
                         //range
-                        let rangetxt = "<div><label>可服務距離：</label><select id='range'>";
-                        
-                        for (let i = 0; i < range.length; i++) {
-                            rangetxt += `<option value=${range[i].RangeId}>${range[i].RangeInMeters}</option>`
-                        }
-                    rangetxt += "</select></div>"
+                        //let rangetxt = "<div><label>可服務距離：</label><select id='range'>";
+
+                    //rangetxt += "</select></div>"
 
                     //other option
-                    txt += `<label>結束時間：</label><input type="datetime" id="endtime"/></div>`
+                    //txt += `<label>結束時間：</label><input class="form-control" type="datetime-local" data-val="true" id="EndTime" name="EndTime" value=""></div><button type="submit">儲存</button></form>`
 
-                        let s = JSON.parse(data[0]);
-                        for (let i = 0; i < s.length; i++) {
+                    //很長的框架
+                    let txt = `
+                    
+                        <div class="border-bottom-dark mb-2">
+                            <h4>編輯</h4>
+                        </div>
+                        <div class="row w-50">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="control-label">縣市</label>
+                                    <select class="form-control" id="cityId" name="cityId" onchange="getDistrictc('#DistrictId')" data-val="true" data-val-required="The CityId field is required.">
+                                        ${citytxt}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="DistrictId">鄉鎮市區</label>
+                                    <select class="form-control" id="DistrictId" name="DistrictId" data-val="true" data-val-required="The 鄉鎮市區 field is required.">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label class="control-label" for="Address">地址</label>
+                                    <input class="form-control" id="Address" name="Address" type="text" value="">
+                                        <span class="text-danger field-validation-valid" data-valmsg-for="Address" data-valmsg-replace="true"></span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                    <div class="form-group">
+                                        <label class="control-label" for="EndTime">結束時間</label>
+                                        <input class="form-control" id="EndTime" name="EndTime" type="datetime-local" data-val="true" data-val-required="The 結束時間 field is required." value="">
+                                            <span class="text-danger field-validation-valid" data-valmsg-for="EndTime" data-valmsg-replace="true"></span>
+                                    </div>
+                                    <div class="form-group form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" data-val="true" data-val-required="The 是否可到府服務 field is required." id="CanGo" name="CanGo" value="true"> 是否可到府服務
+                                        </label>
+                                    </div>
+                                            <div class="form-group">
+                                                <label class="control-label" for="GoRangeId">可服務距離</label>
+                                                <select class="form-control" data-val="true" data-val-required="The 可服務距離 field is required." id="GoRangeId" name="GoRangeId">
+                                                    ${rangetxt}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+
+                                        </div>
+                                    </div>
+
+                                    <div class="row w-50 pb-5">
+                                        <div class="col-12">
+                                            <div class="border-bottom-dark mb-2">
+                                                <h5>垃圾袋尺寸</h5>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label class="control-label" for="L3maxCount">3公升</label>
+                                                <input class="form-control" id="L3maxCount" name="L3maxCount" value="0" type="number" data-val="true" data-val-required="The 3公升 field is required.">
+                                                    <span class="text-danger field-validation-valid" data-valmsg-for="L3maxCount" data-valmsg-replace="true"></span>
+            </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <div class="form-group">
+                                                    <label class="control-label" for="L5maxCount">5公升</label>
+                                                    <input class="form-control" id="L5maxCount" name="L5maxCount" value="0" type="number" data-val="true" data-val-required="The 5公升 field is required.">
+                                                        <span class="text-danger field-validation-valid" data-valmsg-for="L5maxCount" data-valmsg-replace="true"></span>
+            </div>
+                                                </div>
+                                                <div class="col-3">
+                                                    <div class="form-group">
+                                                        <label class="control-label" for="L14maxCount">14公升</label>
+                                                        <input class="form-control" id="L14maxCount" name="L14maxCount" value="0" type="number" data-val="true" data-val-required="The 14公升 field is required.">
+                                                            <span class="text-danger field-validation-valid" data-valmsg-for="L14maxCount" data-valmsg-replace="true"></span>
+            </div>
+                                                    </div>
+                                                    <div class="col-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label" for="L25maxCount">25公升</label>
+                                                            <input class="form-control" id="L25maxCount" name="L25maxCount" value="0" type="number" data-val="true" data-val-required="The 25公升 field is required.">
+                                                                <span class="text-danger field-validation-valid" data-valmsg-for="L25maxCount" data-valmsg-replace="true"></span>
+            </div>
+                                                        </div>
+                                                        <div class="col-3">
+                                                            <div class="form-group">
+                                                                <label class="control-label" for="L33maxCount">33公升</label>
+                                                                <input class="form-control" id="L33maxCount" name="L33maxCount" value="0" type="number" data-val="true" data-val-required="The 33公升 field is required.">
+                                                                    <span class="text-danger field-validation-valid" data-valmsg-for="L33maxCount" data-valmsg-replace="true"></span>
+            </div>
+                                                            </div>
+                                                            <div class="col-3">
+                                                                <div class="form-group">
+                                                                    <label class="control-label" for="L75maxCount">75公升</label>
+                                                                    <input class="form-control" id="L75maxCount" name="L75maxCount" value="0" type="number" data-val="true" data-val-required="The 75公升 field is required.">
+                                                                        <span class="text-danger field-validation-valid" data-valmsg-for="L75maxCount" data-valmsg-replace="true"></span>
+            </div>
+                                                                </div>
+                                                                <div class="col-3">
+                                                                    <div class="form-group">
+                                                                        <label class="control-label" for="L120maxCount">120公升</label>
+                                                                        <input class="form-control" id="L120maxCount" name="L120maxCount" value="0" type="number" data-val="true" data-val-required="The 120公升 field is required.">
+                                                                            <span class="text-danger field-validation-valid" data-valmsg-for="L120maxCount" data-valmsg-replace="true"></span>
+            </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="column-btn py-1">
+                                                                    <input type="button" value="儲存" onclick=saveedit() class="btn btn-primary">
+                                                                    <button type="button">取消</button>
+    </div>
+<input type="hidden" id="GarbageServiceId" name="GarbageServiceId"/>
+<input type="hidden" id="IsActive" name="IsActive" style="display:none" />
+<input type="hidden" id="StartTime" name="StartTime"/>
+<input type="hidden" id="ServiceTypeId" name="ServiceTypeId"/>
+<input type="hidden" id="HostMemberId" name="HostMemberId"/>
+
+                                                                        `;
+
+
+
+
+                    //$("#detail").html(citytxt + rangetxt+txt);
+
+                    $("#detail").html(txt).promise().done(function () {
+
+                        for (let i = 0; i < detail.length; i++) {
+                            $("#cityId").val(detail[i].CityId).change();
+                            var checkExist = setInterval(function () {
+                                if ($('#DistrictId').length) {
+                                    $(`#DistrictId option[value="${detail[i].DistrictId}"]`).attr('selected', 'selected')
+                                    clearInterval(checkExist);
+                                }
+                            }, 100);
+                            $("#Address").val(detail[i].Address);
+                            $("#EndTime").val(detail[i].EndTime);
+                            $("#CanGo").prop('checked', detail[i].CanGo);
+                            $("#GoRangeId").val(detail[i].GoRangeId);
+                            $("#L3maxCount").val(detail[i].L3maxCount);
+                            $("#L5maxCount").val(detail[i].L5maxCount);
+                            $("#L14maxCount").val(detail[i].L14maxCount);
+                            $("#L25maxCount").val(detail[i].L25maxCount);
+                            $("#L33maxCount").val(detail[i].L33maxCount);
+                            $("#L75maxCount").val(detail[i].L75maxCount);
+                            $("#L120maxCount").val(detail[i].L120maxCount);
+                            $("#GarbageServiceId").val(detail[i].GarbageServiceId);
+                            $("#IsActive").val(detail[i].IsActive);
+                            $("#StartTime").val(detail[i].StartTime);
+                            $("#ServiceTypeId").val(detail[i].ServiceTypeId);
+                            $("#HostMemberId").val(detail[i].HostMemberId);
+                            
                         }
-
-                    $("#detail").html(citytxt + rangetxt+txt);
-                    //A
-
+                    })
                 },
             })
         }
+
+        //取得明細
+        function getdetail(oid,gt,hid) {
+            var urlorder = "/ChatMessageRecords/chatGetOrderDetail";
+            $.ajax({
+                url: urlorder,
+                type: "GET",
+                data: {
+                    orderId: oid,
+                    grouptype: gt,
+                    hostid: hid,
+                },
+                success: function (data) {
+                    var s = JSON.parse(data);
+                    var txt = "";
+                    txt += "<input type='hidden' id='OrderId' value='" + oid + "'/>"
+                    if (gt == 1) {
+                        for (let i = 0; i < s.length; i++) {
+                            txt += `<div>團購編號：${s[i].OrderId} </div><br />`;
+                            txt += `<div>商品名稱： ${s[i].ProductName} </div><br />`;
+                            txt += `<div>商品敘述： ${s[i].OrderDescription} </div><br />`;
+                            txt += `<div>地址： ${s[i].CityName}${s[i].DistrictName}${s[i].Address} </div><br />`;
+                            let cango = s[i].CanGo == true ? "是" : "否";
+                            txt += `<div>是否到府服務： ${cango} </div><br />`;
+                            if (cango == "是") {
+                                txt += `<div>可服務距離： ${s[i].RangeInMeters} </div><br />`;
+                            }
+                            txt += `<div>目標購買數量： ${s[i].MaxCount} </div><br />`;
+                            txt += `<div>剩餘數量： ${s[i].AvailableCount} </div><br />`;
+                            if (s[i].Count != undefined) {
+                                txt += `<div>您的購買數量： ${s[i].Count} </div><br />`;
+                            }
+                        }
+                    }
+                    else if (gt == 2) {
+                        for (let i = 0; i < s.length; i++) {
+                            txt += `<div>倒垃圾團編號：${s[i].GarbageServiceId} </div><br />`;
+                            txt += `<div>開團者地址： ${s[i].CityName}${s[i].DistrictName}${s[i].Address} </div><br />`;
+                            let cango = s[i].CanGo == true ? "是" : "否";
+                            txt += `<div>是否到府服務： ${cango} </div><br />`;
+                            if (cango == "是") {
+                                txt += `<div>可服務距離： ${s[i].RangeInMeters} </div><br />`;
+                            }
+                            if (s[i].L3maxCount != 0) {
+                                let str = s[i].L3count == 0 || s[i].L3count == undefined ? "" : `, 您已委託 ${s[i].L3count}個`;
+                                txt += `<div>L3&nbsp;&nbsp;：可收 ${s[i].L3maxCount}個 , 尚可收 ${s[i].L3available}個 ${str}</div><br />`;
+                            }
+                            if (s[i].L5maxCount != 0) {
+                                let str = s[i].L5count == 0 || s[i].L5count == undefined ? "" : `, 您已委託 ${s[i].L5count}個`;
+                                txt += `<div>L5&nbsp;&nbsp;：可收 ${s[i].L5maxCount}個 , 尚可收 ${s[i].L5available}個 ${str}</div><br />`;
+                            }
+                            if (s[i].L14maxCount != 0) {
+                                let str = s[i].L14count == 0 || s[i].L14count == undefined ? "" : `, 您已委託 ${s[i].L14count}個`;
+                                txt += `<div>L14：可收 ${s[i].L14maxCount}個 , 尚可收 ${s[i].L14available}個 ${str}</div><br />`;
+                            }
+                            if (s[i].L25maxCount != 0) {
+                                let str = s[i].L25count == 0 || s[i].L25count == undefined ? "" : `, 您已委託 ${s[i].L25count}個`;
+                                txt += `<div>L25：可收 ${s[i].L25maxCount}個 , 尚可收 ${s[i].L25available}個 ${str}</div><br />`;
+                            }
+                            if (s[i].L33maxCount != 0) {
+                                let str = s[i].L33count == 0 || s[i].L33count == undefined ? "" : `, 您已委託 ${s[i].L33count}個`;
+                                txt += `<div>L33：可收 ${s[i].L33maxCount}個 , 尚可收 ${s[i].L33available}個 ${str}</div><br />`;
+                            }
+                            if (s[i].L75maxCount != 0) {
+                                let str = s[i].L75count == 0 || s[i].L75count == undefined ? "" : `, 您已委託 ${s[i].L75count}個`;
+                                txt += `<div>L75：可收 ${s[i].L75maxCount}個 , 尚可收 ${s[i].L75available}個 ${str}</div><br />`;
+                            }
+                            if (s[i].L120maxCount != 0) {
+                                let str = s[i].L120count == 0 || s[i].L120count == undefined ? "" : `, 您已委託 ${s[i].L120count}個`;
+                                txt += `<div>L120：可收 ${s[i].L120maxCount}個 , 尚可收 ${s[i].L120available}個 ${str}</div><br />`;
+                            }
+                            if (s[i].NeedCome == true) {
+                                txt += `<div>是否到府服務： 是 </div><br />`;
+                                txt += `<div>到府服務地址： ${s[i].ComeCityName}${s[i].ComeDistrictName}${s[i].ComeAddress} </div><br />`;
+                            }
+                            else if (s[i].NeedCome == false) {
+                                txt += `<div>是否到府服務： 否 </div><br />`;
+                            }
+                            txt += `<button id="edit" onclick="editorder()">編輯</button>`
+                        }
+                    }
+
+                    $("#detail").html(txt);
+                },
+            })
+        }
+
+        //儲存編輯(ServiceOffer)
+        function saveedit() {
+            $.ajax({
+                url: "/ServiceOffer/EditGarbageOffer",
+                data: {
+                    DistrictId: $("#DistrictId").val(),
+                    Address: $("#Address").val(),
+                    EndTime: $("#EndTime").val(),
+                    GoRangeId: $("#GoRangeId").val(),
+                    CanGo: $("#CanGo").prop('checked'),
+                    L3maxCount: $("#L3maxCount").val(),
+                    L5maxCount: $("#L5maxCount").val(),
+                    L14maxCount: $("#L14maxCount").val(),
+                    L25maxCount: $("#L25maxCount").val(),
+                    L33maxCount: $("#L33maxCount").val(),
+                    L75maxCount: $("#L75maxCount").val(),
+                    L120maxCount: $("#L120maxCount").val(),
+                    GarbageServiceId: $("#GarbageServiceId").val(),
+                    IsActive: $("#IsActive").val(),
+                    StartTime: $("#StartTime").val(),
+                    ServiceTypeId: $("#ServiceTypeId").val(),
+                    HostMemberId: $("#HostMemberId").val(),
+                },
+                type: "GET",
+                success: function (data) {
+                    getdetail($("#oid").val(), $("#gt").val(), $("#hid").val())
+                }
+            })
+        }
+
+
 
     </script>
 }

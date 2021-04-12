@@ -276,6 +276,7 @@ namespace LeSheTuanGo.Controllers
                         n.GarbageServiceId,
                         n.Address,
                         n.CanGo,
+                        n.District.CityId,
                         n.DistrictId,
                         n.EndTime,
                         n.GoRangeId,
@@ -297,8 +298,13 @@ namespace LeSheTuanGo.Controllers
                 }
                 return ls;
             }
-
         }
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //[Bind("GarbageServiceId,ServiceTypeId,HostMemberId,DistrictId,Address,StartTime,EndTime,IsActive,Latitude,Longitude,CanGo,GoRangeId,L3maxCount,L5maxCount,L14maxCount,L25maxCount,L33maxCount,L75maxCount,L120maxCount")]
+
+
         #region 無用僅佔存的code
 
         // GET: ChatMessageRecords/Details/5
