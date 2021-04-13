@@ -14,7 +14,29 @@ $(function () {
                 console.log(group);
             })
         }
+
+        //撈通知
+        $.ajax({
+            url: "/Notifications/GetNotification",
+            data: { senderId: sessionMemberId},
+            type: "get",
+            success: function (data){
+                var s = JSON.parse(data[0]);
+                var txt = "";
+                for (let i = 0; i < s.length; i++) {
+                    txt += `<a class="dropdown-item" href="/ChatMessageRecords/Index?grouptype=${s[i].SourceType}&groupid=${s[i].SourceId}">${s[i].ContentText}</a>`
+                }
+                $("#LayoutNotificationList").html(txt);
+                $(".LayoutNotificationNumber").text(data[1]);
+                console.log(data[1]);
+            }
+        })
     }
+
+    
+
+
+   
 
 })
 
