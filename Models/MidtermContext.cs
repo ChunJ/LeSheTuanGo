@@ -388,9 +388,7 @@ namespace LeSheTuanGo.Models
             {
                 entity.HasKey(e => e.ContentId);
 
-                entity.Property(e => e.ContentId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("ContentID");
+                entity.Property(e => e.ContentId).HasColumnName("ContentID");
 
                 entity.Property(e => e.ContentText).IsRequired();
             });
