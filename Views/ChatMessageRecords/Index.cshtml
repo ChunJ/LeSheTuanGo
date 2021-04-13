@@ -326,11 +326,12 @@
                     let range = JSON.parse(data[1]);
                     let city = JSON.parse(data[2]);
 
-                        //city
+                    //city
                     let citytxt = "";
                         for (let i = 0; i < city.length; i++) {
                             citytxt += `<option value=${city[i].CityId}>${city[i].CityName}</option>`
                     }
+                    //range
                     let rangetxt = "";
                     for (let i = 0; i < range.length; i++) {
                         rangetxt += `<option value=${range[i].RangeId}>${range[i].RangeInMeters}</option>`
@@ -457,7 +458,7 @@
 
                                                                         `;
 
-
+                    //帶入編輯資料(ServiceOffer)
                     $("#detail").html(txt).promise().done(function () {
 
                         for (let i = 0; i < detail.length; i++) {
