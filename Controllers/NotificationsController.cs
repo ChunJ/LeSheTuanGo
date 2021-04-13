@@ -158,8 +158,8 @@ namespace LeSheTuanGo.Controllers
         //    return "";
         //}
 
-        [HttpPost]
-        public async Task<string> CreateNotification(byte groupType,int orderId,int senderId,string notifyContent)
+        
+        public async Task<string> CreateNotification(string groupType,string orderId,string senderId,string notifyContent)
         {
             int contentID = 0;
             DateTime d = DateTime.Now;
@@ -174,30 +174,30 @@ namespace LeSheTuanGo.Controllers
             }
             if (contentID != 0)
             {
-                switch (groupType)
+                switch (int.Parse(groupType))
                 {
                     case 1:
-                        var orderhost = await _context.Orders.Where(n => n.OrderId == orderId).Select(n => n.HostMemberId).ToListAsync();
-                        var orderjoin = await _context.OrderBuyRecords.Where(n => n.OrderId == orderId).Select(n => n.MemberId).ToListAsync();
+                        var orderhost = await _context.Orders.Where(n => n.OrderId == int.Parse(orderId)).Select(n => n.HostMemberId).ToListAsync();
+                        var orderjoin = await _context.OrderBuyRecords.Where(n => n.OrderId == int.Parse(orderId)).Select(n => n.MemberId).ToListAsync();
                         memberid = orderhost.Union(orderjoin).ToList();
                         break;
                     case 2:
-                        var garbhost = await _context.GarbageServiceOffers.Where(n => n.GarbageServiceId == orderId).Select(n => n.HostMemberId).ToListAsync();
-                        var garbjoin = await _context.GarbageServiceUseRecords.Where(n => n.GarbageServiceOfferId == orderId).Select(n => n.MemberId).ToListAsync();
+                        var garbhost = await _context.GarbageServiceOffers.Where(n => n.GarbageServiceId == int.Parse(orderId)).Select(n => n.HostMemberId).ToListAsync();
+                        var garbjoin = await _context.GarbageServiceUseRecords.Where(n => n.GarbageServiceOfferId == int.Parse(orderId)).Select(n => n.MemberId).ToListAsync();
                         memberid = garbhost.Union(garbjoin).ToList();
                         break;
                     case 3:
                         break;
                 }
-                memberid.Remove(senderId);
+                memberid.Remove(int.Parse(senderId));
                 foreach(int id in memberid)
                 {
                     Notification notification = new Notification
                     {
                         MemberId = id,
                         ContentId = contentID,
-                        SourceType = groupType,
-                        SourceId = orderId,
+                        SourceType = byte.Parse(groupType),
+                        SourceId = int.Parse(orderId),
                         SentTime = d,
                         Checked = false
                     };
