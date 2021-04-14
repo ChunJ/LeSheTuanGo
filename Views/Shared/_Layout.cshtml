@@ -27,7 +27,9 @@
             background-size: cover; /* Resize the background image to cover the entire container */
             background-color: #f1f1f1
         }
-        
+        #LayoutNotificationList a {
+            word-break: break-all;
+        }
         /* icon */
         .accordion:after {
             content: '\02795'; /* Unicode character for "plus" sign (+) */
@@ -46,7 +48,7 @@
         <div class="container">
             <nav class="nav navbar-light mb-3">
                 <a class="navbar-brand text-white" asp-area="" asp-controller="Home" asp-action="Index">樂社團GO</a>
-                <a class="nav-link text-white"  asp-area="" asp-controller="Map" asp-action="Index">集垃地圖</a>
+                <a class="nav-link text-white" asp-area="" asp-controller="Map" asp-action="Index">集垃地圖</a>
                 <div class="dropdown">
                     <a class="nav-link text-white" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         團購
@@ -71,14 +73,14 @@
                             <button class="border-0 bg-transparent" type="button" id="alertDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <div class="position-relative">
                                     <img class="align-middle" src="~/images/Others/bell.svg" />
-                                    <span class="indicator">3</span>
+                                    <span class="indicator LayoutNotificationNumber">0</span>
                                 </div>
                             </button>
                             <div class="dropdown-menu" aria-labelledby="alertsDropdown">
                                 <div class="dropdown-menu-header">
-                                    3 則新通知
+                                    <span class="LayoutNotificationNumber">0</span><span>&nbsp;則新通知</span>
                                 </div>
-                                <div class="list-group">
+                                <div class="list-group" id="LayoutNotificationList">
                                     <a class="dropdown-item" href="#">通知1</a>
                                     <a class="dropdown-item" href="#">通知2</a>
                                     <a class="dropdown-item" href="#">通知3</a>
@@ -95,10 +97,13 @@
                                 <span class="text-white">@ViewData["userNameToDisplay"]</span>
                             </button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                                @if (Context.Session.GetInt32(cUtility.Current_User_Id) == null) {
+                                @if (Context.Session.GetInt32(cUtility.Current_User_Id) == null)
+                                {
                                     <a class="dropdown-item" asp-controller="Member" asp-action="Login">登入</a>
                                     <a class="dropdown-item" asp-controller="Member" asp-action="Create">註冊</a>
-                                } else {
+                                }
+                                else
+                                {
                                     <a class="dropdown-item" asp-controller="Member" asp-action="Detail">我的帳戶</a>
                                     <a class="dropdown-item" href="/ChatMessageRecords">歷史紀錄</a>
                                     <a class="dropdown-item" asp-controller="Background" asp-action="Index">後臺管理</a>
@@ -121,6 +126,12 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/notification.js"></script>
+
+    <script>
+        var sessionMemberId = '@Context.Session.GetInt32(cUtility.Current_User_Id)' ;
+    </script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

@@ -1,9 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Http;
 @using LeSheTuanGo.Controllers;
-
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
 @{
     Layout = "_layoutWide";
     ViewData["Title"] = "集垃地圖 - ";
@@ -13,50 +9,50 @@
         ViewData["currentUserId"] = 0;
     }
 }
-<div class="row h-100">
-    <div class="col-6 h-100 bg-go-light pr-0">
-        <div id="leftSearch" class="column-main h-100 w-100">
-            <button onclick="topFunction()" class="map-btn" id="myBtn" title="Go to top">Top</button>
-            <div class="row">
-                <div class="col-2">
-                    <div class="row">
-                        <div class="col-12">
-                            <button class="btn btn-primary" id="find-me" onclick="geoFindMe()">取得位置</button>
+<div class="d-flex h-100">
+    <div class="w-50 h-100 bg-go-light">
+        <div class="h-100 w-100">
+            <div class="d-flex">
+                <div style="width:20%">
+                    <div class="d-flex flex-wrap">
+                        <div class="w-100 p-1">
+                            <button class="btn btn-primary w-100" id="find-me" onclick="geoFindMe()">取得位置</button>
                         </div>
-                        <div class="col-12">
-                            <a id="status"></a>
+                        <div class="w-100 p-1">
+                            <div class="btn w-100" id="status"></div>
                         </div>
-                        <div class="col-12">
+                        <div hidden>
                             <a id="map-link" href="" target="_blank"></a>  @*target=_blank will open a new tab*@
                         </div>
                     </div>
                 </div>
-                <div class="col-9 p-0">
-                    <div class="row">
-                        <div style="width:10%">
-                            <label id="labelAddress">搜尋：</label>
+                <div style="width:80%">
+                    <div class="d-flex p-1" style="align-items:center">
+                        <div style="width:10%" class="text-right">
+                            搜尋：
                         </div>
-                        <div style="width:20%">
+                        <div style="width:15%" class="px-1">
                             <select class="form-control" id="selectCity" onchange="getDistrict('#selectDistric')" asp-items="ViewBag.CityId">
                                 <option hidden id="optionCity">請選擇</option>
                             </select>
                         </div>
-                        <div style="width:20%">
+                        <div style="width:15%" class="px-1">
                             <select class="form-control" id="selectDistric">
                                 <option hidden id="optionCity">請選擇</option>
                             </select>
                         </div>
-                        <div style="width:40%">
+                        <div style="width:45%" class="px-1">
                             <input class="form-control" id="txtAddress" />
                         </div>
-                        <div style="width:10%">
-                            <button class="btn btn-primary" onclick="captureSelect()">搜尋</button>
+                        <div style="width:15%" class="px-1">
+                            <button class="btn btn-primary w-100" onclick="captureSelect()">搜尋</button>
                         </div>
-                        @*2nd row*@
-                        <div style="width:10%">
-                            <label id="labelAddress">過濾：</label>
+                    </div>
+                    <div class="d-flex p-1" style="align-items:center">
+                        <div style="width:10%" class="text-right">
+                            過濾：
                         </div>
-                        <div style="width:20%">
+                        <div style="width:15%" class="px-1">
                             <select class="form-control" id="rangeLevel" onchange="">
                                 <option hidden>請選擇</option>
                                 <option>300</option>
@@ -65,10 +61,10 @@
                                 <option>100</option>
                             </select>
                         </div>
-                        <div style="width:10%">
-                            <label>公尺內</label>
+                        <div style="width:10%" class="px-1 text-center">
+                            公尺內
                         </div>
-                        <div style="width:20%">
+                        <div style="width:15%" class="px-1">
                             <select class="form-control" id="selectTimeStart" onchange="">
                                 <option hidden>請選擇</option>
                                 @for (int i = 0; i < 24; i++) {
@@ -76,10 +72,10 @@
                                 }
                             </select>
                         </div>
-                        <div style="width:5%">
-                            <label>時起</label>
+                        <div style="width:10%" class="px-1 text-center">
+                            時起
                         </div>
-                        <div style="width:20%">
+                        <div style="width:15%" class="px-1">
                             <select class="form-control" id="selectTimeEnd" onchange="">
                                 <option hidden>請選擇</option>
                                 @for (int i = 0; i < 24; i++) {
@@ -87,19 +83,18 @@
                                 }
                             </select>
                         </div>
-                        <div style="width:5%">
-                            <label>時迄</label>
+                        <div style="width:10%" class="px-1 text-center">
+                            時迄
                         </div>
-                        <div style="width:10%">
-                            <button class="btn btn-primary" onclick="filter()">篩選</button>
+                        <div style="width:15%" class="px-1">
+                            <button class="btn btn-primary w-100" onclick="filter()">篩選</button>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <label>以下結果來自：</label>
-            <label id="lblSource"></label>
-            <button class="btn btn-primary" onclick="(() => {
+            <div class="d-flex" style="align-items:center">
+                <div class="p-1">
+                    <button class="btn btn-primary" onclick="(() => {
         if (currentUser == 0) {
             console.log(this);
             console.log(event);
@@ -110,24 +105,32 @@
             document.getElementById('lblSource').innerText = '您的收藏清單';
         }
         })()">
-                收藏清單（會員專屬）
-            </button>
-            <table class="table" id="table100m" style="float:left;">
-                <tbody id="header">
-                    <tr>
-                        <th id="thFav0">收藏</th>
-                        <th>收集地點</th>
-                        <th onclick="orderByTime()" id="thOrderTime">到達時間☰</th>
-                        <th onclick="orderByDistance()" id="thOrderDistance">距離（公尺）☰</th>
-                        @*<th style="display:none">lat</th>
-                    <th style="display:none">lng</th>*@
-                    </tr>
-                </tbody>
-                <tbody id="content"></tbody>
-            </table>
+                        收藏清單（會員專屬）
+                    </button>
+                </div>
+                <div class="p-1">查詢位置：</div>
+                <div class="p-1" id="lblSource"></div>
+            </div>
+            <div id="leftSearch" class="column-main w-100" style="height:82vh">
+                <button onclick="topFunction()" class="map-btn" id="myBtn" title="Go to top">Top</button>
+                <table class="table" id="table100m">
+                    <thead id="header">
+                        <tr>
+                            <th id="thFav0">收藏</th>
+                            <th>收集地點</th>
+                            <th onclick="orderByTime()" id="thOrderTime">到達時間☰</th>
+                            <th onclick="orderByDistance()" id="thOrderDistance">距離（公尺）☰</th>
+                            @*<th style="display:none">lat</th>
+                        <th style="display:none">lng</th>*@
+                        </tr>
+                    </thead>
+                    <tbody id="content"></tbody>
+                </table>
+            </div>
+
         </div>
     </div>
-    <div class="col-6 pl-0">
+    <div class="w-50 pl-0">
         <div id="map" class="w-100 h-100"></div>
     </div>
 </div>
