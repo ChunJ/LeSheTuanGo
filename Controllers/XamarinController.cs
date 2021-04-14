@@ -60,6 +60,23 @@ namespace LeSheTuanGo.Controllers
             string result = Convert.ToBase64String(crypto);//把加密後的字串從Byte[]轉為字串
             return result;//輸出結果
         }
+        public JsonResult Mlogin(string email, string password)
+        {
+            List<string> ls = new List<string>();
+            var qMember = db.Members.Where(n => n.Email == email).FirstOrDefault();
+            if (qMember == null)
+            {
+                ls.Add("fail");
+                return Json(ls);
+            }
+            string sha256Password = sha256(password, qMember.PasswordSalt);
+            if (sha256Password != qMember.Password)
+            {
+                ls.Add("fail");
+                return Json(ls);
+            }
+            return Json(qMember);
+        }
 
     }
 }
