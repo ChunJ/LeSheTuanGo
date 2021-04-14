@@ -157,8 +157,23 @@ namespace LeSheTuanGo.Controllers
         //    }
         //    return "";
         //}
+        public async Task<string[]> GetNotification(int senderId)
+        {
+            string[] s = new string[2];
+            
+            var notifylist = await _context.Notifications.Where(n => n.MemberId == senderId && n.Checked == false).OrderByDescending(n => n.SentTime).Select(n => new { n.Content.ContentText, n.SentTime, n.SourceType, n.SourceId, }).ToListAsync();
+            int newnotifiy = notifylist.Count;
+            if (notifylist.Count < 5)
+            {
+                newnotifiy = notifylist.Count;
+                notifylist =await _context.Notifications.Where(n => n.MemberId == senderId).OrderByDescending(n => n.SentTime).Select(n => new { n.Content.ContentText, n.SentTime, n.SourceType, n.SourceId, }).Take(5).ToListAsync();
+            }
+            s[0] = JsonConvert.SerializeObject(notifylist);
+            s[1] = newnotifiy.ToString();
+            return s;
+        }
 
-        
+
         public async Task<string> CreateNotification(string groupType,string orderId,string senderId,string notifyContent)
         {
             int contentID = 0;

@@ -28,6 +28,9 @@ namespace LeSheTuanGo.Controllers
             ViewData["Category"] = new SelectList(_context.CategoryRefs, "CategoryId", "CategoryName");
             return View();
         }
+        public IActionResult BIPanel1() {
+            return View();
+        }
         #region 新增商品項目
         public string InsertCategory(string s)
         {

@@ -1,5 +1,7 @@
-﻿using LeSheTuanGo.Models;
+﻿using GeoCoordinatePortable;
+using LeSheTuanGo.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -60,22 +62,34 @@ namespace LeSheTuanGo.Controllers
             string result = Convert.ToBase64String(crypto);//把加密後的字串從Byte[]轉為字串
             return result;//輸出結果
         }
-        public JsonResult Mlogin(string email, string password)
+        private string getLength(string Address , int length)
         {
-            List<string> ls = new List<string>();
-            var qMember = db.Members.Where(n => n.Email == email).FirstOrDefault();
-            if (qMember == null)
-            {
-                ls.Add("fail");
-                return Json(ls);
-            }
-            string sha256Password = sha256(password, qMember.PasswordSalt);
-            if (sha256Password != qMember.Password)
-            {
-                ls.Add("fail");
-                return Json(ls);
-            }
-            return Json(qMember);
+            var latlong = cUtility.addressToLatlong(Address);
+            GeoCoordinate userLocation = new GeoCoordinate((double)latlong[0], (double)latlong[1]);
+            //var tempUser = db.Members.First();
+            //GeoCoordinate userLocation = new GeoCoordinate((double)tempUser.Latitude, (double)tempUser.Longitude);
+            var newObject = from o in db.Orders.Include(o => o.District).Include(o => o.District.City)
+                            select new
+                            {
+                                o.OrderId,
+                                o.ProductId,
+                                o.DistrictId,
+                                o.District.DistrictName,
+                                o.District.City.CityName,
+                                o.Address,
+                                o.EndTime,
+                                o.CanGo,
+                                o.AvailableCount,
+                                o.Latitude,
+                                o.Longitude,
+                                //put user location in every data, not worth putting it elsewhere when the data count is small.
+                                userLat = latlong[0],
+                                userLong = latlong[1],
+                                Distance = userLocation.GetDistanceTo(new GeoCoordinate((double)o.Latitude, (double)o.Longitude)),
+                            };
+            var offerList = newObject.AsEnumerable().Where(o => o.Distance <= length).ToList();
+            return JsonConvert.SerializeObject(offerList);
+
         }
 
     }

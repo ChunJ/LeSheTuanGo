@@ -13,7 +13,6 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="google" content="notranslate" /> @*解決chrome跳翻譯*@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]樂社團Go</title>
     @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />*@
@@ -25,27 +24,14 @@
             background-position: center; /* Center the image */
             background-repeat: no-repeat; /* Do not repeat the image */
             background-size: cover; /* Resize the background image to cover the entire container */
-            background-color: #f1f1f1
-        }
-        #LayoutNotificationList a {
-            word-break: break-all;
-        }
-        /* icon */
-        .accordion:after {
-            content: '\02795'; /* Unicode character for "plus" sign (+) */
-            font-size: 13px;
-            color: #777;
-            float: right;
-            margin-left: 5px;
-        }
-        .active:after {
-            content: "\2796"; /* Unicode character for "minus" sign (-) */
+            background-color: #555555
         }
     </style>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
 </head>
 <body class="imageBG">
     <header class="top-bar">
-        <div class="container">
+        <div class="wide-bar">
             <nav class="nav navbar-light mb-3">
                 <a class="navbar-brand text-white" asp-area="" asp-controller="Home" asp-action="Index">樂社團GO</a>
                 <a class="nav-link text-white" asp-area="" asp-controller="Map" asp-action="Index">集垃地圖</a>
@@ -73,12 +59,12 @@
                             <button class="border-0 bg-transparent" type="button" id="alertDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <div class="position-relative">
                                     <img class="align-middle" src="~/images/Others/bell.svg" />
-                                    <span class="indicator LayoutNotificationNumber">0</span>
+                                    <span class="indicator LayoutNotificationNumber">1</span>
                                 </div>
                             </button>
                             <div class="dropdown-menu" aria-labelledby="alertsDropdown">
                                 <div class="dropdown-menu-header">
-                                    <span class="LayoutNotificationNumber">0</span><span>&nbsp;則新通知</span>
+                                    <span class="LayoutNotificationNumber">1</span><span>&nbsp;則新通知</span>
                                 </div>
                                 <div class="list-group" id="LayoutNotificationList">
                                     <a class="dropdown-item" href="#">通知1</a>
@@ -116,14 +102,26 @@
             </nav>
         </div>
     </header>
-    <div class="main-body vh-100 column-main">
-        <div class="container h-100">
-            <main role="main" class="h-100 pb-3 pt-1">
-                @RenderBody()
-            </main>
+    <div class="main-body vh-100">
+        <div class="d-flex w-100 h-100">
+            <aside class="h-100 p-4" style="width:15rem; background-color:#4f4f4f">
+                <nav class="d-flex flex-column">
+                    <div class="text-white">
+                        <h5>管理者主控台</h5>
+                    </div>
+                    <a class="nav-link pl-0 text-white-50" href="Index">上架商品</a>
+                    <a class="nav-link pl-0 text-white-50" href="BIPanel1">購買紀錄統計</a>
+                    <a class="nav-link pl-0 text-white-50" href="BIPanel2">垃圾清運點</a>
+                </nav>
+            </aside>
+            <div class="flex-grow-1 h-100">
+                <main role="main" class="h-100">
+                    @RenderBody()
+                </main>
+            </div>
+            
         </div>
     </div>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/signalr/dist/browser/signalr.js"></script>
