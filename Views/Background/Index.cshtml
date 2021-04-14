@@ -1,99 +1,103 @@
 ﻿
-@*@{
-    Layout = "_LayoutBackground";
-}*@
-<aside>
-    <a href="#createProduct"><h2>練習 1</h2></a>
-    <a href="#powerBI_view"><h2>練習 2</h2></a>
-    <a href="#divWork3"><h2>練習 3</h2></a>
-    <a href="#divWork4"><h2>練習 4</h2></a>
-    <a href="#divWork5"><h2>練習 5</h2></a>
-</aside>
-<div class="mainOuterDiv">
-    <div class="content">
-        <div class="createProduct">
-            <div>
-                <div class="col-md-4">
-                    <label for="CategoryName" class="control-label">商品種類:</label>
+@{
+    Layout = "_LayoutBG";
+    ViewData["Title"] = "上架商品 - ";
+}
+
+<div class="d-flex justify-content-center h-75 p-2">
+    <div class="w-25 m-2">
+        <div class="rounded-panel bg-go-light">
+            <div class="header-block">
+                <h4 class="m-0">新增商品類型</h4>
+            </div>
+            <div class="p-2">
+                <div class="form-group">
+                    <label for="CategoryName" class="control-label">類型名稱</label>
                     <input class="form-control" type="text" id="CategoryName" name="CategoryName" />
-                    <button onclick="insertCategory()" class="btn btn-primary">新增</button>
                 </div>
+                <button onclick="insertCategory()" class="btn btn-primary w-100">新增</button>
             </div>
-            <div>
-                <div class="col-md-4">
-                    <label for="CategoryID" class="control-label">商品種類:</label>
-                    <select class="form-control" asp-items="ViewBag.Category" id="CategoryID"></select>
-                </div>
-                <div class="col-md-4">
-                    <label for="ProductName" class="control-label">商品名稱:</label>
-                    <input class="form-control" type="text" id="ProductName" name="ProductName" />
-                </div>
-                <div class="col-md-4">
-                    <label for="ProductDescription" class="control-label">商品描述:</label>
-                    <input class="form-control" type="text" id="ProductDescription" name="ProductDescription" />
-                </div>
-                <div class="col-md-4">
-                    <label for="ProductDescription" class="control-label">圖片:</label>
-                    <input class="form-control" type="file" id="path" name="path" accept=".png, .jpg, .jpeg" onchange="imageShow()" />
-                </div>
-                <img width="200" id="uploadPreview" />
-                <div>
-                    <button onclick="insertProduct()" class="btn btn-primary">新增商品</button>
-                </div>
-            </div>
-        </div>
-        <div class="powerBI_view">
-            <iframe width="600" height="373" src="https://app.powerbi.com/view?r=eyJrIjoiM2Q4YTBmODMtMWJmNS00MGUwLTlhYmEtYzMxYjJkZGQ1ZjhkIiwidCI6IjlmYzE0MTgzLWQ1ZGUtNGQzMC1hZDJiLTQ3N2Q1YTQ5OGQyYiIsImMiOjN9" frameborder="0" allowFullScreen="true"></iframe>
         </div>
     </div>
+    <div class="w-25 m-2">
+        <div class="rounded-panel bg-go-light">
+            <div class="header-block">
+                <h4 class="m-0">新增商品</h4>
+            </div>
+            <div class="p-2">
+                <div class="form-group">
+                    <label for="CategoryID" class="control-label">商品類型</label>
+                    <select class="form-control" asp-items="ViewBag.Category" id="CategoryID"></select>
+                </div>
+                <div class="form-group">
+                    <label for="ProductName" class="control-label">商品名稱</label>
+                    <input class="form-control" type="text" id="ProductName" name="ProductName" />
+                </div>
+                <div class="form-group">
+                    <label for="ProductDescription" class="control-label">商品描述</label>
+                    <input class="form-control" type="text" id="ProductDescription" name="ProductDescription" />
+                </div>
+                <div class="form-group">
+                    <label for="ProductDescription" class="control-label">商品示意圖</label>
+                    <input class="form-control" type="file" id="path" name="path" accept=".png, .jpg, .jpeg" onchange="imageShow()" />
+                </div>
+                <div class="form-group">
+                    <img class="w-100" id="uploadPreview" />
+                </div>
+                <button onclick="insertProduct()" class="btn btn-primary w-100">新增商品</button>
+            </div>
+        </div>
+        
+    </div>
 </div>
-<script>
 
-    function insertCategory() {
-        $.get("/Background/InsertCategory", { s: CategoryName.value }).done(function (result) {
-            console.log(result);
-            var txt = "";
-            if (result == "商品類型重複") {
-                alert(result);
-            } else {
-                var s = JSON.parse(result);
-                for (let i = 0; i < s.length; i++) {
-                    txt += "<option value='" + s[i].CategoryId + "'>" + s[i].CategoryName + "</option>"
+
+    <script>
+        function insertCategory() {
+            $.get("/Background/InsertCategory", { s: CategoryName.value }).done(function (result) {
+                console.log(result);
+                var txt = "";
+                if (result == "商品類型重複") {
+                    alert(result);
+                } else {
+                    var s = JSON.parse(result);
+                    for (let i = 0; i < s.length; i++) {
+                        txt += "<option value='" + s[i].CategoryId + "'>" + s[i].CategoryName + "</option>"
+                    }
+                    $('#CategoryID').html(txt);
+                    alert("上傳成功");
                 }
-                $('#CategoryID').html(txt);
-                alert("上傳成功");
-            }
-        });
-    }
-    function insertProduct() {
-        var id = CategoryID.value;
-        var name = ProductName.value;
-        var des = ProductDescription.value;
-        var files = $('#path')[0].files[0];
-        const formdata = new FormData();
-        formdata.append('id', id);
-        formdata.append('name', name);
-        formdata.append('des', des);
-        formdata.append('photo', files);
-        console.log(formdata);
-        fetch('/Background/InsertProduct', {
-            method: 'POST',
-            body: formdata,
-            contentType: 'multipart/form-data',
-        }).then(function (response) {
-            return response.json();
-        }).then(function (data) {
-            alert(data.msg);
-        });
-    }
-    function imageShow() {
-        var file = document.querySelector("#path").files[0]
-        var newfile = new File([file], new Date().getTime() + ".jpg", { type: "image/jpeg" });
-        var reader = new FileReader();
-        reader.onload = function (oFREvent) {
-            document.querySelector("#uploadPreview").src = oFREvent.target.result;
-        };
-        reader.readAsDataURL(newfile);
-        console.log(reader);
-    }//ok
-</script>
+            });
+        }
+        function insertProduct() {
+            var id = CategoryID.value;
+            var name = ProductName.value;
+            var des = ProductDescription.value;
+            var files = $('#path')[0].files[0];
+            const formdata = new FormData();
+            formdata.append('id', id);
+            formdata.append('name', name);
+            formdata.append('des', des);
+            formdata.append('photo', files);
+            console.log(formdata);
+            fetch('/Background/InsertProduct', {
+                method: 'POST',
+                body: formdata,
+                contentType: 'multipart/form-data',
+            }).then(function (response) {
+                return response.json();
+            }).then(function (data) {
+                alert(data.msg);
+            });
+        }
+        function imageShow() {
+            var file = document.querySelector("#path").files[0]
+            var newfile = new File([file], new Date().getTime() + ".jpg", { type: "image/jpeg" });
+            var reader = new FileReader();
+            reader.onload = function (oFREvent) {
+                document.querySelector("#uploadPreview").src = oFREvent.target.result;
+            };
+            reader.readAsDataURL(newfile);
+            console.log(reader);
+        }//ok
+    </script>
