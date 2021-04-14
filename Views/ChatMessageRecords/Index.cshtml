@@ -171,6 +171,31 @@
                 }
             });
 
+            //發送按鈕
+            $('#btnSend').click(function () {
+                var message = $("#message").val();
+                if (message == "") {
+                    return
+                }
+                $("#message").val('');
+                var orderid = $("#OrderId").val();
+                var grouptype = $("#rec_grouptype").val();
+                connection.invoke("SendMessageToGroup", $("#roomid").val(), gmemberid, username, message)
+                    .catch(function (err) {
+                        return console.error(err.toString());
+                    });
+                $.ajax({
+                    type: "POST",
+                    url: "/ChatMessageRecords/Create",
+                    data: { message: message, orderid: orderid, memberid: gmemberid, grouptype: grouptype },
+                    success: function () {
+
+                        let txt = grouptype == 1 ? "(團購團)" : "(垃圾團)";
+                        createNotification(grouptype, orderid, gmemberid, txt + $("#chatheader").text() + "有新的訊息")
+                    }
+                });
+            })
+
             //預先選團
 
             if (gt != 0) {
@@ -185,7 +210,7 @@
             $("#chat").animate({ scrollTop: $('#chat').prop("scrollHeight") }, 500);
         });
 
-            //選團
+            //選團(產出的案件按鈕)
         function chatGetOrder(oid, gt,rn,hid) {
             //加入SignalR聊天室
             $("#oid").val(oid);
@@ -239,7 +264,7 @@
                 },
             })
         }
-        //選團型
+        //選團型(團購/垃圾)
         function getOrderList(gt,so,of) {
             $.ajax({
                 url: "/ChatMessageRecords/getOrderList?groupType=" + gt + "&selfother=" + so + "&onoff=" + of,
@@ -355,29 +380,6 @@
             })
         }
 
-
-            //發訊息
-        $('#btnSend').click(function () {
-            var message = $("#message").val();
-            if (message == "") {
-                return
-            }
-            $("#message").val('');
-            var orderid = $("#OrderId").val();
-            var grouptype = $("#rec_grouptype").val();
-            connection.invoke("SendMessageToGroup", $("#roomid").val(), gmemberid, username, message)
-                .catch(function (err) {
-                return console.error(err.toString());
-            });
-            $.ajax({
-                type: "POST",
-                url: "/ChatMessageRecords/Create",
-                data: { message: message, orderid: orderid, memberid: gmemberid, grouptype: grouptype },
-                success: function () {
-                    createNotification(grouptype, orderid, gmemberid, message)
-                }
-            });
-        })
 
         //編輯案件
         function editorder() {

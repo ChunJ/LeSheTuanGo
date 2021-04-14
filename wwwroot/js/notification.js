@@ -78,8 +78,6 @@ function createNotification(groupType, orderId, senderId, notifyContent) {
                         return console.error(err.toString());
                     });
             }
-
-
         }
     })
 }

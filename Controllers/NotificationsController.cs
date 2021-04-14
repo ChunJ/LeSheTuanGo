@@ -210,9 +210,9 @@ namespace LeSheTuanGo.Controllers
                 targetMemberId.Remove(senderId);
 
                 var existNotify = _context.Notifications.Where(n => n.SourceType == groupType && n.SourceId == orderId);
-                var existNotifyMemberId = existNotify.Where(n=>n.Checked==false).Select(n => n.MemberId).ToList();
-
-                foreach (int id in targetMemberId.Except(existNotifyMemberId))
+                var existNotifyMemberId = existNotify.Where(n=>n.Checked==false).Select(n => n.MemberId).Distinct().ToList();
+                var x = targetMemberId.Except(existNotifyMemberId).ToList();
+                foreach (int id in x)
                 {
                     Notification notification = new Notification
                     {
@@ -226,13 +226,13 @@ namespace LeSheTuanGo.Controllers
                     _context.Add(notification);
                     returnList.Add(new Tuple<int, bool>(id, true));
                 }
-
-                foreach (int id in targetMemberId.Intersect(existNotifyMemberId))
+                var y = targetMemberId.Intersect(existNotifyMemberId).ToList();
+                foreach (int id in y)
                 {
-                    var item = existNotify.Where(n => n.MemberId == id).FirstOrDefault();
+                    var item = existNotify.Where(n => n.MemberId == id&&n.Checked==false).FirstOrDefault();
                     item.SentTime = nowTime;
                     item.ContentId = contentID;
-                    _context.Update(item);
+                    //_context.Update(item);
                     returnList.Add(new Tuple<int, bool>(id, false));
                 }
                 await _context.SaveChangesAsync();
