@@ -30,9 +30,9 @@ namespace LeSheTuanGo.Hubs
         {
             await Clients.Group(groupName).SendAsync("ReceiveGroupMessage", groupName,memberid, username, message);
         }
-        public async Task SendNotificationToGroup(string groupName, string memberid, string username, string message)
+        public async Task SendNotificationToGroup(string groupName, string memberid, string username, string message,string newOrUpdate)
         {
-            await Clients.Group(groupName).SendAsync("ReceiveNotification", groupName, memberid, username, message);
+            await Clients.Group(groupName).SendAsync("ReceiveNotification", groupName, memberid, username, message, newOrUpdate);
         }
     }
 }

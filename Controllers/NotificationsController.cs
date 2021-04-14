@@ -160,13 +160,13 @@ namespace LeSheTuanGo.Controllers
         public async Task<string[]> GetNotification(int senderId)
         {
             string[] s = new string[2];
-            
+
             var notifylist = await _context.Notifications.Where(n => n.MemberId == senderId && n.Checked == false).OrderByDescending(n => n.SentTime).Select(n => new { n.Content.ContentText, n.SentTime, n.SourceType, n.SourceId, }).ToListAsync();
             int newnotifiy = notifylist.Count;
             if (notifylist.Count < 5)
             {
                 newnotifiy = notifylist.Count;
-                notifylist =await _context.Notifications.Where(n => n.MemberId == senderId).OrderByDescending(n => n.SentTime).Select(n => new { n.Content.ContentText, n.SentTime, n.SourceType, n.SourceId, }).Take(5).ToListAsync();
+                notifylist = await _context.Notifications.Where(n => n.MemberId == senderId).OrderByDescending(n => n.SentTime).Select(n => new { n.Content.ContentText, n.SentTime, n.SourceType, n.SourceId, }).Take(5).ToListAsync();
             }
             s[0] = JsonConvert.SerializeObject(notifylist);
             s[1] = newnotifiy.ToString();
@@ -174,11 +174,14 @@ namespace LeSheTuanGo.Controllers
         }
 
 
-        public async Task<string> CreateNotification(string groupType,string orderId,string senderId,string notifyContent)
+        public async Task<string> CreateNotification(int groupType, int orderId, int senderId, string notifyContent)
         {
             int contentID = 0;
-            DateTime d = DateTime.Now;
-            List<int> memberid = new List<int>();
+            DateTime nowTime = DateTime.Now;
+            List<int> targetMemberId = new List<int>();
+            List<Tuple <int,bool>> returnList = new List<Tuple<int, bool>>();
+
+            //排除空訊息
             if (notifyContent != "")
             {
                 NotifyContent n = new NotifyContent();
@@ -189,40 +192,67 @@ namespace LeSheTuanGo.Controllers
             }
             if (contentID != 0)
             {
-                switch (int.Parse(groupType))
+                switch (groupType)
                 {
                     case 1:
-                        var orderhost = await _context.Orders.Where(n => n.OrderId == int.Parse(orderId)).Select(n => n.HostMemberId).ToListAsync();
-                        var orderjoin = await _context.OrderBuyRecords.Where(n => n.OrderId == int.Parse(orderId)).Select(n => n.MemberId).ToListAsync();
-                        memberid = orderhost.Union(orderjoin).ToList();
+                        var orderhost = await _context.Orders.Where(n => n.OrderId == orderId).Select(n => n.HostMemberId).ToListAsync();
+                        var orderjoin = await _context.OrderBuyRecords.Where(n => n.OrderId == orderId).Select(n => n.MemberId).ToListAsync();
+                        targetMemberId = orderhost.Union(orderjoin).ToList();
                         break;
                     case 2:
-                        var garbhost = await _context.GarbageServiceOffers.Where(n => n.GarbageServiceId == int.Parse(orderId)).Select(n => n.HostMemberId).ToListAsync();
-                        var garbjoin = await _context.GarbageServiceUseRecords.Where(n => n.GarbageServiceOfferId == int.Parse(orderId)).Select(n => n.MemberId).ToListAsync();
-                        memberid = garbhost.Union(garbjoin).ToList();
+                        var garbhost = await _context.GarbageServiceOffers.Where(n => n.GarbageServiceId == orderId).Select(n => n.HostMemberId).ToListAsync();
+                        var garbjoin = await _context.GarbageServiceUseRecords.Where(n => n.GarbageServiceOfferId == orderId).Select(n => n.MemberId).ToListAsync();
+                        targetMemberId = garbhost.Union(garbjoin).ToList();
                         break;
                     case 3:
                         break;
                 }
-                memberid.Remove(int.Parse(senderId));
-                foreach(int id in memberid)
+                targetMemberId.Remove(senderId);
+
+                var existNotify = _context.Notifications.Where(n => n.SourceType == groupType && n.SourceId == orderId);
+                var existNotifyMemberId = existNotify.Where(n=>n.Checked==false).Select(n => n.MemberId).ToList();
+
+                foreach (int id in targetMemberId.Except(existNotifyMemberId))
                 {
                     Notification notification = new Notification
                     {
                         MemberId = id,
                         ContentId = contentID,
-                        SourceType = byte.Parse(groupType),
-                        SourceId = int.Parse(orderId),
-                        SentTime = d,
+                        SourceType = (byte)groupType,
+                        SourceId = orderId,
+                        SentTime = nowTime,
                         Checked = false
                     };
                     _context.Add(notification);
+                    returnList.Add(new Tuple<int, bool>(id, true));
+                }
+
+                foreach (int id in targetMemberId.Intersect(existNotifyMemberId))
+                {
+                    var item = existNotify.Where(n => n.MemberId == id).FirstOrDefault();
+                    item.SentTime = nowTime;
+                    item.ContentId = contentID;
+                    _context.Update(item);
+                    returnList.Add(new Tuple<int, bool>(id, false));
                 }
                 await _context.SaveChangesAsync();
             }
 
-            return JsonConvert.SerializeObject(memberid);
+            return JsonConvert.SerializeObject(returnList);
         }
+
+        public void ClearNotification(int senderId)
+        {
+            var notifylist = _context.Notifications.Where(n => n.MemberId == senderId && n.Checked == false).ToList();
+            foreach(var item in notifylist)
+            {
+                item.Checked = true;
+                _context.Update(item);
+            }
+            _context.SaveChanges();
+
+        }
+
         private bool NotificationExists(int id)
         {
             return _context.Notifications.Any(e => e.NotifyId == id);
