@@ -19,6 +19,18 @@ namespace LeSheTuanGo.Controllers
             _context = context;
         }
         #region 廢棄
+        //[HttpPost]
+        //public async Task<string> CreateNotification([Bind("NotifyId,MemberId,ContentId,SentTime,SourceType,SourceId,Checked")] Notification notification)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        _context.Add(notification);
+        //        await _context.SaveChangesAsync();
+        //        return "";
+        //    }
+        //    return "";
+        //}
+
         //// GET: Notifications
         //public async Task<IActionResult> Index()
         //{
@@ -146,17 +158,10 @@ namespace LeSheTuanGo.Controllers
         //}
         #endregion
 
-        //[HttpPost]
-        //public async Task<string> CreateNotification([Bind("NotifyId,MemberId,ContentId,SentTime,SourceType,SourceId,Checked")] Notification notification)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        _context.Add(notification);
-        //        await _context.SaveChangesAsync();
-        //        return "";
-        //    }
-        //    return "";
-        //}
+
+
+
+        //取通知
         public async Task<string[]> GetNotification(int senderId)
         {
             string[] s = new string[2];
@@ -173,7 +178,7 @@ namespace LeSheTuanGo.Controllers
             return s;
         }
 
-
+        //寫入通知
         public async Task<string> CreateNotification(int groupType, int orderId, int senderId, string notifyContent)
         {
             int contentID = 0;
@@ -241,6 +246,7 @@ namespace LeSheTuanGo.Controllers
             return JsonConvert.SerializeObject(returnList);
         }
 
+        //清除通知(已讀)
         public void ClearNotification(int senderId)
         {
             var notifylist = _context.Notifications.Where(n => n.MemberId == senderId && n.Checked == false).ToList();

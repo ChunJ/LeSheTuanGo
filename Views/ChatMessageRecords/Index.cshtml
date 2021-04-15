@@ -39,7 +39,7 @@
     @*column2*@
     <div class="bg-go-light h-100 px-2 pt-2 d-flex flex-column" style="width:40%;">
         <h3 id="chatheader" class="text-center">聊天室</h3>
-        <div class="d-flex ">
+        <div class="d-flex " id="chatMemberIcon">
             @for (int i = 0; i < 5; i++)
             {
                 <div class="p-1">
@@ -48,7 +48,7 @@
             }
         </div>
         <div class="w-100 flex-grow-1 column-main" id="chat">
-            @for (int i = 0; i < 5; i++)
+            @*@for (int i = 0; i < 5; i++)
             {
                 <div class="d-flex">
                     <img class="profile m-1 align-self-start" src="~/images/ProfileImages/guestProfile.jpg" />
@@ -65,7 +65,7 @@
                     </div>
                     <div class="m-1 msg-time">下午 4：30</div>
                 </div>
-            }
+            }*@
 
         </div>
         <input type="hidden" id="roomid" value="0" />

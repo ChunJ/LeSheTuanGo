@@ -124,74 +124,10 @@ function chatGetOrder(oid, gt, rn, hid) {
 
     //取得團明細
     getdetail(oid, gt, hid);
-    //取得聊天紀錄
-    var urlchat = "/ChatMessageRecords/chatGetChat?orderId=" + oid + "&grouptype=" + gt;
-    $.ajax({
-        url: urlchat,
-        type: "GET",
-        success: function (data) {
-            var s = JSON.parse(data);
-            var txt = "";
-            for (let i = 0; i < s.length; i++) {
-                //let msgclass = (s[i].SentMemberId == gmemberid) ? 'self' : 'other';
-                //txt += "<div class='" + msgclass + "'>" + s[i].username + "說：<div><div>" + s[i].Message + "</div></div></div>"
-                let sendtime = (new Date(s[i].SentTime)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                let other = `
-                <div class="d-flex">
-                    <img class="profile m-1 align-self-start" src="${s[i].ProfileImagePath}" />
-                    <div class="msg-box m-1 msg-in" style="word-break: break-all">
-                        ${s[i].Message}
-                    </div>
-                    <div class="m-1 msg-time">${sendtime}</div>
-                </div >`
-                let self = `
-                <div class="d-flex flex-row-reverse">
-                    <div class="msg-box m-1 msg-out" style="word-break: break-all">
-                        ${s[i].Message}
-                    </div>
-                    <div class="m-1 msg-time">${sendtime}</div>
-                </div>`
-
-                txt += (s[i].SentMemberId == gmemberid) ? self : other;
-
-            }
-            $("#chatheader").text(rn + " 的聊天室");
-            $("#chat").html(txt);
-            $("#chat").scrollTop($('#chat').prop("scrollHeight"));
-            $(`#link_btn div[id=btn${oid}]`).addClass("active_chat").siblings().removeClass("active_chat");
-            document.getElementById("btnSend").disabled = false;
-        },
-    })
-}
-//選團型(團購/垃圾)
-function getOrderList(gt, so, of) {
-    $.ajax({
-        url: "/ChatMessageRecords/getOrderList",
-        data: { groupType:gt, selfother:so, onoff:of},
-        type: "GET",
-        success: function (data) {
-            var s = JSON.parse(data);
-            var txt = "";
-            if (gt == 1) {
-                for (let i = 0; i < s.length; i++) {
-                    txt += `<div class="p-2 w-100 text-center" id="btn${s[i].OrderId}" data-hostid=${s[i].HostMemberId} onclick="chatGetOrder(${s[i].OrderId} , ${gt} ,'${s[i].ProductName}(編號：${s[i].OrderId}  )',${s[i].HostMemberId})"> ${s[i].ProductName} (編號：${s[i].OrderId})</div>`
-                }
-            }
-            else if (gt == 2) {
-                for (let i = 0; i < s.length; i++) {
-                    txt += `<div class="p-2 w-100 text-center" id="btn${s[i].GarbageServiceId}" data-hostid=${s[i].HostMemberId} onclick="chatGetOrder(${s[i].GarbageServiceId} , ${gt} ,'${s[i].EndTime}(編號：${s[i].GarbageServiceId}  )',${s[i].HostMemberId})"> ${s[i].EndTime} (編號：${s[i].GarbageServiceId})</div>`
-                }
-            }
-            $("#link_btn").html(txt).promise().done(function () {
-
-                if (oid != 0) {
-                    $(`#link_btn div[id=btn${oid}]`).click();
-                    oid = 0;
-                    gt = 0;
-                }
-            });
-        },
-    })
+    //取得聊天紀錄   
+    getchat(oid, gt,rn);
+    //取得參加者清單
+    getjointmember(oid, gt);
 }
 //取得明細
 function getdetail(oid, gt, hid) {
@@ -278,6 +214,106 @@ function getdetail(oid, gt, hid) {
             }
 
             $("#detail").html(txt);
+        },
+    })
+}
+//取得聊天紀錄
+function getchat(oid, gt,rn) {
+    $.ajax({
+        url: "/ChatMessageRecords/chatGetChat",
+        type: "GET",
+        data: { orderId: oid, grouptype: gt },
+        success: function (data) {
+            var s = JSON.parse(data);
+            var txt = "";
+            for (let i = 0; i < s.length; i++) {
+                //let msgclass = (s[i].SentMemberId == gmemberid) ? 'self' : 'other';
+                //txt += "<div class='" + msgclass + "'>" + s[i].username + "說：<div><div>" + s[i].Message + "</div></div></div>"
+                let sendtime = (new Date(s[i].SentTime)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                let other = `
+                <div class="d-flex">
+                    <img class="profile m-1 align-self-start" src="${s[i].ProfileImagePath}" />
+                    <div class="msg-box m-1 msg-in" style="word-break: break-all">
+                        ${s[i].Message}
+                    </div>
+                    <div class="m-1 msg-time">${sendtime}</div>
+                </div >`
+                let self = `
+                <div class="d-flex flex-row-reverse">
+                    <div class="msg-box m-1 msg-out" style="word-break: break-all">
+                        ${s[i].Message}
+                    </div>
+                    <div class="m-1 msg-time">${sendtime}</div>
+                </div>`
+
+                txt += (s[i].SentMemberId == gmemberid) ? self : other;
+
+            }
+            $("#chatheader").text(rn + " 的聊天室");
+            $("#chat").html(txt);
+            $("#chat").scrollTop($('#chat').prop("scrollHeight"));
+            $(`#link_btn div[id=btn${oid}]`).addClass("active_chat").siblings().removeClass("active_chat");
+            document.getElementById("btnSend").disabled = false;
+        },
+    })
+}
+//取得參加者清單
+function getjointmember(oid, gt) {
+    $.ajax({
+        url: "/ChatMessageRecords/getJointMember",
+        type: "GET",
+        data: { orderId: oid, grouptype: gt },
+        success: function (data) {
+            var s = JSON.parse(data);
+            console.log(s);
+            var txt = "";
+            for (let i = 0; i < s.length; i++) {
+                txt += `
+                <a class="p-1" rel="popover" data-img="${s[i].ProfileImagePath}" data-kk="${s[i].username}">
+                    <img class="profile-big" src="${s[i].ProfileImagePath}" />
+                </a>`
+            }
+            $("#chatMemberIcon").html(txt).promise().done(function () {
+                $('a[rel=popover]').popover({
+                    html: true,
+                    trigger: 'hover',
+                    content: function () {
+                        return `<img  src='${$(this).data('img')}' width=50/><div>${$(this).data('kk')}</div>`;
+                    }
+                });
+            });
+        },
+    })
+}
+
+
+//選團型(團購/垃圾)
+function getOrderList(gt, so, of) {
+    $.ajax({
+        url: "/ChatMessageRecords/getOrderList",
+        data: { groupType:gt, selfother:so, onoff:of},
+        type: "GET",
+        success: function (data) {
+            var s = JSON.parse(data);
+            var txt = "";
+            if (gt == 1) {
+                for (let i = 0; i < s.length; i++) {
+                    txt += `<div class="p-2 w-100 text-center" id="btn${s[i].OrderId}" data-hostid=${s[i].HostMemberId} onclick="chatGetOrder(${s[i].OrderId} , ${gt} ,'${s[i].ProductName}(編號：${s[i].OrderId}  )',${s[i].HostMemberId})"> ${s[i].ProductName} (編號：${s[i].OrderId})</div>`
+                }
+            }
+            else if (gt == 2) {
+                for (let i = 0; i < s.length; i++) {
+                    txt += `<div class="p-2 w-100 text-center" id="btn${s[i].GarbageServiceId}" data-hostid=${s[i].HostMemberId} onclick="chatGetOrder(${s[i].GarbageServiceId} , ${gt} ,'${s[i].EndTime}(編號：${s[i].GarbageServiceId}  )',${s[i].HostMemberId})"> ${s[i].EndTime} (編號：${s[i].GarbageServiceId})</div>`
+                }
+            }
+            $("#link_btn").html(txt).promise().done(function () {
+
+                if (oid != 0) {
+                    $(`#link_btn div[id=btn${oid}]`).click();
+                    oid = 0;
+                    gt = 0;
+                }
+            });
         },
     })
 }

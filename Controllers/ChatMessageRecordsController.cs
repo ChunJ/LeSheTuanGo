@@ -240,6 +240,30 @@ namespace LeSheTuanGo.Controllers
             return JsonConvert.SerializeObject(chatMessages);
         }
 
+        public string getJointMember(int orderId, int grouptype)
+        {
+            if (grouptype == 1)
+            {
+                var memberList = _context.OrderBuyRecords.Where(n => n.OrderId == orderId).Select(n => new
+                {
+                    n.MemberId,
+                    n.Member.ProfileImagePath,
+                    username = n.Member.FirstName + n.Member.LastName,
+                }).Distinct();
+                var dancyou = _context.Orders.Where(n => n.OrderId == orderId).Select(n => new
+                {
+                    MemberId=n.HostMemberId,
+                    ProfileImagePath=n.HostMember.ProfileImagePath,
+                    username = n.HostMember.FirstName + n.HostMember.LastName,
+                });
+                return JsonConvert.SerializeObject(memberList.Union(dancyou));
+            }
+            else
+            {
+                return "";
+            }
+        }
+
         //寫入聊天紀錄
         [HttpPost]
         public async Task<string> Create(string message, int orderid, int memberid, byte grouptype)
@@ -255,7 +279,7 @@ namespace LeSheTuanGo.Controllers
             };
             _context.Add(chatMessageRecord);
             await _context.SaveChangesAsync();
-            return JsonConvert.SerializeObject(new Tuple<DateTime,string>( chatMessageRecord.SentTime, memberphoto));
+            return JsonConvert.SerializeObject(new Tuple<DateTime, string>(chatMessageRecord.SentTime, memberphoto));
         }
 
         //編輯明細頁面
@@ -269,14 +293,14 @@ namespace LeSheTuanGo.Controllers
             {
                 if (self)
                 {
-                    var order = await _context.Orders.Where(n => n.OrderId == orderid&&n.HostMemberId==memberid).ToListAsync();
+                    var order = await _context.Orders.Where(n => n.OrderId == orderid && n.HostMemberId == memberid).ToListAsync();
                     var ss = JsonConvert.SerializeObject(order);
                     ls[0] = ss;
                     return ls;
                 }
                 else
                 {
-                    var orderBuy = await _context.OrderBuyRecords.Where(n => n.OrderId == orderid&&n.MemberId==memberid).ToListAsync();
+                    var orderBuy = await _context.OrderBuyRecords.Where(n => n.OrderId == orderid && n.MemberId == memberid).ToListAsync();
                     var ss = JsonConvert.SerializeObject(orderBuy);
                     ls[0] = ss;
                     return ls;
@@ -287,7 +311,7 @@ namespace LeSheTuanGo.Controllers
             {
                 if (self)
                 {
-                    var garbageServiceOffer = await _context.GarbageServiceOffers.Where(n => n.GarbageServiceId == orderid&&n.HostMemberId==memberid).Select(n => new
+                    var garbageServiceOffer = await _context.GarbageServiceOffers.Where(n => n.GarbageServiceId == orderid && n.HostMemberId == memberid).Select(n => new
                     {
                         n.GarbageServiceId,
                         n.Address,
