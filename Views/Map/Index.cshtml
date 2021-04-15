@@ -2,7 +2,7 @@
 @using LeSheTuanGo.Controllers;
 @{
     Layout = "_layoutWide";
-    ViewData["Title"] = "你要去哪裡？ - ";
+    ViewData["Title"] = "搜個集點 - ";
     if (Context.Session.GetInt32(cUtility.Current_User_Id) != null) {
         ViewData["currentUserId"] = Context.Session.GetInt32(cUtility.Current_User_Id);
     } else {
