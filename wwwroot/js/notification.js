@@ -3,13 +3,13 @@ $(function () {
     //接收事件
     connection.on("ReceiveNotification", function (groupName, groupType, orderId, message, newOrUpdate) {
         //$("#LayoutNotificationList").prepend(`<a class="dropdown-item" href="/ChatMessageRecords/Index?grouptype=${groupType}&groupid=${orderId}">${message}</a>`)
-        getNotification(sessionMemberId);
         //if (newOrUpdate == "true") {
         //    let notifynum = parseInt($(".LayoutNotificationNumber").first().text(), 10);
         //    $(".LayoutNotificationNumber").text((notifynum + 1).toString());
         //}
-        
+        getNotification(sessionMemberId);
     })
+
     //啟動時連線&依據登入ID加入group
     if (sessionMemberId != "") {
         var group = "memberid_" + sessionMemberId;
@@ -33,10 +33,7 @@ $(function () {
                 }
             })
         })
-
     }
-
-
 })
 
 
@@ -58,10 +55,7 @@ function getNotification(senderid) {
     })
 }
 
-
-
-
-
+//寫入通知
 function createNotification(groupType, orderId, senderId, notifyContent) {
     $.ajax({
         url: "/Notifications/CreateNotification",

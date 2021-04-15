@@ -165,7 +165,7 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     @*<script src="~/js/signalr/dist/browser/signalr.js"></script>*@
-    <script>
+<script>
         "use strict";
         var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
         var gmemberid = '@ViewBag.memberid';
@@ -434,7 +434,7 @@
 
 
                     //很長的框架
-                    let txt = `
+                    let txt1 = `
                         <div class="border-bottom-dark mb-2">
                             <h4>編輯</h4>
                         </div>
@@ -552,6 +552,119 @@
 
                                                                         `;
 
+                    let txt = `        <div class="px-2 pt-2" id="serviceEditForm">
+            <div class="border-bottom-dark mb-2">
+                <h4>編輯</h4>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label class="control-label">縣市</label>
+                        <select class="form-control" id="cityId" name="cityId" onchange="getDistrictc('#DistrictId')" data-val="true" data-val-required="The CityId field is required.">
+                            ${citytxt}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label class="control-label" for="DistrictId">鄉鎮市區</label>
+                        <select class="form-control" id="DistrictId" name="DistrictId" data-val="true" data-val-required="The 鄉鎮市區 field is required.">
+                        </select>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-group">
+                        <label class="control-label" for="Address">地址</label>
+                        <input class="form-control" id="Address" name="Address" type="text" value="">
+                        <span class="text-danger field-validation-valid" data-valmsg-for="Address" data-valmsg-replace="true"></span>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label class="control-label" for="EndTime">結束時間</label>
+                        <input class="form-control" id="EndTime" name="EndTime" type="datetime-local" data-val="true" data-val-required="The 結束時間 field is required." value="">
+                        <span class="text-danger field-validation-valid" data-valmsg-for="EndTime" data-valmsg-replace="true"></span>
+                    </div>
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" data-val="true" data-val-required="The 是否可到府服務 field is required." id="CanGo" name="CanGo" value="true"> 是否可到府服務
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="GoRangeId">可服務距離</label>
+                        <select class="form-control" data-val="true" data-val-required="The 可服務距離 field is required." id="GoRangeId" name="GoRangeId">
+                            ${rangetxt}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row pb-5">
+                <div class="col-12">
+                    <div class="border-bottom-dark mb-2">
+                        <h5>垃圾袋尺寸</h5>
+                    </div>
+                </div>
+                <div class="col-3">
+                                            <div class="form-group">
+                                                <label class="control-label" for="L3maxCount">3公升</label>
+                                                <input class="form-control" id="L3maxCount" name="L3maxCount" value="0" type="number" data-val="true" data-val-required="The 3公升 field is required.">
+                                                    <span class="text-danger field-validation-valid" data-valmsg-for="L3maxCount" data-valmsg-replace="true"></span>
+            </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <div class="form-group">
+                                                    <label class="control-label" for="L5maxCount">5公升</label>
+                                                    <input class="form-control" id="L5maxCount" name="L5maxCount" value="0" type="number" data-val="true" data-val-required="The 5公升 field is required.">
+                                                        <span class="text-danger field-validation-valid" data-valmsg-for="L5maxCount" data-valmsg-replace="true"></span>
+            </div>
+                                                </div>
+                                                <div class="col-3">
+                                                    <div class="form-group">
+                                                        <label class="control-label" for="L14maxCount">14公升</label>
+                                                        <input class="form-control" id="L14maxCount" name="L14maxCount" value="0" type="number" data-val="true" data-val-required="The 14公升 field is required.">
+                                                            <span class="text-danger field-validation-valid" data-valmsg-for="L14maxCount" data-valmsg-replace="true"></span>
+            </div>
+                                                    </div>
+                                                    <div class="col-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label" for="L25maxCount">25公升</label>
+                                                            <input class="form-control" id="L25maxCount" name="L25maxCount" value="0" type="number" data-val="true" data-val-required="The 25公升 field is required.">
+                                                                <span class="text-danger field-validation-valid" data-valmsg-for="L25maxCount" data-valmsg-replace="true"></span>
+            </div>
+                                                        </div>
+                                                        <div class="col-3">
+                                                            <div class="form-group">
+                                                                <label class="control-label" for="L33maxCount">33公升</label>
+                                                                <input class="form-control" id="L33maxCount" name="L33maxCount" value="0" type="number" data-val="true" data-val-required="The 33公升 field is required.">
+                                                                    <span class="text-danger field-validation-valid" data-valmsg-for="L33maxCount" data-valmsg-replace="true"></span>
+            </div>
+                                                            </div>
+                                                            <div class="col-3">
+                                                                <div class="form-group">
+                                                                    <label class="control-label" for="L75maxCount">75公升</label>
+                                                                    <input class="form-control" id="L75maxCount" name="L75maxCount" value="0" type="number" data-val="true" data-val-required="The 75公升 field is required.">
+                                                                        <span class="text-danger field-validation-valid" data-valmsg-for="L75maxCount" data-valmsg-replace="true"></span>
+            </div>
+                                                                </div>
+                                                                <div class="col-3">
+                                                                    <div class="form-group">
+                                                                        <label class="control-label" for="L120maxCount">120公升</label>
+                                                                        <input class="form-control" id="L120maxCount" name="L120maxCount" value="0" type="number" data-val="true" data-val-required="The 120公升 field is required.">
+                                                                            <span class="text-danger field-validation-valid" data-valmsg-for="L120maxCount" data-valmsg-replace="true"></span>
+            </div>
+                                                                    </div>
+                                                                </div>
+            </div>
+            <div class="column-btn py-1">
+                <button class="btn btn-primary" onclick="saveedit()">儲存</button>
+                <button class="btn btn-primary">取消</button>
+            </div>
+            <input type="hidden" id="GarbageServiceId" name="GarbageServiceId" />
+            <input type="hidden" id="IsActive" name="IsActive" style="display:none" />
+            <input type="hidden" id="StartTime" name="StartTime" />
+            <input type="hidden" id="ServiceTypeId" name="ServiceTypeId" />
+            <input type="hidden" id="HostMemberId" name="HostMemberId" />`;
+
                     //帶入編輯資料(ServiceOffer)
                     $("#detail").html(txt).promise().done(function () {
 
@@ -619,5 +732,5 @@
 
 
 
-    </script>
+</script>
 }
