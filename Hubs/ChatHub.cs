@@ -26,9 +26,9 @@ namespace LeSheTuanGo.Hubs
             //await Clients.Group(groupName).SendAsync("Send", $"{Context.ConnectionId} has left the group {groupName}.");
         }
 
-        public async Task SendMessageToGroup(string groupName,string memberid, string username, string message)
+        public async Task SendMessageToGroup(string groupName,string memberid, string username, string message,string sendtime,string photopath)
         {
-            await Clients.Group(groupName).SendAsync("ReceiveGroupMessage", groupName,memberid, username, message);
+            await Clients.Group(groupName).SendAsync("ReceiveGroupMessage", groupName,memberid, username, message, sendtime, photopath);
         }
         public async Task SendNotificationToGroup(string groupName, string memberid, string username, string message,string newOrUpdate)
         {

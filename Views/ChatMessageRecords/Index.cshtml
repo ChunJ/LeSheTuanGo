@@ -86,8 +86,9 @@
     <input type="hidden" id="hid" />
     <input type="hidden" id="self" />
     <div class="row p-3 h-100 column-main" style="align-content:flex-start">
+        <div class="px-2 pt-2" id="detail"></div>
         @*order edit form*@
-        <div class="px-2 pt-2" id="orderEditForm">
+        <div class="px-2 pt-2 d-none" id="orderEditForm">
             <div class="border-bottom-dark mb-2">
                 <h4>編輯</h4>
             </div>
@@ -95,7 +96,7 @@
                 <div class="col-6">
                     <div class="form-group">
                         <label>商品類別</label>
-                        <select id="CategoryId" class="form-control" onchange="getProduct('#ProductId')" asp-items="ViewBag.Category"></select>
+                        <select id="CategoryId" class="form-control" asp-items="ViewBag.Category"></select>
                     </div>
                     <div class="form-group">
                         <label for="ProductId">商品名稱</label>
@@ -171,7 +172,7 @@
             </div>
         </div>
         @*service edit form*@
-        <div class="px-2 pt-2 d-none" id="serviceEditForm_ServiceOffer">
+        <div class="px-2 pt-2 d-none" id="serviceEditForm">
             <div class="border-bottom-dark mb-2">
                 <h4>編輯</h4>
             </div>
@@ -179,7 +180,7 @@
                 <div class="col-6">
                     <div class="form-group">
                         <label class="control-label">縣市</label>
-                        <select class="form-control" id="cityId" name="cityId" onchange="getDistrictc('#DistrictId')" data-val="true" data-val-required="The CityId field is required.">
+                        <select class="form-control" id="cityId" name="cityId"  data-val="true" data-val-required="The CityId field is required.">
                             @*${citytxt}*@
                         </select>
                     </div>

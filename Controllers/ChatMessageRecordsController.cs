@@ -234,15 +234,17 @@ namespace LeSheTuanGo.Controllers
                 n.Message,
                 n.SentMemberId,
                 SentTime = n.SentTime.ToString("yyyy/MM/dd, HH:mm"),
-                username = n.SentMember.FirstName + n.SentMember.LastName
+                username = n.SentMember.FirstName + n.SentMember.LastName,
+                n.SentMember.ProfileImagePath,
             }).ToList();
             return JsonConvert.SerializeObject(chatMessages);
         }
 
         //寫入聊天紀錄
         [HttpPost]
-        public void Create(string message, int orderid, int memberid, byte grouptype)
+        public async Task<string> Create(string message, int orderid, int memberid, byte grouptype)
         {
+            var memberphoto = _context.Members.Where(n => n.MemberId == memberid).Select(n => n.ProfileImagePath).FirstOrDefault();
             ChatMessageRecord chatMessageRecord = new ChatMessageRecord
             {
                 GroupType = grouptype,
@@ -252,8 +254,8 @@ namespace LeSheTuanGo.Controllers
                 Message = message
             };
             _context.Add(chatMessageRecord);
-            _context.SaveChanges();
-
+            await _context.SaveChangesAsync();
+            return JsonConvert.SerializeObject(new Tuple<DateTime,string>( chatMessageRecord.SentTime, memberphoto));
         }
 
         //編輯明細頁面
@@ -274,7 +276,6 @@ namespace LeSheTuanGo.Controllers
                 }
                 else
                 {
-
                     var orderBuy = await _context.OrderBuyRecords.Where(n => n.OrderId == orderid&&n.MemberId==memberid).ToListAsync();
                     var ss = JsonConvert.SerializeObject(orderBuy);
                     ls[0] = ss;

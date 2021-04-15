@@ -6,23 +6,29 @@ $(function () {
     //掛事件
     $('input[type=radio][name="grouptype"]').change(function () {
         $("#rec_grouptype").val($(this).val());
-        getOrderList($("#rec_grouptype").val(), $("#rec_selfother").val(), $("#rec_onoff").val())
+        getOrderList($("#rec_grouptype").val(), $("#rec_selfother").val(), $("#rec_onoff").val());
+        $("#detail").removeClass('d-none').siblings().addClass('d-none');
     });
     $('input[type=radio][name="selfother"]').change(function () {
         $("#rec_selfother").val($(this).val());
-        getOrderList($("#rec_grouptype").val(), $("#rec_selfother").val(), $("#rec_onoff").val())
+        getOrderList($("#rec_grouptype").val(), $("#rec_selfother").val(), $("#rec_onoff").val());
+        $("#detail").removeClass('d-none').siblings().addClass('d-none');
     });
     $('input[type=radio][name="onoff"]').change(function () {
         $("#rec_onoff").val($(this).val());
-        getOrderList($("#rec_grouptype").val(), $("#rec_selfother").val(), $("#rec_onoff").val())
+        getOrderList($("#rec_grouptype").val(), $("#rec_selfother").val(), $("#rec_onoff").val());
+        $("#detail").removeClass('d-none').siblings().addClass('d-none');
     });
     $('#message').keypress(function (e) {
         if (e.which == 13) {
             $('#btnSend').click();
             return false;
         }
-    });
 
+    });
+    //各編輯表格縣市連動
+    $("#serviceEditForm #cityId").on("change", function () { getDistrictc('#serviceEditForm #DistrictId') });
+    $("#orderEditForm #cityId").on("change", function () { getDistrictc('#orderEditForm #DistrictId') })
     //發送按鈕
     $('#btnSend').click(function () {
         var message = $("#message").val();
@@ -32,16 +38,19 @@ $(function () {
         $("#message").val('');
         var orderid = $("#OrderId").val();
         var grouptype = $("#rec_grouptype").val();
-        connection.invoke("SendMessageToGroup", $("#roomid").val(), gmemberid, username, message)
-            .catch(function (err) {
-                return console.error(err.toString());
-            });
+
         $.ajax({
             type: "POST",
             url: "/ChatMessageRecords/Create",
             data: { message: message, orderid: orderid, memberid: gmemberid, grouptype: grouptype },
-            success: function () {
-
+            success: function (data) {
+                var s = JSON.parse(data);
+                let sendtime = s["Item1"];
+                let photopath = s["Item2"];
+                connection.invoke("SendMessageToGroup", $("#roomid").val(), gmemberid, username, message, sendtime, photopath)
+                    .catch(function (err) {
+                        return console.error(err.toString());
+                    });
                 let txt = grouptype == 1 ? "(團購團)" : "(垃圾團)";
                 createNotification(grouptype, orderid, gmemberid, $("#chatheader").text() + "有新的訊息")
             }
@@ -57,19 +66,36 @@ $(function () {
 
 
 //建立SignalR連線，接收訊息用事件
-connection.on("ReceiveGroupMessage", function (groupName, memberid, username, message) {
-    let msgclass = (gmemberid == memberid) ? 'self' : 'other';
-    $("#chat").append("<div class='" + msgclass + "'>" + username + "說：<div><div>" + message + "</div></div></div>")
+connection.on("ReceiveGroupMessage", function (groupName, memberid, username, message, sendtime,photopath) {
+    let shortsendtime = (new Date(sendtime)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    let other = `
+                <div class="d-flex">
+                    <img class="profile m-1 align-self-start" src="${photopath}" />
+                    <div class="msg-box m-1 msg-in" style="word-break: break-all">
+                        ${message}
+                    </div>
+                    <div class="m-1 msg-time">${shortsendtime}</div>
+                </div >`
+    let self = `
+                <div class="d-flex flex-row-reverse">
+                    <div class="msg-box m-1 msg-out" style="word-break: break-all">
+                        ${message}
+                    </div>
+                    <div class="m-1 msg-time">${shortsendtime}</div>
+                </div>`
+    let msg = (gmemberid == memberid) ? self : other;
+    $("#chat").append(msg)
     $("#chat").animate({ scrollTop: $('#chat').prop("scrollHeight") }, 500);
 });
 
-//選團(產出的案件按鈕)
+//選團(點產出的案件按鈕)
 function chatGetOrder(oid, gt, rn, hid) {
-    //加入SignalR聊天室
+    
     $("#oid").val(oid);
     $("#gt").val(gt);
     $("#hid").val(hid);
-
+    $("#detail").removeClass('d-none').siblings().addClass('d-none');
+    //加入SignalR聊天室
     var group = gt.toString() + '_' + oid.toString();
     if (connection.connectionState != "Connected") {
         connection.start().then(function () {
@@ -95,6 +121,7 @@ function chatGetOrder(oid, gt, rn, hid) {
             return console.error(err.toString());
         });
     };
+
     //取得團明細
     getdetail(oid, gt, hid);
     //取得聊天紀錄
@@ -106,8 +133,27 @@ function chatGetOrder(oid, gt, rn, hid) {
             var s = JSON.parse(data);
             var txt = "";
             for (let i = 0; i < s.length; i++) {
-                let msgclass = (s[i].SentMemberId == gmemberid) ? 'self' : 'other';
-                txt += "<div class='" + msgclass + "'>" + s[i].username + "說：<div><div>" + s[i].Message + "</div></div></div>"
+                //let msgclass = (s[i].SentMemberId == gmemberid) ? 'self' : 'other';
+                //txt += "<div class='" + msgclass + "'>" + s[i].username + "說：<div><div>" + s[i].Message + "</div></div></div>"
+                let sendtime = (new Date(s[i].SentTime)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                let other = `
+                <div class="d-flex">
+                    <img class="profile m-1 align-self-start" src="${s[i].ProfileImagePath}" />
+                    <div class="msg-box m-1 msg-in" style="word-break: break-all">
+                        ${s[i].Message}
+                    </div>
+                    <div class="m-1 msg-time">${sendtime}</div>
+                </div >`
+                let self = `
+                <div class="d-flex flex-row-reverse">
+                    <div class="msg-box m-1 msg-out" style="word-break: break-all">
+                        ${s[i].Message}
+                    </div>
+                    <div class="m-1 msg-time">${sendtime}</div>
+                </div>`
+
+                txt += (s[i].SentMemberId == gmemberid) ? self : other;
+
             }
             $("#chatheader").text(rn + " 的聊天室");
             $("#chat").html(txt);
@@ -120,7 +166,8 @@ function chatGetOrder(oid, gt, rn, hid) {
 //選團型(團購/垃圾)
 function getOrderList(gt, so, of) {
     $.ajax({
-        url: "/ChatMessageRecords/getOrderList?groupType=" + gt + "&selfother=" + so + "&onoff=" + of,
+        url: "/ChatMessageRecords/getOrderList",
+        data: { groupType:gt, selfother:so, onoff:of},
         type: "GET",
         success: function (data) {
             var s = JSON.parse(data);
@@ -257,14 +304,14 @@ function editorder() {
                     for (let i = 0; i < city.length; i++) {
                         citytxt += `<option value=${city[i].CityId}>${city[i].CityName}</option>`
                     }
-                    $("#cityId").html(citytxt);
+                    $("#serviceEditForm #cityId").html(citytxt);
 
                     //range
                     let rangetxt = "";
                     for (let i = 0; i < range.length; i++) {
                         rangetxt += `<option value=${range[i].RangeId}>${range[i].RangeInMeters}</option>`
                     }
-                    $("#GoRangeId").html(rangetxt);
+                    $("#serviceEditForm #GoRangeId").html(rangetxt);
 
                     //很長的框架
                     let txt1 = `
@@ -500,33 +547,35 @@ function editorder() {
     <input type="hidden" id="HostMemberId" name="HostMemberId" />`;
 
                     //帶入編輯資料(ServiceOffer)
-                    $("#detail").html(txt1).promise().done(function () {
-                        for (let i = 0; i < detail.length; i++) {
-                            $("#cityId").val(detail[i].CityId).change();
-                            var checkExist = setInterval(function () {
-                                if ($('#DistrictId').length) {
-                                    $(`#DistrictId option[value="${detail[i].DistrictId}"]`).attr('selected', 'selected')
-                                    clearInterval(checkExist);
-                                }
-                            }, 100);
-                            $("#Address").val(detail[i].Address);
-                            $("#EndTime").val(detail[i].EndTime);
-                            $("#CanGo").prop('checked', detail[i].CanGo);
-                            $("#GoRangeId").val(detail[i].GoRangeId);
-                            $("#L3maxCount").val(detail[i].L3maxCount);
-                            $("#L5maxCount").val(detail[i].L5maxCount);
-                            $("#L14maxCount").val(detail[i].L14maxCount);
-                            $("#L25maxCount").val(detail[i].L25maxCount);
-                            $("#L33maxCount").val(detail[i].L33maxCount);
-                            $("#L75maxCount").val(detail[i].L75maxCount);
-                            $("#L120maxCount").val(detail[i].L120maxCount);
-                            $("#GarbageServiceId").val(detail[i].GarbageServiceId);
-                            $("#IsActive").val(detail[i].IsActive);
-                            $("#StartTime").val(detail[i].StartTime);
-                            $("#ServiceTypeId").val(detail[i].ServiceTypeId);
-                            $("#HostMemberId").val(detail[i].HostMemberId);
-                        }
-                    })
+                    //$("#detail").html(txt1).promise().done(function () {
+                    for (let i = 0; i < detail.length; i++) {
+                        $("#serviceEditForm #cityId").val(detail[i].CityId).change();
+                        var checkExist = setInterval(function () {
+                            if ($('#serviceEditForm #DistrictId').length) {
+                                $(`#serviceEditForm #DistrictId option[value="${detail[i].DistrictId}"]`).attr('selected', 'selected')
+                                clearInterval(checkExist);
+                            }
+                        }, 100);
+                        $("#serviceEditForm #Address").val(detail[i].Address);
+                        $("#serviceEditForm #EndTime").val(detail[i].EndTime);
+                        $("#serviceEditForm #CanGo").prop('checked', detail[i].CanGo);
+                        $("#serviceEditForm #GoRangeId").val(detail[i].GoRangeId);
+                        $("#serviceEditForm #L3maxCount").val(detail[i].L3maxCount);
+                        $("#serviceEditForm #L5maxCount").val(detail[i].L5maxCount);
+                        $("#serviceEditForm #L14maxCount").val(detail[i].L14maxCount);
+                        $("#serviceEditForm #L25maxCount").val(detail[i].L25maxCount);
+                        $("#serviceEditForm #L33maxCount").val(detail[i].L33maxCount);
+                        $("#serviceEditForm #L75maxCount").val(detail[i].L75maxCount);
+                        $("#serviceEditForm #L120maxCount").val(detail[i].L120maxCount);
+                        $("#serviceEditForm #GarbageServiceId").val(detail[i].GarbageServiceId);
+                        $("#serviceEditForm #IsActive").val(detail[i].IsActive);
+                        $("#serviceEditForm #StartTime").val(detail[i].StartTime);
+                        $("#serviceEditForm #ServiceTypeId").val(detail[i].ServiceTypeId);
+                        $("#serviceEditForm #HostMemberId").val(detail[i].HostMemberId);
+                    }
+                    $("#detail").addClass("d-none");
+                    $("#serviceEditForm").removeClass("d-none")
+                    //})
                 }
                 else {
                     //A
