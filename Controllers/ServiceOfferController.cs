@@ -67,6 +67,7 @@ namespace LeSheTuanGo.Controllers
             ViewData["CityId"] = new SelectList(_context.CityRefs, "CityId", "CityName", g.District);
             ViewData["ServiceTypeId"] = new SelectList(_context.ServiceTypeRefs, "ServiceTypeId", "ServiceName", g.ServiceTypeId);
             return View(g);
+            //
         }
 
         #region 縣市區連動用，目前不使用
@@ -141,6 +142,7 @@ namespace LeSheTuanGo.Controllers
         //Real Edit
         public void EditGarbageOffer(int garbageServiceID, GarbageServiceOffer garbageServiceOffer)
         {
+
             if (garbageServiceID == garbageServiceOffer.GarbageServiceId)
             {
                 decimal[] s = cUtility.addressToLatlong(garbageServiceOffer.Address);
@@ -150,6 +152,8 @@ namespace LeSheTuanGo.Controllers
                 _context.SaveChanges();
             }
         }
+
+
 
         // GET: GarbageServiceOffers/Delete/5
         public async Task<IActionResult> Delete(int? id)

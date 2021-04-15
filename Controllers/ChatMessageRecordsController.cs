@@ -256,7 +256,7 @@ namespace LeSheTuanGo.Controllers
 
         }
 
-        //A
+        //編輯明細頁面
         public async Task<string[]> editOrder(int grouptype, int orderid, int memberid,bool self)
         {
             string[] ls = new string[3];
@@ -298,9 +298,32 @@ namespace LeSheTuanGo.Controllers
                 }
                 else
                 {
-                    //var garbageServiceUseRecords = _context.GarbageServiceUseRecords
+                    var garbageServiceOffer = await _context.GarbageServiceOffers.Where(n => n.GarbageServiceId == orderid).Select(n => new
+                    {
+                        n.GarbageServiceId,
+                        n.Address,
+                        n.CanGo,
+                        n.District.CityId,
+                        n.DistrictId,
+                        n.EndTime,
+                        n.GoRangeId,
+                        n.HostMemberId,
+                        n.IsActive,
+                        n.L3maxCount,
+                        n.L5maxCount,
+                        n.L14maxCount,
+                        n.L25maxCount,
+                        n.L33maxCount,
+                        n.L75maxCount,
+                        n.L120maxCount,
+                        n.StartTime,
+                        n.ServiceTypeId,
+                    }).ToListAsync();
+                    var ss = JsonConvert.SerializeObject(garbageServiceOffer);
+                    ls[0] = ss;
+                    return ls;
                 }
-                return ls;
+                //return ls;
             }
         }
 

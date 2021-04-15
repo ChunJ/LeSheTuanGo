@@ -40,8 +40,8 @@ namespace LeSheTuanGo.Controllers
                 js = JsonConvert.SerializeObject("Fail");
                 return js;
             }
-            //var qDistrict = db.DistrictRefs.Where(n => n.DistrictId == qMember.DistrictId).First();
-            //var qCity = db.CityRefs.Where(n => n.CityId == qDistrict.CityId).First();
+            //var qDistrict = db.DistrictRefs.Where(n => n.DistrictId == qMember.DistrictId).FirstOrDefault();
+            //var qCity = db.CityRefs.Where(n => n.CityId == qDistrict.CityId).FirstOrDefault();
             //qMember.Address = qCity.CityName + qDistrict.DistrictName + qMember.Address;
             js = JsonConvert.SerializeObject(qMember);
             return js;
