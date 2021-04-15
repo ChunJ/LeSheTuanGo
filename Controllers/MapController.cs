@@ -27,6 +27,11 @@ namespace LeSheTuanGo.Controllers
             iv_context = midtermContext;
         }
 
+        public IActionResult visualized()
+        {
+            return View();
+        }
+        
         public string AdjFavorite(int mem, int spot, byte type)
         {
             if (type==0) //+spot

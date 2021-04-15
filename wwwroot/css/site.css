@@ -61,6 +61,11 @@ html {
 
 .profile {
     width: 30px;
+    border-radius: 50%
+}
+.profile-big {
+    width: 40px;
+    border-radius: 50%
 }
 
 .indicator {
@@ -81,17 +86,8 @@ html {
 }
 
 .dropdown-menu-header {
-    padding: .75rem;
     text-align: center;
     font-weight: 600;
-    border-bottom: 1px solid #dee2e6
-}
-
-.dropdown-menu-footer {
-    padding: .5rem;
-    text-align: center;
-    display: block;
-    font-size: .75rem
 }
 
 /*not used by service and order*/ 
@@ -200,4 +196,19 @@ html {
 }
 .h-form-con {
     height: calc(1.5em + 0.75rem + 2px);
+}
+.notify-title {
+    flex-grow: 1 !important;
+    font-weight: 500;
+}
+.notify-time {
+    width: 6rem;
+    color: #777;
+    font-size: 0.9rem;
+    text-align:right;
+}
+.notify-content {
+    font-size: 0.9rem;
+    width: 15rem;
+    overflow: hidden;
 }

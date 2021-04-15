@@ -3,13 +3,13 @@ $(function () {
     //接收事件
     connection.on("ReceiveNotification", function (groupName, groupType, orderId, message, newOrUpdate) {
         //$("#LayoutNotificationList").prepend(`<a class="dropdown-item" href="/ChatMessageRecords/Index?grouptype=${groupType}&groupid=${orderId}">${message}</a>`)
-        getNotification(sessionMemberId);
         //if (newOrUpdate == "true") {
         //    let notifynum = parseInt($(".LayoutNotificationNumber").first().text(), 10);
         //    $(".LayoutNotificationNumber").text((notifynum + 1).toString());
         //}
-        
+        getNotification(sessionMemberId);
     })
+
     //啟動時連線&依據登入ID加入group
     if (sessionMemberId != "") {
         var group = "memberid_" + sessionMemberId;
@@ -22,7 +22,7 @@ $(function () {
         //撈通知
         getNotification(sessionMemberId);
 
-        //小鈴鐺消通知
+        //點小鈴鐺消通知
         $("#alertDropdown").on('click', function () {
             $.ajax({
                 url: "/Notifications/ClearNotification",
@@ -30,13 +30,11 @@ $(function () {
                 type: "get",
                 success: function (data) {
                     $(".LayoutNotificationNumber").text("0");
+                    //A
                 }
             })
         })
-
     }
-
-
 })
 
 
@@ -50,7 +48,16 @@ function getNotification(senderid) {
             var s = JSON.parse(data[0]);
             var txt = "";
             for (let i = 0; i < s.length; i++) {
-                txt += `<a class="dropdown-item" href="/ChatMessageRecords/Index?grouptype=${s[i].SourceType}&groupid=${s[i].SourceId}">${s[i].ContentText}</a>`
+                console.log((new Date(s[i].SentTime)).toLocaleTimeString());
+                let grouptype = s[i].SourceType == 1 ? "購物團" : "垃圾團";
+
+                txt += `<a class="dropdown-item border-top py-2" href="/ChatMessageRecords/Index?grouptype=${s[i].SourceType}&groupid=${s[i].SourceId}">
+                                        <div class="d-flex align-items-center">
+                                            <div class="notify-title">${grouptype} (編號：${s[i].SourceId})</div>
+                                            <div class="notify-time">${(new Date(s[i].SentTime)).toLocaleTimeString()}</div>
+                                        </div>
+                                        <div class="notify-content">${s[i].ContentText}</div>
+                                    </a>`
             }
             $("#LayoutNotificationList").html(txt);
             $(".LayoutNotificationNumber").text(data[1]);
@@ -58,10 +65,7 @@ function getNotification(senderid) {
     })
 }
 
-
-
-
-
+//寫入通知
 function createNotification(groupType, orderId, senderId, notifyContent) {
     $.ajax({
         url: "/Notifications/CreateNotification",
