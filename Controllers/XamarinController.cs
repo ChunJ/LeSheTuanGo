@@ -62,22 +62,40 @@ namespace LeSheTuanGo.Controllers
             string result = Convert.ToBase64String(crypto);//把加密後的字串從Byte[]轉為字串
             return result;//輸出結果
         }
-        public string getLength(string address , int length)
+        public string getLength(string address , int length,int type)    //type 0 for spot ,type 1 for orderGroup
         {
             var addressLoc = cUtility.addressToLatlong(address);
-
             decimal addressLat = addressLoc[0];
             decimal addressLng = addressLoc[1];
+            string listJsonString;
+            if (type == 0)
+            {
 
             var result = db.GarbageTruckSpots.ToList();
 
             var q = from i in result select new { i.Address, i.ArrivalTime, i.Latitude, i.Longitude, distance = cUtility.distanceBetweenTwoSpots(addressLat, addressLng, i.Latitude, i.Longitude), addLat = addressLat, addLng = addressLng, i.GarbageTruckSpotId };
             var qList = q.Where(q => q.distance <= Convert.ToInt32(length) && q.distance >= 0).OrderBy(q => q.distance).ToList();
 
-            string listJsonString = JsonConvert.SerializeObject(qList);
+            listJsonString = JsonConvert.SerializeObject(qList);
 
+ 
+            }
+           else if (type == 1)
+            {
+                var result = db.Orders.ToList();
+                var q = from i in result select new { i.Address, i.EndTime, i.Latitude, i.Longitude, distance = cUtility.distanceBetweenTwoSpots(addressLat, addressLng, i.Latitude, i.Longitude), addLat = addressLat, addLng = addressLng, i.OrderDescription,i.UnitPrice };
+                var qList = q.Where(q => q.distance <= Convert.ToInt32(length) && q.distance >= 0).OrderBy(q => q.distance).ToList();
+
+                listJsonString = JsonConvert.SerializeObject(qList);
+            }
+            else
+            {
+                List<string> err = new List<string>();
+                err.Add("type error");
+                listJsonString = JsonConvert.SerializeObject(err);
+            }
+                
             return listJsonString;
         }
-
     }
 }
