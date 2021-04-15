@@ -48,7 +48,15 @@
         <div class="container">
             <nav class="nav navbar-light mb-3">
                 <a class="navbar-brand text-white" asp-area="" asp-controller="Home" asp-action="Index">樂社團GO</a>
-                <a class="nav-link text-white" asp-area="" asp-controller="Map" asp-action="Index">集垃地圖</a>
+                <div class="dropdown">
+                    <a class="nav-link text-white" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        集垃地圖
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <a class="dropdown-item" href="/Map">你要去哪裡？</a>
+                        <a class="dropdown-item" href="/Map/Visualized">你知道嗎？</a>
+                    </div>
+                </div>
                 <div class="dropdown">
                     <a class="nav-link text-white" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         團購
@@ -81,14 +89,15 @@
                                     <span class="LayoutNotificationNumber">3</span><span>則新通知</span>
                                 </div>
                                 <div class="list-group" style="width:18rem" id="LayoutNotificationList">
-                                    @for(int i = 0; i < 3; i++) {
-                                    <a class="dropdown-item border-top py-2" href="#">
-                                        <div class="d-flex align-items-center">
-                                            <div class="notify-title">購物團 No.2546</div>
-                                            <div class="notify-time">下午 4：30</div>
-                                        </div>
-                                        <div class="notify-content">購物團有新訊息則新通知則</div>
-                                    </a>
+                                    @for (int i = 0; i < 3; i++)
+                                    {
+                                        <a class="dropdown-item border-top py-2" href="#">
+                                            <div class="d-flex align-items-center">
+                                                <div class="notify-title">購物團 No.2546</div>
+                                                <div class="notify-time">下午 4：30</div>
+                                            </div>
+                                            <div class="notify-content">購物團有新訊息則新通知則</div>
+                                        </a>
                                     }
                                 </div>
                             </div>
