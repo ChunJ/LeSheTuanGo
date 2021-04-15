@@ -10,128 +10,154 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" type="text/css" rel="stylesheet" />
 <div class="d-flex w-100 h-100">
     @*column1*@
-    <div class="bg-go-light h-100" style="width: 30%">
-            <h3 class="sideheader text-center">案件總覽</h3>
-            <div class="px-2">
-                <div class="border-bottom py-1">
-                    <label>選擇團別：</label>
-                    <label class="m-0"><input type="radio" name="grouptype" value="1">團購團</label>
-                    <label class="m-0"><input type="radio" name="grouptype" value="2">垃圾團</label>
-                    <input type="hidden" id="rec_grouptype" value="0" />
-                </div>
-                <div class="border-bottom py-1">
-                    <label>發起人：</label>
-                    <label><input type="radio" name="selfother" value="0" checked>全部顯示</label>
-                    <label><input type="radio" name="selfother" value="1">我發起的</label>
-                    <label><input type="radio" name="selfother" value="2">我加入的</label>
-                    <input type="hidden" id="rec_selfother" value="0" />
-                </div>
-                <div class="border-bottom py-1">
-                    <label>案件狀態：</label>
-                    <label><input type="radio" name="onoff" value="0" checked>全部顯示</label>
-                    <label><input type="radio" name="onoff" value="1">進行中</label>
-                    <label><input type="radio" name="onoff" value="2">已結束</label>
-                    <input type="hidden" id="rec_onoff" value="0" />
-                </div>
-            </div>
-            <div id="link_btn" class="p-1 overflow-auto">
+    <div class="bg-go-light h-100 border-right px-2 pt-2" style="width: 30%">
+        <h3>案件總覽</h3>
+        <div class="border-bottom py-1">
+            <label>選擇團別：</label>
+            <label class="m-0"><input type="radio" name="grouptype" value="1">團購團</label>
+            <label class="m-0"><input type="radio" name="grouptype" value="2">垃圾團</label>
+            <input type="hidden" id="rec_grouptype" value="0" />
+        </div>
+        <div class="border-bottom py-1">
+            <label>發起人：</label>
+            <label><input type="radio" name="selfother" value="0" checked>全部顯示</label>
+            <label><input type="radio" name="selfother" value="1">我發起的</label>
+            <label><input type="radio" name="selfother" value="2">我加入的</label>
+            <input type="hidden" id="rec_selfother" value="0" />
+        </div>
+        <div class="border-bottom py-1">
+            <label>案件狀態：</label>
+            <label><input type="radio" name="onoff" value="0" checked>全部顯示</label>
+            <label><input type="radio" name="onoff" value="1">進行中</label>
+            <label><input type="radio" name="onoff" value="2">已結束</label>
+            <input type="hidden" id="rec_onoff" value="0" />
+        </div>
+        <div id="link_btn" class="p-1 overflow-auto">
 
-            </div>
+        </div>
     </div>
     @*column2*@
-    <div class="h-100" style="width:40%; background-color:#b5b5b5">
-        <h3 id="chatheader" class="text-center border-bottom" style="margin-top:0">聊天室</h3>
-        <div id="chat">
+    <div class="bg-go-light h-100 px-2 pt-2 d-flex flex-column" style="width:40%;">
+        <h3 id="chatheader" class="text-center">聊天室</h3>
+        <div class="d-flex ">
+            @for(int i = 0; i < 5; i++) {
+            <div class="p-1">
+                <img class="profile-big" src="~/images/ProfileImages/guestProfile.jpg" />
+            </div>
+            }
+        </div>
+        <div class="w-100 flex-grow-1 column-main" id="chat">
+            @for (int i = 0; i < 5; i++) {
+                <div class="d-flex">
+                    <img class="profile m-1 align-self-start" src="~/images/ProfileImages/guestProfile.jpg" />
+                    <div class="msg-box m-1 msg-in">
+                        強烈建議認真學習其內容，而且學完之後村長會給玩家多枚經驗加成徽章，請盡早入手幫助升級。
+                        其中畢業篇甚至包含了對新手幫助很大的30%經驗加成徽章，但難度對於新手較高，可等大約60級左右再回頭挑戰，詳情請見討論串：【攻略】村長特訓(畢業篇) 村長行動&低配攻略徵求
+                    </div>
+                    <div class="m-1 msg-time">下午 4：30</div>
+                </div>
+                <div class="d-flex flex-row-reverse">
+                    <div class="msg-box m-1 msg-out">
+                        強烈建議認真學習其內容，而且學完之後村長會給玩家多枚經驗加成徽章，請盡早入手幫助升級。
+                        詳情請見討論串：【攻略】村長特訓(畢業篇) 村長行動&低配攻略徵求
+                    </div>
+                    <div class="m-1 msg-time">下午 4：30</div>
+                </div>
+            }
+
         </div>
         <input type="hidden" id="roomid" value="0" />
-        <div class="input_msg_write">
-            <input type="text" id="message" class="write_msg" placeholder="輸入訊息" />
-            <button class="msg_send_btn" type="button" id="btnSend" disabled='disabled'>送出</button>
+        <div class="d-flex py-1">
+            <div style="width:90%">
+                <textarea id="message" class="msg-box msg-input w-100" style="height:auto" placeholder="輸入訊息"></textarea>
+            </div>
+            <div class="pl-2" style="width:10%">
+                <button class="px-1 btn btn-primary w-100" id="btnSend" disabled='disabled'>送出</button>
+            </div>
         </div>
     </div>
     @*column3*@
-<div class="bg-go-light h-100" style="width: 30%">
-    <h3 class="sideheader text-center">詳細資訊</h3>
-    <input type="hidden" id="oid" />
-    <input type="hidden" id="gt" />
-    <input type="hidden" id="hid" />
-    <input type="hidden" id="self" />
-    <div class="" id="detail">
-
-    </div>
+    <div class="bg-go-light h-100 border-left px-2 pt-2" style="width: 30%">
+        <h3>詳細資訊</h3>
+        <input type="hidden" id="oid" />
+        <input type="hidden" id="gt" />
+        <input type="hidden" id="hid" />
+        <input type="hidden" id="self" />
+        <div class="" id="detail">
+        </div>
     @*service edit form*@
-    <div class="px-2 d-none" id="serviceEditForm">
-        <div class="border-bottom-dark mb-2">
-            <h4>編輯</h4>
-        </div>
-        <div class="row">
-            <div class="col-6">
-                <div class="form-group">
-                    <label class="control-label">縣市</label>
-                    <select class="form-control" id="cityId" name="cityId" onchange="getDistrictc('#DistrictId')" data-val="true" data-val-required="The CityId field is required.">
-                        @*${citytxt}*@
-                    </select>
-                </div>
+        <div class="px-2 pt-2 d-none" id="serviceEditForm">
+            <div class="border-bottom-dark mb-2">
+                <h4>編輯</h4>
             </div>
-            <div class="col-6">
-                <div class="form-group">
-                    <label class="control-label" for="DistrictId">鄉鎮市區</label>
-                    <select class="form-control" id="DistrictId" name="DistrictId" data-val="true" data-val-required="The 鄉鎮市區 field is required.">
-                    </select>
-                </div>
-            </div>
-            <div class="col-12">
-                <div class="form-group">
-                    <label class="control-label" for="Address">地址</label>
-                    <input class="form-control" id="Address" name="Address" type="text" value="">
-                    <span class="text-danger field-validation-valid" data-valmsg-for="Address" data-valmsg-replace="true"></span>
-                </div>
-            </div>
-            <div class="col-6">
-                <div class="form-group">
-                    <label class="control-label" for="EndTime">結束時間</label>
-                    <input class="form-control" id="EndTime" name="EndTime" type="datetime-local" data-val="true" data-val-required="The 結束時間 field is required." value="">
-                    <span class="text-danger field-validation-valid" data-valmsg-for="EndTime" data-valmsg-replace="true"></span>
-                </div>
-                <div class="form-group form-check">
-                    <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox" data-val="true" data-val-required="The 是否可到府服務 field is required." id="CanGo" name="CanGo" value="true"> 是否可到府服務
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="GoRangeId">可服務距離</label>
-                    <select class="form-control" data-val="true" data-val-required="The 可服務距離 field is required." id="GoRangeId" name="GoRangeId">
-                        @*${rangetxt}*@
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="row pb-5">
-            <div class="col-12">
-                <div class="border-bottom-dark mb-2">
-                    <h5>垃圾袋尺寸</h5>
-                </div>
-            </div>
-            @for (int i = 0; i < sizeNumber.Length; i++) {
-                <div class="col-3">
+            <div class="row">
+                <div class="col-6">
                     <div class="form-group">
-                        <label class="control-label" for="L@(sizeNumber[i])maxCount">@(sizeNumber[i])公升</label>
-                        <input class="form-control" id="L@(sizeNumber[i])maxCount" name="L@(sizeNumber[i])maxCount" value="0" type="number">
+                        <label class="control-label">縣市</label>
+                        <select class="form-control" id="cityId" name="cityId" onchange="getDistrictc('#DistrictId')" data-val="true" data-val-required="The CityId field is required.">
+                            @*${citytxt}*@
+                        </select>
                     </div>
                 </div>
-            }
+                <div class="col-6">
+                    <div class="form-group">
+                        <label class="control-label" for="DistrictId">鄉鎮市區</label>
+                        <select class="form-control" id="DistrictId" name="DistrictId" data-val="true" data-val-required="The 鄉鎮市區 field is required.">
+                        </select>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-group">
+                        <label class="control-label" for="Address">地址</label>
+                        <input class="form-control" id="Address" name="Address" type="text" value="">
+                        <span class="text-danger field-validation-valid" data-valmsg-for="Address" data-valmsg-replace="true"></span>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label class="control-label" for="EndTime">結束時間</label>
+                        <input class="form-control" id="EndTime" name="EndTime" type="datetime-local" data-val="true" data-val-required="The 結束時間 field is required." value="">
+                        <span class="text-danger field-validation-valid" data-valmsg-for="EndTime" data-valmsg-replace="true"></span>
+                    </div>
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" data-val="true" data-val-required="The 是否可到府服務 field is required." id="CanGo" name="CanGo" value="true"> 是否可到府服務
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="GoRangeId">可服務距離</label>
+                        <select class="form-control" data-val="true" data-val-required="The 可服務距離 field is required." id="GoRangeId" name="GoRangeId">
+                            @*${rangetxt}*@
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row pb-5">
+                <div class="col-12">
+                    <div class="border-bottom-dark mb-2">
+                        <h5>垃圾袋尺寸</h5>
+                    </div>
+                </div>
+                @for (int i = 0; i < sizeNumber.Length; i++) {
+                    <div class="col-3">
+                        <div class="form-group">
+                            <label class="control-label" for="L@(sizeNumber[i])maxCount">@(sizeNumber[i])公升</label>
+                            <input class="form-control" id="L@(sizeNumber[i])maxCount" name="L@(sizeNumber[i])maxCount" value="0" type="number">
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="column-btn py-1">
+                <button class="btn btn-primary" onclick="saveedit()">儲存</button>
+                <button class="btn btn-primary">取消</button>
+            </div>
+            <input type="hidden" id="GarbageServiceId" name="GarbageServiceId" />
+            <input type="hidden" id="IsActive" name="IsActive" style="display:none" />
+            <input type="hidden" id="StartTime" name="StartTime" />
+            <input type="hidden" id="ServiceTypeId" name="ServiceTypeId" />
+            <input type="hidden" id="HostMemberId" name="HostMemberId" />
         </div>
-        <div class="column-btn py-1">
-            <button class="btn btn-primary" onclick="saveedit()">儲存</button>
-            <button class="btn btn-primary">取消</button>
-        </div>
-        <input type="hidden" id="GarbageServiceId" name="GarbageServiceId" />
-        <input type="hidden" id="IsActive" name="IsActive" style="display:none" />
-        <input type="hidden" id="StartTime" name="StartTime" />
-        <input type="hidden" id="ServiceTypeId" name="ServiceTypeId" />
-        <input type="hidden" id="HostMemberId" name="HostMemberId" />
     </div>
-</div>
 </div>
 
 

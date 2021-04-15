@@ -61,6 +61,11 @@ html {
 
 .profile {
     width: 30px;
+    border-radius: 50%
+}
+.profile-big {
+    width: 40px;
+    border-radius: 50%
 }
 
 .indicator {
