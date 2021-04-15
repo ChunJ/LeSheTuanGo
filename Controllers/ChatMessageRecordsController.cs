@@ -266,6 +266,7 @@ namespace LeSheTuanGo.Controllers
             if (grouptype == 1)
             {
                 return ls;
+                //
             }
             else
             {
