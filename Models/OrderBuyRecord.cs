@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 #nullable disable
@@ -14,9 +15,11 @@ namespace LeSheTuanGo.Models
         public bool NeedCome { get; set; }
         public short ComeDistrictId { get; set; }
         public string ComeAddress { get; set; }
-
+        [JsonIgnore]
         public virtual DistrictRef ComeDistrict { get; set; }
+        [JsonIgnore]
         public virtual Member Member { get; set; }
+        [JsonIgnore]
         public virtual Order Order { get; set; }
     }
 }

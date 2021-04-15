@@ -43,7 +43,7 @@ $(function () {
             success: function () {
 
                 let txt = grouptype == 1 ? "(團購團)" : "(垃圾團)";
-                createNotification(grouptype, orderid, gmemberid, txt + $("#chatheader").text() + "有新的訊息")
+                createNotification(grouptype, orderid, gmemberid, $("#chatheader").text() + "有新的訊息")
             }
         });
     })
@@ -177,6 +177,7 @@ function getdetail(oid, gt, hid) {
                     if (s[i].Count != undefined) {
                         txt += `<div>您的購買數量： ${s[i].Count} </div><br />`;
                     }
+                    txt += `<button id="edit" onclick="editorder()">編輯</button>`
                     $("#self").val(s[i].self);
                 }
             }
@@ -499,7 +500,7 @@ function editorder() {
     <input type="hidden" id="HostMemberId" name="HostMemberId" />`;
 
                     //帶入編輯資料(ServiceOffer)
-                    $("#detail").html(txt).promise().done(function () {
+                    $("#detail").html(txt1).promise().done(function () {
                         for (let i = 0; i < detail.length; i++) {
                             $("#cityId").val(detail[i].CityId).change();
                             var checkExist = setInterval(function () {
