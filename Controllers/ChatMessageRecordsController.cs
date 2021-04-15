@@ -257,7 +257,7 @@ namespace LeSheTuanGo.Controllers
         }
 
         //編輯明細頁面
-        public async Task<string[]> editOrder(int grouptype, int orderid, int memberid,bool self)
+        public async Task<string[]> editOrder(int grouptype, int orderid, int memberid, bool self)
         {
             string[] ls = new string[3];
             memberID = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
@@ -265,13 +265,28 @@ namespace LeSheTuanGo.Controllers
             ls[2] = JsonConvert.SerializeObject(await _context.CityRefs.Select(n => n).ToListAsync());
             if (grouptype == 1)
             {
-                return ls;
+                if (self)
+                {
+                    var order = await _context.Orders.Where(n => n.OrderId == orderid&&n.HostMemberId==memberid).ToListAsync();
+                    var ss = JsonConvert.SerializeObject(order);
+                    ls[0] = ss;
+                    return ls;
+                }
+                else
+                {
+
+                    var orderBuy = await _context.OrderBuyRecords.Where(n => n.OrderId == orderid&&n.MemberId==memberid).ToListAsync();
+                    var ss = JsonConvert.SerializeObject(orderBuy);
+                    ls[0] = ss;
+                    return ls;
+                }
+
             }
             else
             {
                 if (self)
                 {
-                    var garbageServiceOffer = await _context.GarbageServiceOffers.Where(n => n.GarbageServiceId == orderid).Select(n => new
+                    var garbageServiceOffer = await _context.GarbageServiceOffers.Where(n => n.GarbageServiceId == orderid&&n.HostMemberId==memberid).Select(n => new
                     {
                         n.GarbageServiceId,
                         n.Address,
@@ -298,26 +313,20 @@ namespace LeSheTuanGo.Controllers
                 }
                 else
                 {
-                    var garbageServiceOffer = await _context.GarbageServiceOffers.Where(n => n.GarbageServiceId == orderid).Select(n => new
+                    var garbageServiceOffer = await _context.GarbageServiceUseRecords.Where(n => n.GarbageServiceOfferId == orderid && n.MemberId == memberid).Select(n => new
                     {
-                        n.GarbageServiceId,
-                        n.Address,
-                        n.CanGo,
-                        n.District.CityId,
-                        n.DistrictId,
-                        n.EndTime,
-                        n.GoRangeId,
-                        n.HostMemberId,
-                        n.IsActive,
-                        n.L3maxCount,
-                        n.L5maxCount,
-                        n.L14maxCount,
-                        n.L25maxCount,
-                        n.L33maxCount,
-                        n.L75maxCount,
-                        n.L120maxCount,
-                        n.StartTime,
-                        n.ServiceTypeId,
+                        n.GarbageServiceOffer.GarbageServiceId,
+                        n.ComeAddress,
+                        n.NeedCome,
+                        n.ComeDistrict.CityId,
+                        n.ComeDistrictId,
+                        n.L3count,
+                        n.L5count,
+                        n.L14count,
+                        n.L25count,
+                        n.L33count,
+                        n.L75count,
+                        n.L120count,
                     }).ToListAsync();
                     var ss = JsonConvert.SerializeObject(garbageServiceOffer);
                     ls[0] = ss;

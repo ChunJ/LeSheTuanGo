@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 #nullable disable
@@ -28,11 +29,15 @@ namespace LeSheTuanGo.Models
         public decimal UnitPrice { get; set; }
         public bool CanGo { get; set; }
         public byte GoRangeId { get; set; }
-
+        [JsonIgnore]
         public virtual DistrictRef District { get; set; }
+        [JsonIgnore]
         public virtual RangeRef GoRange { get; set; }
+        [JsonIgnore]
         public virtual Member HostMember { get; set; }
+        [JsonIgnore]
         public virtual Product Product { get; set; }
+        [JsonIgnore]
         public virtual ICollection<OrderBuyRecord> OrderBuyRecords { get; set; }
     }
 }
