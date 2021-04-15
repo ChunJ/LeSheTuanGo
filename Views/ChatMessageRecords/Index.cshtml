@@ -79,98 +79,97 @@
         </div>
     </div>
     @*column3*@
-    <div class="bg-go-light h-100 border-left px-2 pt-2" style="width: 30%">
-        <h3>詳細資訊</h3>
-        <input type="hidden" id="oid" />
-        <input type="hidden" id="gt" />
-        <input type="hidden" id="hid" />
-        <input type="hidden" id="self" />
-        <div class="" id="detail">
-    </div>
+<div class="bg-go-light h-100 border-left px-2 pt-2" style="width: 30%">
+    <h3 class="m-0">詳細資訊</h3>
+    <input type="hidden" id="oid" />
+    <input type="hidden" id="gt" />
+    <input type="hidden" id="hid" />
+    <input type="hidden" id="self" />
+    <div class="row p-3 h-100 column-main" style="align-content:flex-start">
         @*order edit form*@
-    <div class="px-2 pt-2" id="orderEditForm">
-        <div class="border-bottom-dark mb-2">
-            <h4>編輯</h4>
-        </div>
-        <div class="row">
-            <div class="col-6">
-                <div class="form-group">
-                    <label>商品類別</label>
-                    <select id="CategoryId" class="form-control" onchange="getProduct('#ProductId')" asp-items="ViewBag.Category"></select>
-                </div>
-                <div class="form-group">
-                    <label for="ProductId">商品名稱</label>
-                    <select name="ProductId" id="ProductId" class="form-control" onchange="showProdImage()"></select>
-                </div>
-                <div class="form-group">
-                    <label>目標購買數量</label>
-                    <input name="MaxCount" id="MaxCount" class="form-control" />
-                </div>
-                <div class="form-group">
-                    <label>每單位價格</label>
-                    <input name="UnitPrice" id="UnitPrice" class="form-control" />
-                </div>
+        <div class="px-2 pt-2" id="orderEditForm">
+            <div class="border-bottom-dark mb-2">
+                <h4>編輯</h4>
             </div>
-            <div class="col-6">
-                <div class="d-flex flex-column h-100">
-                    <div>
-                        <label>商品示意圖</label>
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>商品類別</label>
+                        <select id="CategoryId" class="form-control" onchange="getProduct('#ProductId')" asp-items="ViewBag.Category"></select>
                     </div>
-                    <div class="flex-grow-1">
-                        <image id="prodImage" class="product-image" src="@ViewData["ProductImage"]"></image>
+                    <div class="form-group">
+                        <label for="ProductId">商品名稱</label>
+                        <select name="ProductId" id="ProductId" class="form-control" onchange="showProdImage()"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>目標購買數量</label>
+                        <input name="MaxCount" id="MaxCount" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>每單位價格</label>
+                        <input name="UnitPrice" id="UnitPrice" class="form-control" />
                     </div>
                 </div>
+                <div class="col-6">
+                    <div class="d-flex flex-column h-100">
+                        <div>
+                            <label>商品示意圖</label>
+                        </div>
+                        <div class="flex-grow-1">
+                            <image id="prodImage" class="product-image" src="@ViewData["ProductImage"]"></image>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row pb-5">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>縣市</label>
+                        <select id="CityId" class="form-control" onchange="getDistrict('#DistrictId')" asp-items="ViewBag.City"></select>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label for="DistrictId">鄉鎮市區</label>
+                        <select name="DistrictId" id="DistrictId" class="form-control"></select>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-group">
+                        <label>街道地址</label>
+                        <input name="Address" id="Address" value=@ViewData["Address"] class="form-control" />
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>截止時間</label>
+                        <input name="EndTime" id="EndTime" class="form-control" />
+                    </div>
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" name="CanGo" id="CanGo" />
+                            是否提供外送服務?
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>外送距離限制</label>
+                        <select name="GoRangeId" id="GoRangeId" class="form-control">
+                        </select>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-group">
+                        <label>團購說明</label>
+                        <textarea id="OrderDescription" name="OrderDescription" rows="7" class="form-control" value=""></textarea>
+                    </div>
+                </div>
+                <div class="col-12" style="height:1.5rem"></div>
+            </div>
+            <div class="sink py-1">
+                <input type="submit" value="新增" class="btn btn-primary" />
+                <a class="btn btn-primary" href="/ChatMessageRecords/Index">查看紀錄</a>
             </div>
         </div>
-        <div class="row pb-5">
-            <div class="col-6">
-                <div class="form-group">
-                    <label>縣市</label>
-                    <select id="CityId" class="form-control" onchange="getDistrict('#DistrictId')" asp-items="ViewBag.City"></select>
-                </div>
-            </div>
-            <div class="col-6">
-                <div class="form-group">
-                    <label for="DistrictId">鄉鎮市區</label>
-                    <select name="DistrictId" id="DistrictId" class="form-control"></select>
-                </div>
-            </div>
-            <div class="col-12">
-                <div class="form-group">
-                    <label>街道地址</label>
-                    <input name="Address" id="Address" value=@ViewData["Address"] class="form-control" />
-                </div>
-            </div>
-            <div class="col-6">
-                <div class="form-group">
-                    <label>截止時間</label>
-                    <input name="EndTime" id="EndTime" class="form-control" />
-                </div>
-                <div class="form-group form-check">
-                    <label class="form-check-label">
-                        <input class="form-check-input" name="CanGo" id="CanGo" />
-                        是否提供外送服務?
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label>外送距離限制</label>
-                    <select name="GoRangeId" id="GoRangeId" class="form-control">
-
-                    </select>
-                </div>
-            </div>
-            <div class="col-12">
-                <div class="form-group">
-                    <label>團購說明</label>
-                    <textarea id="OrderDescription" name="OrderDescription" rows="7" class="form-control" value=""></textarea>
-                </div>
-            </div>
-        </div>
-        <div class="column-btn py-1">
-            <input type="submit" value="新增" class="btn btn-primary" />
-            <a class="btn btn-primary" href="/ChatMessageRecords/Index">查看紀錄</a>
-        </div>
-    </div>
         @*service edit form*@
         <div class="px-2 pt-2 d-none" id="serviceEditForm_ServiceOffer">
             <div class="border-bottom-dark mb-2">
@@ -274,13 +273,13 @@
                     </div>
                 </div>
                 @*@for (int i = 0; i < sizeNumber.Length; i++) {
-                        <div class="col-3">
-                            <div class="form-group">
-                                <label class="control-label" for="L@(sizeNumber[i])maxCount">@(sizeNumber[i])公升</label>
-                                <input class="form-control" id="L@(sizeNumber[i])maxCount" name="L@(sizeNumber[i])maxCount" value="0" type="number">
-                            </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                            <label class="control-label" for="L@(sizeNumber[i])maxCount">@(sizeNumber[i])公升</label>
+                            <input class="form-control" id="L@(sizeNumber[i])maxCount" name="L@(sizeNumber[i])maxCount" value="0" type="number">
                         </div>
-                    }*@
+                    </div>
+                }*@
             </div>
             <div class="column-btn py-1">
                 <button class="btn btn-primary" onclick="saveedit()">儲存</button>
@@ -293,6 +292,10 @@
             <input type="hidden" id="HostMemberId" name="HostMemberId" />
         </div>
     </div>
+    
+    
+    
+</div>
 </div>
 
 
