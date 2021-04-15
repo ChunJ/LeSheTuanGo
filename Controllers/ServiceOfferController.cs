@@ -141,6 +141,7 @@ namespace LeSheTuanGo.Controllers
         //Real Edit
         public void EditGarbageOffer(int garbageServiceID, GarbageServiceOffer garbageServiceOffer)
         {
+
             if (garbageServiceID == garbageServiceOffer.GarbageServiceId)
             {
                 decimal[] s = cUtility.addressToLatlong(garbageServiceOffer.Address);
@@ -150,6 +151,8 @@ namespace LeSheTuanGo.Controllers
                 _context.SaveChanges();
             }
         }
+
+
 
         // GET: GarbageServiceOffers/Delete/5
         public async Task<IActionResult> Delete(int? id)

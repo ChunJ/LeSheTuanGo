@@ -22,7 +22,7 @@ $(function () {
         //撈通知
         getNotification(sessionMemberId);
 
-        //小鈴鐺消通知
+        //點小鈴鐺消通知
         $("#alertDropdown").on('click', function () {
             $.ajax({
                 url: "/Notifications/ClearNotification",

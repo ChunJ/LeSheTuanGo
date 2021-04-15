@@ -40,14 +40,16 @@
     <div class="bg-go-light h-100 px-2 pt-2 d-flex flex-column" style="width:40%;">
         <h3 id="chatheader" class="text-center">聊天室</h3>
         <div class="d-flex ">
-            @for(int i = 0; i < 5; i++) {
-            <div class="p-1">
-                <img class="profile-big" src="~/images/ProfileImages/guestProfile.jpg" />
-            </div>
+            @for (int i = 0; i < 5; i++)
+            {
+                <div class="p-1">
+                    <img class="profile-big" src="~/images/ProfileImages/guestProfile.jpg" />
+                </div>
             }
         </div>
         <div class="w-100 flex-grow-1 column-main" id="chat">
-            @for (int i = 0; i < 5; i++) {
+            @for (int i = 0; i < 5; i++)
+            {
                 <div class="d-flex">
                     <img class="profile m-1 align-self-start" src="~/images/ProfileImages/guestProfile.jpg" />
                     <div class="msg-box m-1 msg-in">
@@ -85,8 +87,8 @@
         <input type="hidden" id="self" />
         <div class="" id="detail">
         </div>
-    @*service edit form*@
-        <div class="px-2 pt-2 d-none" id="serviceEditForm">
+        @*service edit form*@
+        <div class="px-2 pt-2 d-none" id="serviceEditForm_ServiceOffer">
             <div class="border-bottom-dark mb-2">
                 <h4>編輯</h4>
             </div>
@@ -138,14 +140,63 @@
                         <h5>垃圾袋尺寸</h5>
                     </div>
                 </div>
-                @for (int i = 0; i < sizeNumber.Length; i++) {
-                    <div class="col-3">
-                        <div class="form-group">
-                            <label class="control-label" for="L@(sizeNumber[i])maxCount">@(sizeNumber[i])公升</label>
-                            <input class="form-control" id="L@(sizeNumber[i])maxCount" name="L@(sizeNumber[i])maxCount" value="0" type="number">
-                        </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <label class="control-label" for="L3maxCount">3公升</label>
+                        <input class="form-control" id="L3maxCount" name="L3maxCount" value="0" type="number" data-val="true" data-val-required="The 3公升 field is required.">
+                        <span class="text-danger field-validation-valid" data-valmsg-for="L3maxCount" data-valmsg-replace="true"></span>
                     </div>
-                }
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <label class="control-label" for="L5maxCount">5公升</label>
+                        <input class="form-control" id="L5maxCount" name="L5maxCount" value="0" type="number" data-val="true" data-val-required="The 5公升 field is required.">
+                        <span class="text-danger field-validation-valid" data-valmsg-for="L5maxCount" data-valmsg-replace="true"></span>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <label class="control-label" for="L14maxCount">14公升</label>
+                        <input class="form-control" id="L14maxCount" name="L14maxCount" value="0" type="number" data-val="true" data-val-required="The 14公升 field is required.">
+                        <span class="text-danger field-validation-valid" data-valmsg-for="L14maxCount" data-valmsg-replace="true"></span>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <label class="control-label" for="L25maxCount">25公升</label>
+                        <input class="form-control" id="L25maxCount" name="L25maxCount" value="0" type="number" data-val="true" data-val-required="The 25公升 field is required.">
+                        <span class="text-danger field-validation-valid" data-valmsg-for="L25maxCount" data-valmsg-replace="true"></span>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <label class="control-label" for="L33maxCount">33公升</label>
+                        <input class="form-control" id="L33maxCount" name="L33maxCount" value="0" type="number" data-val="true" data-val-required="The 33公升 field is required.">
+                        <span class="text-danger field-validation-valid" data-valmsg-for="L33maxCount" data-valmsg-replace="true"></span>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <label class="control-label" for="L75maxCount">75公升</label>
+                        <input class="form-control" id="L75maxCount" name="L75maxCount" value="0" type="number" data-val="true" data-val-required="The 75公升 field is required.">
+                        <span class="text-danger field-validation-valid" data-valmsg-for="L75maxCount" data-valmsg-replace="true"></span>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <label class="control-label" for="L120maxCount">120公升</label>
+                        <input class="form-control" id="L120maxCount" name="L120maxCount" value="0" type="number" data-val="true" data-val-required="The 120公升 field is required.">
+                        <span class="text-danger field-validation-valid" data-valmsg-for="L120maxCount" data-valmsg-replace="true"></span>
+                    </div>
+                </div>
+                @*@for (int i = 0; i < sizeNumber.Length; i++) {
+                        <div class="col-3">
+                            <div class="form-group">
+                                <label class="control-label" for="L@(sizeNumber[i])maxCount">@(sizeNumber[i])公升</label>
+                                <input class="form-control" id="L@(sizeNumber[i])maxCount" name="L@(sizeNumber[i])maxCount" value="0" type="number">
+                            </div>
+                        </div>
+                    }*@
             </div>
             <div class="column-btn py-1">
                 <button class="btn btn-primary" onclick="saveedit()">儲存</button>
@@ -159,6 +210,8 @@
         </div>
     </div>
 </div>
+
+
 
 
 
@@ -421,20 +474,24 @@
                     let range = JSON.parse(data[1]);
                     let city = JSON.parse(data[2]);
 
-                    //city
-                    let citytxt = "";
-                        for (let i = 0; i < city.length; i++) {
-                            citytxt += `<option value=${city[i].CityId}>${city[i].CityName}</option>`
-                    }
-                    //range
-                    let rangetxt = "";
-                    for (let i = 0; i < range.length; i++) {
-                        rangetxt += `<option value=${range[i].RangeId}>${range[i].RangeInMeters}</option>`
-                    }
+                    if (grouptype == 2) {
+                        if ($("#self").val() == "true") {
+                            //city
+                            let citytxt = "";
+                            for (let i = 0; i < city.length; i++) {
+                                citytxt += `<option value=${city[i].CityId}>${city[i].CityName}</option>`
+                            }
+                            $("#cityId").html(citytxt);
 
+                            //range
+                            let rangetxt = "";
+                            for (let i = 0; i < range.length; i++) {
+                                rangetxt += `<option value=${range[i].RangeId}>${range[i].RangeInMeters}</option>`
+                            }
+                            $("#GoRangeId").html(rangetxt);
 
-                    //很長的框架
-                    let txt1 = `
+                            //很長的框架
+                            let txt1 = `
                         <div class="border-bottom-dark mb-2">
                             <h4>編輯</h4>
                         </div>
@@ -552,7 +609,8 @@
 
                                                                         `;
 
-                    let txt = `        <div class="px-2 pt-2" id="serviceEditForm">
+                            let txt = `        
+    <div class="px-2 pt-2" id="serviceEditForm">
             <div class="border-bottom-dark mb-2">
                 <h4>編輯</h4>
             </div>
@@ -605,100 +663,104 @@
                     </div>
                 </div>
                 <div class="col-3">
-                                            <div class="form-group">
-                                                <label class="control-label" for="L3maxCount">3公升</label>
-                                                <input class="form-control" id="L3maxCount" name="L3maxCount" value="0" type="number" data-val="true" data-val-required="The 3公升 field is required.">
-                                                    <span class="text-danger field-validation-valid" data-valmsg-for="L3maxCount" data-valmsg-replace="true"></span>
+                <div class="form-group">
+                    <label class="control-label" for="L3maxCount">3公升</label>
+                    <input class="form-control" id="L3maxCount" name="L3maxCount" value="0" type="number" data-val="true" data-val-required="The 3公升 field is required.">
+                    <span class="text-danger field-validation-valid" data-valmsg-for="L3maxCount" data-valmsg-replace="true"></span>
+                </div>
             </div>
-                                            </div>
-                                            <div class="col-3">
-                                                <div class="form-group">
-                                                    <label class="control-label" for="L5maxCount">5公升</label>
-                                                    <input class="form-control" id="L5maxCount" name="L5maxCount" value="0" type="number" data-val="true" data-val-required="The 5公升 field is required.">
-                                                        <span class="text-danger field-validation-valid" data-valmsg-for="L5maxCount" data-valmsg-replace="true"></span>
+            <div class="col-3">
+                <div class="form-group">
+                    <label class="control-label" for="L5maxCount">5公升</label>
+                    <input class="form-control" id="L5maxCount" name="L5maxCount" value="0" type="number" data-val="true" data-val-required="The 5公升 field is required.">
+                    <span class="text-danger field-validation-valid" data-valmsg-for="L5maxCount" data-valmsg-replace="true"></span>
+                </div>
             </div>
-                                                </div>
-                                                <div class="col-3">
-                                                    <div class="form-group">
-                                                        <label class="control-label" for="L14maxCount">14公升</label>
-                                                        <input class="form-control" id="L14maxCount" name="L14maxCount" value="0" type="number" data-val="true" data-val-required="The 14公升 field is required.">
-                                                            <span class="text-danger field-validation-valid" data-valmsg-for="L14maxCount" data-valmsg-replace="true"></span>
+            <div class="col-3">
+                <div class="form-group">
+                    <label class="control-label" for="L14maxCount">14公升</label>
+                    <input class="form-control" id="L14maxCount" name="L14maxCount" value="0" type="number" data-val="true" data-val-required="The 14公升 field is required.">
+                    <span class="text-danger field-validation-valid" data-valmsg-for="L14maxCount" data-valmsg-replace="true"></span>
+                </div>
             </div>
-                                                    </div>
-                                                    <div class="col-3">
-                                                        <div class="form-group">
-                                                            <label class="control-label" for="L25maxCount">25公升</label>
-                                                            <input class="form-control" id="L25maxCount" name="L25maxCount" value="0" type="number" data-val="true" data-val-required="The 25公升 field is required.">
-                                                                <span class="text-danger field-validation-valid" data-valmsg-for="L25maxCount" data-valmsg-replace="true"></span>
+            <div class="col-3">
+                <div class="form-group">
+                    <label class="control-label" for="L25maxCount">25公升</label>
+                    <input class="form-control" id="L25maxCount" name="L25maxCount" value="0" type="number" data-val="true" data-val-required="The 25公升 field is required.">
+                    <span class="text-danger field-validation-valid" data-valmsg-for="L25maxCount" data-valmsg-replace="true"></span>
+                </div>
             </div>
-                                                        </div>
-                                                        <div class="col-3">
-                                                            <div class="form-group">
-                                                                <label class="control-label" for="L33maxCount">33公升</label>
-                                                                <input class="form-control" id="L33maxCount" name="L33maxCount" value="0" type="number" data-val="true" data-val-required="The 33公升 field is required.">
-                                                                    <span class="text-danger field-validation-valid" data-valmsg-for="L33maxCount" data-valmsg-replace="true"></span>
+            <div class="col-3">
+                <div class="form-group">
+                    <label class="control-label" for="L33maxCount">33公升</label>
+                    <input class="form-control" id="L33maxCount" name="L33maxCount" value="0" type="number" data-val="true" data-val-required="The 33公升 field is required.">
+                    <span class="text-danger field-validation-valid" data-valmsg-for="L33maxCount" data-valmsg-replace="true"></span>
+                </div>
             </div>
-                                                            </div>
-                                                            <div class="col-3">
-                                                                <div class="form-group">
-                                                                    <label class="control-label" for="L75maxCount">75公升</label>
-                                                                    <input class="form-control" id="L75maxCount" name="L75maxCount" value="0" type="number" data-val="true" data-val-required="The 75公升 field is required.">
-                                                                        <span class="text-danger field-validation-valid" data-valmsg-for="L75maxCount" data-valmsg-replace="true"></span>
+            <div class="col-3">
+                <div class="form-group">
+                    <label class="control-label" for="L75maxCount">75公升</label>
+                    <input class="form-control" id="L75maxCount" name="L75maxCount" value="0" type="number" data-val="true" data-val-required="The 75公升 field is required.">
+                    <span class="text-danger field-validation-valid" data-valmsg-for="L75maxCount" data-valmsg-replace="true"></span>
+                </div>
             </div>
-                                                                </div>
-                                                                <div class="col-3">
-                                                                    <div class="form-group">
-                                                                        <label class="control-label" for="L120maxCount">120公升</label>
-                                                                        <input class="form-control" id="L120maxCount" name="L120maxCount" value="0" type="number" data-val="true" data-val-required="The 120公升 field is required.">
-                                                                            <span class="text-danger field-validation-valid" data-valmsg-for="L120maxCount" data-valmsg-replace="true"></span>
+            <div class="col-3">
+                <div class="form-group">
+                    <label class="control-label" for="L120maxCount">120公升</label>
+                    <input class="form-control" id="L120maxCount" name="L120maxCount" value="0" type="number" data-val="true" data-val-required="The 120公升 field is required.">
+                    <span class="text-danger field-validation-valid" data-valmsg-for="L120maxCount" data-valmsg-replace="true"></span>
+                </div>
             </div>
-                                                                    </div>
-                                                                </div>
-            </div>
-            <div class="column-btn py-1">
-                <button class="btn btn-primary" onclick="saveedit()">儲存</button>
-                <button class="btn btn-primary">取消</button>
-            </div>
-            <input type="hidden" id="GarbageServiceId" name="GarbageServiceId" />
-            <input type="hidden" id="IsActive" name="IsActive" style="display:none" />
-            <input type="hidden" id="StartTime" name="StartTime" />
-            <input type="hidden" id="ServiceTypeId" name="ServiceTypeId" />
-            <input type="hidden" id="HostMemberId" name="HostMemberId" />`;
+        </div>
+    </div>
+    <div class="column-btn py-1">
+        <button class="btn btn-primary" onclick="saveedit()">儲存</button>
+        <button class="btn btn-primary">取消</button>
+    </div>
+    <input type="hidden" id="GarbageServiceId" name="GarbageServiceId" />
+    <input type="hidden" id="IsActive" name="IsActive" style="display:none" />
+    <input type="hidden" id="StartTime" name="StartTime" />
+    <input type="hidden" id="ServiceTypeId" name="ServiceTypeId" />
+    <input type="hidden" id="HostMemberId" name="HostMemberId" />`;
 
-                    //帶入編輯資料(ServiceOffer)
-                    $("#detail").html(txt).promise().done(function () {
-
-                        for (let i = 0; i < detail.length; i++) {
-                            $("#cityId").val(detail[i].CityId).change();
-                            var checkExist = setInterval(function () {
-                                if ($('#DistrictId').length) {
-                                    $(`#DistrictId option[value="${detail[i].DistrictId}"]`).attr('selected', 'selected')
-                                    clearInterval(checkExist);
+                            //帶入編輯資料(ServiceOffer)
+                            $("#detail").html(txt).promise().done(function () {
+                                for (let i = 0; i < detail.length; i++) {
+                                    $("#cityId").val(detail[i].CityId).change();
+                                    var checkExist = setInterval(function () {
+                                        if ($('#DistrictId').length) {
+                                            $(`#DistrictId option[value="${detail[i].DistrictId}"]`).attr('selected', 'selected')
+                                            clearInterval(checkExist);
+                                        }
+                                    }, 100);
+                                    $("#Address").val(detail[i].Address);
+                                    $("#EndTime").val(detail[i].EndTime);
+                                    $("#CanGo").prop('checked', detail[i].CanGo);
+                                    $("#GoRangeId").val(detail[i].GoRangeId);
+                                    $("#L3maxCount").val(detail[i].L3maxCount);
+                                    $("#L5maxCount").val(detail[i].L5maxCount);
+                                    $("#L14maxCount").val(detail[i].L14maxCount);
+                                    $("#L25maxCount").val(detail[i].L25maxCount);
+                                    $("#L33maxCount").val(detail[i].L33maxCount);
+                                    $("#L75maxCount").val(detail[i].L75maxCount);
+                                    $("#L120maxCount").val(detail[i].L120maxCount);
+                                    $("#GarbageServiceId").val(detail[i].GarbageServiceId);
+                                    $("#IsActive").val(detail[i].IsActive);
+                                    $("#StartTime").val(detail[i].StartTime);
+                                    $("#ServiceTypeId").val(detail[i].ServiceTypeId);
+                                    $("#HostMemberId").val(detail[i].HostMemberId);
                                 }
-                            }, 100);
-                            $("#Address").val(detail[i].Address);
-                            $("#EndTime").val(detail[i].EndTime);
-                            $("#CanGo").prop('checked', detail[i].CanGo);
-                            $("#GoRangeId").val(detail[i].GoRangeId);
-                            $("#L3maxCount").val(detail[i].L3maxCount);
-                            $("#L5maxCount").val(detail[i].L5maxCount);
-                            $("#L14maxCount").val(detail[i].L14maxCount);
-                            $("#L25maxCount").val(detail[i].L25maxCount);
-                            $("#L33maxCount").val(detail[i].L33maxCount);
-                            $("#L75maxCount").val(detail[i].L75maxCount);
-                            $("#L120maxCount").val(detail[i].L120maxCount);
-                            $("#GarbageServiceId").val(detail[i].GarbageServiceId);
-                            $("#IsActive").val(detail[i].IsActive);
-                            $("#StartTime").val(detail[i].StartTime);
-                            $("#ServiceTypeId").val(detail[i].ServiceTypeId);
-                            $("#HostMemberId").val(detail[i].HostMemberId);
+                            })
                         }
-                    })
+                        else {
+
+                        }
+                    }
+
+                    //$("#serviceEditForm_ServiceOffer").removeClass("d-none")
                 },
             })
-        }
-
-
+    }
 
         //儲存編輯(ServiceOffer)
         function saveedit() {
