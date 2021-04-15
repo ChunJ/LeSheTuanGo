@@ -62,7 +62,7 @@ namespace LeSheTuanGo.Controllers
             string result = Convert.ToBase64String(crypto);//把加密後的字串從Byte[]轉為字串
             return result;//輸出結果
         }
-        private string getLength(string address , int length)
+        public string getLength(string address , int length)
         {
             var addressLoc = cUtility.addressToLatlong(address);
 
