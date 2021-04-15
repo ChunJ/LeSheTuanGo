@@ -61,7 +61,7 @@ namespace LeSheTuanGo.ViewModels
         [DisplayName("經度")]
         public decimal Longitude { get { return iv_Member.Longitude; } set { iv_Member.Longitude = value; } }
 
-        [DisplayName("貢獻")]
+        [DisplayName("貢獻值")]
         public int Balance { get { return iv_Member.Balance; } set { iv_Member.Balance = value; } }
         [DisplayName("照片")]
         public string ProfileImagePath { get { return iv_Member.ProfileImagePath; } set { iv_Member.ProfileImagePath = value; } }
