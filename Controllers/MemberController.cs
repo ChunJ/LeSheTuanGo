@@ -85,7 +85,9 @@ namespace LeSheTuanGo.Controllers
             #endregion
             #region 地址轉經緯
             decimal[] addressToLatlong = new decimal[2];
-            addressToLatlong = cUtility.addressToLatlong(memberData.Address);
+            var qDistrict = db.DistrictRefs.Where(n => n.DistrictId == memberData.DistrictId).FirstOrDefault();
+            var qCity = db.CityRefs.Where(n => n.CityId == qDistrict.CityId).FirstOrDefault();
+            addressToLatlong = cUtility.addressToLatlong(qCity.CityName + qDistrict.DistrictName + memberData.Address);
             memberData.Latitude = addressToLatlong[0];
             memberData.Longitude = addressToLatlong[1];
             #endregion
