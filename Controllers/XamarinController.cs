@@ -62,33 +62,21 @@ namespace LeSheTuanGo.Controllers
             string result = Convert.ToBase64String(crypto);//把加密後的字串從Byte[]轉為字串
             return result;//輸出結果
         }
-        private string getLength(string Address , int length)
+        public string GetLength(string address , string length)
         {
-            var latlong = cUtility.addressToLatlong(Address);
-            GeoCoordinate userLocation = new GeoCoordinate((double)latlong[0], (double)latlong[1]);
-            //var tempUser = db.Members.First();
-            //GeoCoordinate userLocation = new GeoCoordinate((double)tempUser.Latitude, (double)tempUser.Longitude);
-            var newObject = from o in db.Orders.Include(o => o.District).Include(o => o.District.City)
-                            select new
-                            {
-                                o.OrderId,
-                                o.ProductId,
-                                o.DistrictId,
-                                o.District.DistrictName,
-                                o.District.City.CityName,
-                                o.Address,
-                                o.EndTime,
-                                o.CanGo,
-                                o.AvailableCount,
-                                o.Latitude,
-                                o.Longitude,
-                                //put user location in every data, not worth putting it elsewhere when the data count is small.
-                                userLat = latlong[0],
-                                userLong = latlong[1],
-                                Distance = userLocation.GetDistanceTo(new GeoCoordinate((double)o.Latitude, (double)o.Longitude)),
-                            };
-            var offerList = newObject.AsEnumerable().Where(o => o.Distance <= length).ToList();
-            return JsonConvert.SerializeObject(offerList);
+            var addressLoc = cUtility.addressToLatlong(address);
+
+            decimal addressLat = addressLoc[0];
+            decimal addressLng = addressLoc[1];
+
+            var result = db.GarbageTruckSpots.ToList();
+
+            var q = from i in result select new { i.Address, i.ArrivalTime, i.Latitude, i.Longitude, distance = cUtility.distanceBetweenTwoSpots(addressLat, addressLng, i.Latitude, i.Longitude), addLat = addressLat, addLng = addressLng, i.GarbageTruckSpotId };
+            var qList = q.Where(q => q.distance <= Convert.ToInt32(length) && q.distance >= 0).OrderBy(q => q.distance).ToList();
+
+            string listJsonString = JsonConvert.SerializeObject(qList);
+
+            return listJsonString;
 
         }
 
