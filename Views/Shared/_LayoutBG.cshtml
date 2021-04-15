@@ -1,0 +1,135 @@
+﻿@using Microsoft.AspNetCore.Http;
+@using LeSheTuanGo.Controllers;
+
+@if (Context.Session.GetInt32(cUtility.Current_User_Id) != null) {
+    ViewData["userNameToDisplay"] = Context.Session.GetString(cUtility.Current_User_Name);
+    ViewData["userProfileImageToShow"] = Context.Session.GetString(cUtility.Current_User_Profile_Image);
+} else {
+    ViewData["userNameToDisplay"] = "訪客";
+    ViewData["userProfileImageToShow"] = "/images/ProfileImages/guestProfile.jpg";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]樂社團Go</title>
+    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />*@
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+        .imageBG {
+            background-image: url(@ViewData["bgImage"]);
+            background-position: center; /* Center the image */
+            background-repeat: no-repeat; /* Do not repeat the image */
+            background-size: cover; /* Resize the background image to cover the entire container */
+            background-color: #555555
+        }
+    </style>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+</head>
+<body class="imageBG">
+    <header class="top-bar">
+        <div class="wide-bar">
+            <nav class="nav navbar-light mb-3">
+                <a class="navbar-brand text-white" asp-area="" asp-controller="Home" asp-action="Index">樂社團GO</a>
+                <a class="nav-link text-white" asp-area="" asp-controller="Map" asp-action="Index">集垃地圖</a>
+                <div class="dropdown">
+                    <a class="nav-link text-white" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        團購
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <a class="dropdown-item" href="/GroupOrder">開新團購</a>
+                        <a class="dropdown-item" href="/Buy">加入團購</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <a class="nav-link text-white" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        倒垃圾
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <a class="dropdown-item" href="/ServiceOffer">幫人倒垃圾</a>
+                        <a class="dropdown-item" href="/ServiceUse">請人倒垃圾</a>
+                    </div>
+                </div>
+                <div class="flex-grow-1">
+                    <div class="nav justify-content-end align-items-center h-100">
+                        <div class="nav-item dropdown mx-1">
+                            <button class="border-0 bg-transparent" type="button" id="alertDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <div class="position-relative">
+                                    <img class="align-middle" src="~/images/Others/bell.svg" />
+                                    <span class="indicator LayoutNotificationNumber">1</span>
+                                </div>
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="alertsDropdown">
+                                <div class="dropdown-menu-header">
+                                    <span class="LayoutNotificationNumber">1</span><span>&nbsp;則新通知</span>
+                                </div>
+                                <div class="list-group" id="LayoutNotificationList">
+                                    <a class="dropdown-item" href="#">通知1</a>
+                                    <a class="dropdown-item" href="#">通知2</a>
+                                    <a class="dropdown-item" href="#">通知3</a>
+                                </div>
+                                <div class="dropdown-divider"></div>
+                                <div class="dropdown-menu-footer">
+                                    <a href="#" class="text-muted">查看所有通知</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="nav-item dropdown mx-1">
+                            <button class="border-0 bg-transparent" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <img class="rounded-circle profile" src="@ViewData["userProfileImageToShow"]" />
+                                <span class="text-white">@ViewData["userNameToDisplay"]</span>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                @if (Context.Session.GetInt32(cUtility.Current_User_Id) == null)
+                                {
+                                    <a class="dropdown-item" asp-controller="Member" asp-action="Login">登入</a>
+                                    <a class="dropdown-item" asp-controller="Member" asp-action="Create">註冊</a>
+                                }
+                                else
+                                {
+                                    <a class="dropdown-item" asp-controller="Member" asp-action="Detail">我的帳戶</a>
+                                    <a class="dropdown-item" href="/ChatMessageRecords">歷史紀錄</a>
+                                    <a class="dropdown-item" asp-controller="Background" asp-action="Index">後臺管理</a>
+                                    <a class="dropdown-item" asp-action="Logout" asp-controller="Member">登出</a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <div class="main-body vh-100">
+        <div class="d-flex w-100 h-100">
+            <aside class="h-100 p-4" style="width:15rem; background-color:#4f4f4f">
+                <nav class="d-flex flex-column">
+                    <div class="text-white">
+                        <h5>管理者主控台</h5>
+                    </div>
+                    <a class="nav-link pl-0 text-white-50" href="Index">上架商品</a>
+                    <a class="nav-link pl-0 text-white-50" href="BIPanel1">購買紀錄統計</a>
+                    <a class="nav-link pl-0 text-white-50" href="BIPanel2">垃圾清運點</a>
+                </nav>
+            </aside>
+            <div class="flex-grow-1 h-100">
+                <main role="main" class="h-100">
+                    @RenderBody()
+                </main>
+            </div>
+            
+        </div>
+    </div>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/notification.js"></script>
+
+    <script>
+        var sessionMemberId = '@Context.Session.GetInt32(cUtility.Current_User_Id)' ;
+    </script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

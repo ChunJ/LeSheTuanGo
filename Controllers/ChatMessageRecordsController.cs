@@ -26,7 +26,7 @@ namespace LeSheTuanGo.Controllers
         {
             if (HttpContext.Session.GetInt32(cUtility.Current_User_Id) == null)
             {
-                return RedirectToAction("Login", "Member");
+                return RedirectToAction("Login", "Member", new { from = "ChatMessageRecords/Index" });
             }
 
             memberID = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
