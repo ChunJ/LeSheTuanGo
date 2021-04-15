@@ -48,7 +48,16 @@ function getNotification(senderid) {
             var s = JSON.parse(data[0]);
             var txt = "";
             for (let i = 0; i < s.length; i++) {
-                txt += `<a class="dropdown-item" href="/ChatMessageRecords/Index?grouptype=${s[i].SourceType}&groupid=${s[i].SourceId}">${s[i].ContentText}</a>`
+                console.log((new Date(s[i].SentTime)).toLocaleTimeString());
+                let grouptype = s[i].SourceType == 1 ? "購物團" : "垃圾團";
+
+                txt += `<a class="dropdown-item border-top py-2" href="/ChatMessageRecords/Index?grouptype=${s[i].SourceType}&groupid=${s[i].SourceId}">
+                                        <div class="d-flex align-items-center">
+                                            <div class="notify-title">${grouptype} (編號：${s[i].SourceId})</div>
+                                            <div class="notify-time">${(new Date(s[i].SentTime)).toLocaleTimeString()}</div>
+                                        </div>
+                                        <div class="notify-content">${s[i].ContentText}</div>
+                                    </a>`
             }
             $("#LayoutNotificationList").html(txt);
             $(".LayoutNotificationNumber").text(data[1]);

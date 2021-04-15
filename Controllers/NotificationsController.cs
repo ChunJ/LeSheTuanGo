@@ -233,7 +233,6 @@ namespace LeSheTuanGo.Controllers
                     item.SentTime = nowTime;
                     item.ContentId = contentID;
                     //_context.Update(item);
-                    //
                     returnList.Add(new Tuple<int, bool>(id, false));
                 }
                 await _context.SaveChangesAsync();

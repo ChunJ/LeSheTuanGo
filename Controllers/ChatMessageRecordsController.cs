@@ -266,7 +266,6 @@ namespace LeSheTuanGo.Controllers
             if (grouptype == 1)
             {
                 return ls;
-                //
             }
             else
             {
@@ -324,7 +323,7 @@ namespace LeSheTuanGo.Controllers
                     ls[0] = ss;
                     return ls;
                 }
-                return ls;
+                //return ls;
             }
         }
 
