@@ -109,7 +109,7 @@
                     </button>
                 </div>
                 <div class="p-1">查詢位置：</div>
-                <div class="p-1" id="lblSource"></div>
+                <div class="p-1" id="lblSource"></div><b id="bCount"></b>
             </div>
             <div id="leftSearch" class="column-main w-100" style="height:82vh">
                 <button onclick="topFunction()" class="map-btn" id="myBtn" title="Go to top">Top</button>
@@ -175,6 +175,7 @@
         $.ajax({
             url: "/map/spotCollectedNum?mem=" + currentUser,
             type: "GET",
+            async: false,
             success: function (spotJsonString) {
                 console.log(this.url);
                 userFav = JSON.parse(spotJsonString);
@@ -308,6 +309,7 @@
                         }
                         document.getElementById("thFav0").innerText = "收藏";
                     }
+                    setTimeout(() => { document.getElementById('bCount').innerText = js.length; }, 250);
 
 
 
@@ -409,6 +411,7 @@
             document.getElementById("thOrderTime").innerText = "到達時間☰";
             document.getElementById("thOrderDistance").innerText = "距離（公尺）☰";
             document.getElementById("thFav0").innerText = "移除";
+            setTimeout(() => { document.getElementById('bCount').innerText = js.length; }, 250);
         }
 
         function clearContent() {
@@ -421,7 +424,7 @@
             document.getElementById("content").remove();
             var ele = document.createElement("tbody");
             ele.id = "content";
-            js = js.sort(function (a, b) {
+            js.sort(function (a, b) {
                 return a.ArrivalTime < b.ArrivalTime ? timeOrder : -1 * timeOrder;
             });
             if (currentUser == 0) {
@@ -486,7 +489,7 @@
             document.getElementById("content").remove();
             var ele = document.createElement("tbody");
             ele.id = "content";
-            js = js.sort(function (a, b) {
+            js.sort(function (a, b) {
                 return a.distance < b.distance ? distanceOrder : -1 * distanceOrder;
             });
             if (currentUser == 0) {
@@ -621,6 +624,7 @@
 
             document.getElementById("thOrderTime").innerText = "到達時間☰";
             document.getElementById("thOrderDistance").innerText = "距離（公尺）☰";
+            setTimeout(() => { document.getElementById('bCount').innerText = js.length; }, 250);
 
 
 
@@ -726,8 +730,10 @@
                     userFav.splice(i, 1);
                 }
             }
-
+            getSpotNum(currentUser);
             document.getElementById(target).innerHTML = '';
+            setTimeout(() => { document.getElementById('bCount').innerText = js.length; }, 250);
+
         }
 
         function addFav() {
@@ -741,6 +747,7 @@
                     alert(result + $(`#${target} td`).eq(1).text());
                 }
             });
+            getSpotNum(currentUser);
             document.getElementById(`tdFav${event.target.parentNode.parentNode.id}`).innerHTML = '';
         }
     </script>
