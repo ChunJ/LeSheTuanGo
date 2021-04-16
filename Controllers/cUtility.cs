@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 namespace LeSheTuanGo.Controllers {
     public static class cUtility {
         //key for session
+        public static readonly string Current_Ip = "Current_Ip";
         public static readonly string Current_User_Id = "Current_User_Id";
         public static readonly string Current_User_Name = "Current_User_Name";
         public static readonly string Current_User_Validate = "Current_User_Validate"; //之後會驗證是否通過Email驗證
