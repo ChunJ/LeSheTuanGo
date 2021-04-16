@@ -10,7 +10,7 @@
         <div class="col-6">
             <div class="form-group">
                 <label>商品類別</label>
-                <select id="CategoryId" class="form-control" onchange="getProduct('#ProductId')" asp-items="ViewBag.Category"></select>
+                <select id="CategoryId" class="form-control" onchange="getProduct('#ProductId', showProdImage)" asp-items="ViewBag.Category"></select>
             </div>
             <div class="form-group">
                 <label for="ProductId">商品名稱</label>
@@ -110,8 +110,7 @@
             prodImage.src = "/images/ProductImages/test3.jpg";
         }
         function showProdImage() {
-            let t = event.target;
-            prodImage.src = t.options[t.selectedIndex].getAttribute("imgPath");
+            prodImage.src = prodS.options[prodS.selectedIndex].getAttribute("imgPath");
         }
     </script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

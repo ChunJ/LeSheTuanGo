@@ -13,7 +13,7 @@
                 <div class="col-6">
                     <div class="form-group">
                         <label>商品類型</label>
-                        <select id="CategotyId" class="form-control" onchange="getProduct('#ProductId')" asp-items="ViewBag.Category"></select>
+                        <select id="CategotyId" class="form-control" onchange="getProduct('#ProductId', showProdImage)" asp-items="ViewBag.Category"></select>
                     </div>
                     <div class="form-group">
                         <label>商品名稱</label>
@@ -154,8 +154,7 @@
 
         }
         function showProdImage() {
-            let t = event.target;
-            prodImage.src = t.options[t.selectedIndex].getAttribute("imgPath");
+            prodImage.src = prodS.options[prodS.selectedIndex].getAttribute("imgPath");
         }
         function accorClick(accor) {
             let panel = accor.nextElementSibling;
