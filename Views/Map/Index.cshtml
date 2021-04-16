@@ -56,7 +56,6 @@
                             <select class="form-control" id="rangeLevel" onchange="">
                                 <option hidden>請選擇</option>
                                 <option>300</option>
-                                @*<option>30000</option>*@
                                 <option>200</option>
                                 <option>100</option>
                             </select>
@@ -102,7 +101,7 @@
         } else {
             initFav();
             console.log('initFav');
-            document.getElementById('lblSource').innerText = '您的收藏清單';
+            document.getElementById('lblSource').innerText = '您的收藏清單，';
         }
         })()">
                         收藏清單（會員專屬）
@@ -120,8 +119,6 @@
                             <th>收集地點</th>
                             <th onclick="orderByTime()" id="thOrderTime">到達時間☰</th>
                             <th onclick="orderByDistance()" id="thOrderDistance">距離（公尺）☰</th>
-                            @*<th style="display:none">lat</th>
-                        <th style="display:none">lng</th>*@
                         </tr>
                     </thead>
                     <tbody id="content"></tbody>
@@ -137,8 +134,6 @@
 
 
 
-@*<button onclick="init100M()">100M</button>*@
-@*<button onclick="clearContent()">100M</button>*@
 
 @section Scripts {
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBircB99P_RvzxWdQT-hk40-h3Ofzlb_vQ&callback=initMap&libraries=&v=weekly" async></script>
@@ -164,7 +159,7 @@
                 getSpotNum(currentUser);
                 init300M('', 'mem');
                 console.log('init300M(, mem)');
-                document.getElementById('lblSource').innerText = '您的註冊地址';
+                document.getElementById('lblSource').innerText = '您的註冊地址，';
             }
         })();
 
@@ -236,7 +231,6 @@
             });
 
             var markers = [];
-            //console.log(typeof lat);
             for (let i = 0; i < lat.length; i++) {
                 let marker = new google.maps.Marker({
                     position: { lat: lat[i]["Latitude"], lng: lat[i]["Longitude"] },
@@ -265,23 +259,17 @@
                 success: function (listJsonString) {
                     console.log(this.url);
                     js0 = JSON.parse(listJsonString);
-                    //js = js.sort(function (a, b) {
-                    //    return a.ArrivalTime < b.ArrivalTime ? -1 : 1;
-                    //});
                     js = js0;
                     let tbodycont = document.getElementById("content");
                     tbodycont.innerHTML = "";
                     latNow = js[0]["addLat"];
                     lngNow = js[0]["addLng"];
                     initMap(js, "l");
-                    //console.log(js[0]["addLat"]);
-                    //console.log(js[0]["addLng"]);
                     if (currentUser == 0) {
                         $('#thFav0').remove();
                         for (let i = 0; i < js.length; i++) {
                             tbodycont.innerHTML +=
                                 '<tr id="' + js[i]["GarbageTruckSpotId"] + '" onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + ')">'
-                                //+ '<th>+++</th>'
                                 + '<td>' + js[i]["Address"] + '</td>'
                                 + '<td>' + js[i]["ArrivalTime"] + '</td>'
                                 + '<td>' + js[i]["distance"] + '</td>'
@@ -309,44 +297,8 @@
                         }
                         document.getElementById("thFav0").innerText = "收藏";
                     }
-                    setTimeout(() => { document.getElementById('bCount').innerText = js.length; }, 250);
-
-
-
-                    //if (document.getElementById('tdFav276')) {
-                    //    console.log(document.getElementById('tdFav276').innerHTML);
-                    //    document.getElementById('tdFav276').innerHTML = '';
-                    //    if (userFav.length) {
-                    //        userFav0.forEach((element) => {
-                    //            console.log(element);
-                    //            console.log(eval(`document.getElementById('tdFav${element}').innerHTML`));
-                    //        });
-
-                    //    }
-                    //}
-
-                            //'<tr id="' + js[i]["GarbageTruckSpotId"] + '">'
-                            //+ '<td id="thFav' + js[i]["GarbageTruckSpotId"] + '"><label onclick="addFav()">♥️</label></td>'
-                            //+ '<td onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">' + js[i]["Address"] + '</td>'
-                            //+ '<td onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">' + js[i]["ArrivalTime"] + '</td>'
-                            //+ '<td onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">' + js[i]["distance"] + '</td>'
-                            //+ '</tr>';
-
-                            //'<tr id="' + js[i]["GarbageTruckSpotId"] + '" onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + '),topFunction()">'
-                            //+ '<th>+++</th>'
-                            //+ '<th>' + js[i]["Address"] + '</th>'
-                            //+ '<th>' + js[i]["ArrivalTime"] + '</th>'
-                            //+ '<th>' + js[i]["distance"] + '</th>'
-                            //+ '</tr>';
+                    setTimeout(() => { document.getElementById('bCount').innerText = `共 ${js.length} 個收集點`; }, 500);
                 }
-
-                    //if (currentUser == 0) {
-                    //    $('th[id^="thFav"]').remove();
-                    //    $('td[id^="thFav"]').remove();
-                    //} else {
-                    //    console.log('currenUser!=0');
-                    //}
-
             })
             document.getElementById("thOrderTime").innerText = "到達時間☰";
             document.getElementById("thOrderDistance").innerText = "距離（公尺）☰";
@@ -359,9 +311,6 @@
                 success: function (listJsonString) {
                     console.log(this.url);
                     js0 = JSON.parse(listJsonString);
-                    //js = js.sort(function (a, b) {
-                    //    return a.ArrivalTime < b.ArrivalTime ? -1 : 1;
-                    //});
                     js = js0;
                     let tbodycont = document.getElementById("content");
                     tbodycont.innerHTML = "";
@@ -373,14 +322,11 @@
                         lngNow = 121;
                     }
                     initMap(js, "l");
-                    //console.log(js[0]["addLat"]);
-                    //console.log(js[0]["addLng"]);
                     if (currentUser == 0) {
                         $('#thFav0').remove();
                         for (let i = 0; i < js.length; i++) {
                             tbodycont.innerHTML +=
                                 '<tr id="' + js[i]["GarbageTruckSpotId"] + '" onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + ')">'
-                                //+ '<th>+++</th>'
                                 + '<td>' + js[i]["Address"] + '</td>'
                                 + '<td>' + js[i]["ArrivalTime"] + '</td>'
                                 + '<td>' + js[i]["distance"] + '</td>'
@@ -398,20 +344,13 @@
                                 + '<td onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + ')">' + js[i]["distance"] + '</td>'
                                 + '</tr>';
                         }
-                    //if (userFav.length) {
-                    //    for (let i = 0; i < userFav.length; i++) {
-                    //        if (document.getElementById(`tdFav${userFav[i]}`)) {
-                    //            document.getElementById(`tdFav${userFav[i]}`).innerHTML = '';
-                    //        }
-                    //    }
-                    //}
                     }
                 }
             })
             document.getElementById("thOrderTime").innerText = "到達時間☰";
             document.getElementById("thOrderDistance").innerText = "距離（公尺）☰";
             document.getElementById("thFav0").innerText = "移除";
-            setTimeout(() => { document.getElementById('bCount').innerText = js.length; }, 250);
+            setTimeout(() => { document.getElementById('bCount').innerText = `共 ${js.length} 個收集點`; }, 500);
         }
 
         function clearContent() {
@@ -432,7 +371,6 @@
                 for (let i = 0; i < js.length; i++) {
                     ele.innerHTML +=
                         '<tr id="' + js[i]["GarbageTruckSpotId"] + '" onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + ')">'
-                        //+ '<th>+++</th>'
                         + '<td>' + js[i]["Address"] + '</td>'
                         + '<td>' + js[i]["ArrivalTime"] + '</td>'
                         + '<td>' + js[i]["distance"] + '</td>'
@@ -454,7 +392,7 @@
                 }
                 table100m.appendChild(ele);
 
-                if (document.getElementById('lblSource').innerText != '您的收藏清單') {
+                if (document.getElementById('lblSource').innerText != '您的收藏清單，') {
                     if (userFav.length) {
                         for (let i = 0; i < userFav.length; i++) {
                             if (document.getElementById(`tdFav${userFav[i]}`)) {
@@ -497,7 +435,6 @@
                 for (let i = 0; i < js.length; i++) {
                     ele.innerHTML +=
                         '<tr id="' + js[i]["GarbageTruckSpotId"] + '" onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + ')">'
-                        //+ '<th>+++</th>'
                         + '<td>' + js[i]["Address"] + '</td>'
                         + '<td>' + js[i]["ArrivalTime"] + '</td>'
                         + '<td>' + js[i]["distance"] + '</td>'
@@ -517,7 +454,7 @@
                         + '</tr>';
                 }
                 table100m.appendChild(ele);
-                if (document.getElementById('lblSource').innerText != '您的收藏清單') {
+                if (document.getElementById('lblSource').innerText != '您的收藏清單，') {
                     if (userFav.length) {
                         for (let i = 0; i < userFav.length; i++) {
                             if (document.getElementById(`tdFav${userFav[i]}`)) {
@@ -559,7 +496,7 @@
 
             if ($('#selectCity :selected').index() != 0) {
                 init300M($('#selectCity :selected').text() + $('#selectDistric :selected').text() + $('#txtAddress').val(), 'add');
-                document.getElementById('lblSource').innerText = '您輸入的新地址';
+                document.getElementById('lblSource').innerText = '您輸入的新地址，';
             }
             else {
                 alert('請檢查搜尋條件！');
@@ -571,6 +508,10 @@
             var timeEnd = $('#selectTimeEnd :selected').text();
             var distance = $('#rangeLevel :selected').text();
 
+            if (timeStart == '請選擇'||timeEnd=='請選擇'||distance=='請選擇') {
+                alert('請指定完整條件');
+                return;
+            }
             /*js0 = js;*/
             js = js0.filter(spot => spot.distance <= (distance)).filter(spot => spot.ArrivalTime >= timeStart).filter(spot => spot.ArrivalTime <= timeEnd);
             document.getElementById("content").remove();
@@ -583,7 +524,6 @@
                 for (let i = 0; i < js.length; i++) {
                     ele.innerHTML +=
                         '<tr id="' + js[i]["GarbageTruckSpotId"] + '" onclick="initMap(' + js[i]["Latitude"] + ',' + js[i]["Longitude"] + ',' + '\'' + js[i]["Address"] + '\'' + ',' + js[i]["GarbageTruckSpotId"] + ')">'
-                        //+ '<th>+++</th>'
                         + '<td>' + js[i]["Address"] + '</td>'
                         + '<td>' + js[i]["ArrivalTime"] + '</td>'
                         + '<td>' + js[i]["distance"] + '</td>'
@@ -603,7 +543,7 @@
                         + '</tr>';
                 }
                 table100m.appendChild(ele);
-                if (document.getElementById('lblSource').innerText != '您的收藏清單') {
+                if (document.getElementById('lblSource').innerText != '您的收藏清單，') {
                     if (userFav.length) {
                         for (let i = 0; i < userFav.length; i++) {
                             if (document.getElementById(`tdFav${userFav[i]}`)) {
@@ -624,7 +564,7 @@
 
             document.getElementById("thOrderTime").innerText = "到達時間☰";
             document.getElementById("thOrderDistance").innerText = "距離（公尺）☰";
-            setTimeout(() => { document.getElementById('bCount').innerText = js.length; }, 250);
+            setTimeout(() => { document.getElementById('bCount').innerText = `共 ${js.length} 個收集點`; }, 500);
 
 
 
@@ -664,7 +604,7 @@
                 mapLink.textContent = `緯度: ${latitude.toFixed(7)}°, 經度: ${longitude.toFixed(7)}°`;
 
                 init300M('', 'nav');
-                document.getElementById('lblSource').innerText = '您目前的GPS定位';
+                document.getElementById('lblSource').innerText = '您的GPS定位，';
             }
 
             function error() {
@@ -672,7 +612,7 @@
             }
 
             if (!navigator.geolocation) {
-                status.textContent = '您的瀏覽器不支援定位功能';
+                status.textContent = '您的瀏覽器未支援定位功能';
             } else {
                 status.textContent = '定位中...';
                 navigator.geolocation.getCurrentPosition(success, error);
@@ -697,8 +637,6 @@
 
         // When the user clicks on the button, scroll to the top of the document
         function topFunction() {
-            //document.getElementById('leftSearch').scrollTop = 0; // For Safari
-            //document.getElementById('leftSearch').scrollTop = 0; // For Chrome, Firefox, IE and Opera
             document.getElementById('leftSearch').scrollTo({top: 0, behavior: 'smooth'}); // For Safari
             document.getElementById('leftSearch').scrollTo({top: 0, behavior: 'smooth'}); // For Chrome, Firefox, IE and Opera
         }
@@ -732,7 +670,7 @@
             }
             getSpotNum(currentUser);
             document.getElementById(target).innerHTML = '';
-            setTimeout(() => { document.getElementById('bCount').innerText = js.length; }, 250);
+            setTimeout(() => { document.getElementById('bCount').innerText = `共 ${js.length} 個收集點`; }, 500);
 
         }
 
