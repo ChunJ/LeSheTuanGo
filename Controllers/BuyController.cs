@@ -51,7 +51,11 @@ namespace LeSheTuanGo.Controllers {
             GeoCoordinate userLocation = new GeoCoordinate((double)latlong[0], (double)latlong[1]);
             //var tempUser = db.Members.First();
             //GeoCoordinate userLocation = new GeoCoordinate((double)tempUser.Latitude, (double)tempUser.Longitude);
-            var newObject = from o in db.Orders.Include(o => o.District).Include(o => o.District.City)
+            IQueryable<Order> firstPass = db.Orders;
+            if (HttpContext.Session.GetInt32(cUtility.Current_User_Id) != null) {
+                firstPass = db.Orders.Where(o => o.HostMemberId != HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value);
+            }
+            var newObject = from o in firstPass.Include(o => o.District).Include(o => o.District.City)
                             select new {
                                 o.OrderId,
                                 o.ProductId,
