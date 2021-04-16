@@ -370,9 +370,9 @@ namespace LeSheTuanGo.Controllers
         {
             string bodyEmail = "";
             if (controllerName == "openMember")
-                bodyEmail = "http://192.168.36.145:8080/Member/openMember?memberId=" + inputId;
+                bodyEmail = "http://192.168.36.103:80/Member/openMember?memberId=" + inputId;
             else if (controllerName == "resetPassword")
-                bodyEmail = "http://192.168.36.145:8080/Member/resetPassword?memberId=" + inputId;
+                bodyEmail = "http://192.168.36.103:80/Member/resetPassword?memberId=" + inputId;
             SmtpClient MySmtp = new SmtpClient("smtp.gmail.com", 587);
             MySmtp.Credentials = new System.Net.NetworkCredential("msit129GarbageCar@gmail.com", "@msit129GarbageCar@");
 
@@ -383,10 +383,10 @@ namespace LeSheTuanGo.Controllers
             mail.Priority = MailPriority.Normal;
             mail.Subject = "樂圾團GO驗證信";
             if(controllerName == "openMember")
-                mail.Body = "點選網址，啟動會員 :\r\n" + bodyEmail; //todo 可能可以在裡面加a標籤 看情形
+                 mail.Body = "啟動會員" + $"<a href='{bodyEmail}'>點我</a>";
             if(controllerName == "resetPassword")
-                mail.Body = "點選網址，重新設定密碼 :\r\n" + bodyEmail; //todo 可能可以在裡面加a標籤 看情形
-
+                mail.Body = "重新設定密碼" + $"<a href='{bodyEmail}'>點我</a>";
+            mail.IsBodyHtml = true;
             MySmtp.Send(mail);
         }
         public IActionResult InsertRecord()
