@@ -141,20 +141,22 @@ namespace LeSheTuanGo.Controllers
         //Real Edit
         public void EditGarbageOffer(int garbageServiceID, GarbageServiceOffer garbageServiceOffer)
         {
+
+
             var g = _context.GarbageServiceOffers.Where(n => n.GarbageServiceId == garbageServiceID).FirstOrDefault();
             if (garbageServiceID == garbageServiceOffer.GarbageServiceId)
             {
                 decimal[] s = cUtility.addressToLatlong(garbageServiceOffer.Address);
-                garbageServiceOffer.Latitude = s[0];
-                garbageServiceOffer.Longitude = s[1];
-                garbageServiceOffer.L3available = (byte)(g.L3available + (garbageServiceOffer.L3maxCount - g.L3maxCount));
-                garbageServiceOffer.L5available = (byte)(g.L5available + (garbageServiceOffer.L5maxCount - g.L5maxCount));
-                garbageServiceOffer.L14available = (byte)(g.L14available + (garbageServiceOffer.L14maxCount - g.L14maxCount));
-                garbageServiceOffer.L25available = (byte)(g.L25available + (garbageServiceOffer.L25maxCount - g.L25maxCount));
-                garbageServiceOffer.L33available = (byte)(g.L33available + (garbageServiceOffer.L33maxCount - g.L33maxCount));
-                garbageServiceOffer.L75available = (byte)(g.L75available + (garbageServiceOffer.L75maxCount - g.L75maxCount));
-                garbageServiceOffer.L120available = (byte)(g.L120available + (garbageServiceOffer.L120maxCount - g.L120maxCount));
-                _context.Update(garbageServiceOffer);
+                g.Latitude = s[0];
+                g.Longitude = s[1];
+                g.L3available = (byte)(g.L3available + (garbageServiceOffer.L3maxCount - g.L3maxCount));
+                g.L5available = (byte)(g.L5available + (garbageServiceOffer.L5maxCount - g.L5maxCount));
+                g.L14available = (byte)(g.L14available + (garbageServiceOffer.L14maxCount - g.L14maxCount));
+                g.L25available = (byte)(g.L25available + (garbageServiceOffer.L25maxCount - g.L25maxCount));
+                g.L33available = (byte)(g.L33available + (garbageServiceOffer.L33maxCount - g.L33maxCount));
+                g.L75available = (byte)(g.L75available + (garbageServiceOffer.L75maxCount - g.L75maxCount));
+                g.L120available = (byte)(g.L120available + (garbageServiceOffer.L120maxCount - g.L120maxCount));
+                _context.Update(g);
                 _context.SaveChanges();
             }
         }
