@@ -252,15 +252,27 @@ namespace LeSheTuanGo.Controllers
                 }).Distinct();
                 var dancyou = _context.Orders.Where(n => n.OrderId == orderId).Select(n => new
                 {
-                    MemberId=n.HostMemberId,
-                    ProfileImagePath=n.HostMember.ProfileImagePath,
+                    MemberId = n.HostMemberId,
+                    ProfileImagePath = n.HostMember.ProfileImagePath,
                     username = n.HostMember.FirstName + n.HostMember.LastName,
                 });
                 return JsonConvert.SerializeObject(memberList.Union(dancyou));
             }
             else
             {
-                return "";
+                var memberList = _context.GarbageServiceUseRecords.Where(n => n.GarbageServiceOfferId == orderId).Select(n => new
+                {
+                    n.MemberId,
+                    n.Member.ProfileImagePath,
+                    username = n.Member.FirstName + n.Member.LastName,
+                }).Distinct();
+                var dancyou = _context.GarbageServiceOffers.Where(n => n.GarbageServiceId == orderId).Select(n => new
+                {
+                    MemberId = n.HostMemberId,
+                    ProfileImagePath = n.HostMember.ProfileImagePath,
+                    username = n.HostMember.FirstName + n.HostMember.LastName,
+                });
+                return JsonConvert.SerializeObject(memberList.Union(dancyou));
             }
         }
 

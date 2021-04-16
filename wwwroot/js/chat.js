@@ -259,6 +259,7 @@ function getchat(oid, gt,rn) {
 }
 //取得參加者清單
 function getjointmember(oid, gt) {
+    console.log(oid)
     $.ajax({
         url: "/ChatMessageRecords/getJointMember",
         type: "GET",
@@ -269,7 +270,7 @@ function getjointmember(oid, gt) {
             var txt = "";
             for (let i = 0; i < s.length; i++) {
                 txt += `
-                <a class="p-1" rel="popover" data-img="${s[i].ProfileImagePath}" data-kk="${s[i].username}">
+                <a class="p-1" rel="popover" data-img="${s[i].ProfileImagePath}" data-username="${s[i].username}">
                     <img class="profile-big" src="${s[i].ProfileImagePath}" />
                 </a>`
             }
@@ -278,7 +279,8 @@ function getjointmember(oid, gt) {
                     html: true,
                     trigger: 'hover',
                     content: function () {
-                        return `<img  src='${$(this).data('img')}' width=50/><div>${$(this).data('kk')}</div>`;
+                        //<div style="border-radius:50%;width:80px;height:80px;background-image:url('${$(this).data('img')}');background-size:cover"></div>
+                        return `<img  src='${$(this).data('img')}' style="border-radius:50%;"/><div>${$(this).data('username')}</div>`;
                     }
                 });
             });

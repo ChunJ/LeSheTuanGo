@@ -128,8 +128,7 @@
         let result = document.querySelector("#searchResult");
         //let detailView = document.querySelector("#detailView");
         let mapDiv = document.querySelector("#map");
-        let sizeInputG1 = document.querySelectorAll("#sizeInputGroup1>div");
-        let sizeCountG1 = document.querySelectorAll("#sizeInputGroup1>div>input");
+        let sizeCountG1 = document.querySelectorAll("#sizeInputGroup1 input");
         //other variable
         let lastAddress = "";
         let lastDistrict = 0;
@@ -154,15 +153,6 @@
             distS.value = 5;
         }
         //not used
-        function sizeInputSwitch1(id) {
-            if (event.target.checked == true) {
-                sizeInputG1[id].classList.remove("d-none");
-                sizeCountG1[id].value = 1;
-            } else {
-                sizeInputG1[id].classList.add("d-none");
-                sizeCountG1[id].value = 0;
-            }
-        }
         function accorClick(accor) {
             let panel = accor.nextElementSibling;
             console.log(accor);

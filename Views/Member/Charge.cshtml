@@ -12,17 +12,21 @@
             <div class="form-group">
                 <label asp-for="Balance" class="control-label"></label>
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-9">
+                        <input type="radio" asp-for="Balance" class="form-control" value="50" onclick="changeProduct(50)" />
+                        <label>50</label>
+                    </div>
+                    <div class="col-md-9">
+                        <input type="radio" asp-for="Balance" class="form-control" value="150" onclick="changeProduct(150)" />
+                        <label>150</label>
+                    </div>
+                    <div class="col-md-9">
                         <input type="radio" asp-for="Balance" class="form-control" value="500" onclick="changeProduct(500)" />
                         <label>500</label>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-9">
                         <input type="radio" asp-for="Balance" class="form-control" value="1000" onclick="changeProduct(1000)" />
                         <label>1000</label>
-                    </div>
-                    <div class="col-md-4">
-                        <input type="radio" asp-for="Balance" class="form-control" value="1500" onclick="changeProduct(1500)" />
-                        <label>1500</label>
                     </div>
                 </div>
                 <span asp-validation-for="Balance" class="text-danger"></span>
@@ -81,6 +85,7 @@
     function changeProduct(item) {
         const formElement = document.getElementById("formCreditCard")
         formElement[6].value = item + "點";
+        formElement[4].value = item;
         payment();
     }
 </script>
