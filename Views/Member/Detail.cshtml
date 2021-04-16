@@ -7,6 +7,14 @@
         <h1 style="text-align: center">帳號資訊</h1>
         <hr />
         <div class="form-group">
+            <label>@Html.DisplayNameFor(model => model.ProfileImagePath)</label>
+            @Html.ActionLink("編輯", "EditImage", new { memberId = Model.MemberId })
+            <div>
+                <img src="@Model.ProfileImagePath" class="detail-profile" />
+            </div>
+        </div>
+
+        <div class="form-group">
             <label>姓名</label>
             <div>
                 @(Model.FirstName +  " " + Model.LastName)
@@ -15,9 +23,9 @@
         <div class="form-group">
             <label>@Html.DisplayNameFor(model => model.DateOfBirth)</label>
             <div>
-                @Html.DisplayFor(model => model.DateOfBirth.Year) 年 
-                @Html.DisplayFor(model => model.DateOfBirth.Month) 月 
-                @Html.DisplayFor(model => model.DateOfBirth.Day) 日 
+                @Html.DisplayFor(model => model.DateOfBirth.Year) 年
+                @Html.DisplayFor(model => model.DateOfBirth.Month) 月
+                @Html.DisplayFor(model => model.DateOfBirth.Day) 日
             </div>
         </div>
         <div class="form-group">
@@ -30,6 +38,8 @@
             <label>@Html.DisplayNameFor(model => model.Validate)</label>
             <div>
                 @Html.DisplayFor(model => model.Validate)
+                @Html.ActionLink("編輯密碼", "EditPassword", new { memberId = Model.MemberId })
+
             </div>
         </div>
         <div class="form-group">
@@ -46,14 +56,6 @@
                 @Html.DisplayFor(model => model.Balance)
             </div>
         </div>
-        <div class="form-group">
-            <label>@Html.DisplayNameFor(model => model.ProfileImagePath)</label>
-            @Html.ActionLink("編輯", "EditImage", new { memberId = Model.MemberId })
-            <div>
-                <img src="@Model.ProfileImagePath" class="detail-profile" />
-            </div>
-        </div>
-        @Html.ActionLink("編輯密碼", "EditPassword", new { memberId = Model.MemberId })
         @*<a asp-action="EditPassword" asp-route-id="@Model.MemberId">編輯密碼</a>*@
     </div>
 </div>
