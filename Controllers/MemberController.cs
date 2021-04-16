@@ -370,9 +370,9 @@ namespace LeSheTuanGo.Controllers
         {
             string bodyEmail = "";
             if (controllerName == "openMember")
-                bodyEmail = "http://192.168.36.103:80/Member/openMember?memberId=" + inputId;
+                bodyEmail = "https://192.168.36.145:8080/Member/openMember?memberId=" + inputId;
             else if (controllerName == "resetPassword")
-                bodyEmail = "http://192.168.36.103:80/Member/resetPassword?memberId=" + inputId;
+                bodyEmail = "https://192.168.36.145:8080/Member/resetPassword?memberId=" + inputId;
             SmtpClient MySmtp = new SmtpClient("smtp.gmail.com", 587);
             MySmtp.Credentials = new System.Net.NetworkCredential("msit129GarbageCar@gmail.com", "@msit129GarbageCar@");
 
@@ -402,5 +402,23 @@ namespace LeSheTuanGo.Controllers
             db.SaveChanges();
             return RedirectToAction("Charge");
         }
+        //public void download()
+        //{
+        //    Byte[] Buf = new byte[FileStream.Length];
+        //    FileStream.Read(Buf, 0, int.Parse(FileStream.Length.ToString()));
+        //    FileStream.Close();
+
+        //    //準備下載檔案 
+        //    Response.ClearHeaders();
+        //    Response.Clear();
+        //    Response.Expires = 0;
+        //    Response.Buffer = false;
+        //    Response.ContentType = "Application/save-as";
+        //    Response.Charset = "utf-8";
+        //    //透過Header設定檔名 
+        //    Response.AddHeader("Content-Disposition", "Attachment; filename=" + HttpUtility.UrlEncode(filename));
+        //    Response.BinaryWrite(Buf);
+        //    Response.End();
+        //}
     }
 }
