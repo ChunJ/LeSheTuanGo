@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using System.Net.Mail;
+using System.Net;
 
 namespace LeSheTuanGo.Controllers
 {
@@ -21,6 +22,7 @@ namespace LeSheTuanGo.Controllers
     {
         private readonly MidtermContext db;
         private IWebHostEnvironment iv_host;
+        IPHostEntry iphostentry = Dns.GetHostEntry(Dns.GetHostName());
         public MemberController(IWebHostEnvironment host,MidtermContext context)
         {
             iv_host = host;
@@ -368,11 +370,12 @@ namespace LeSheTuanGo.Controllers
         }
         public void sendEmail(string inputEmail , int inputId , string controllerName)
         {
+            string ipaddress = iphostentry.AddressList[1].ToString() ;
             string bodyEmail = "";
             if (controllerName == "openMember")
-                bodyEmail = "http://192.168.36.103:80/Member/openMember?memberId=" + inputId;
+                bodyEmail = $"https://{ipaddress}:8080/Member/openMember?memberId=" + inputId;
             else if (controllerName == "resetPassword")
-                bodyEmail = "http://192.168.36.103:80/Member/resetPassword?memberId=" + inputId;
+                bodyEmail = $"https://{ipaddress}:8080/Member/resetPassword?memberId=" + inputId;
             SmtpClient MySmtp = new SmtpClient("smtp.gmail.com", 587);
             MySmtp.Credentials = new System.Net.NetworkCredential("msit129GarbageCar@gmail.com", "@msit129GarbageCar@");
 
