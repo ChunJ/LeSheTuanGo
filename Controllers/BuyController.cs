@@ -78,6 +78,7 @@ namespace LeSheTuanGo.Controllers {
                 return RedirectToAction("Login", "Member", new { from = "Buy/Index" });
             }
             r.MemberId = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
+            if (r.ComeAddress == null) r.ComeAddress = "";
             //need server side validation
             var order = db.Orders.Where(o => o.OrderId == r.OrderId).First();
             order.AvailableCount -= r.Count;

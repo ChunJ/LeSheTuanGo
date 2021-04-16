@@ -50,7 +50,7 @@
             <label>@Html.DisplayNameFor(model => model.ProfileImagePath)</label>
             @Html.ActionLink("編輯", "EditImage", new { memberId = Model.MemberId })
             <div>
-                <img src="@Model.ProfileImagePath" class="w-50" />
+                <img src="@Model.ProfileImagePath" class="detail-profile" />
             </div>
         </div>
         @Html.ActionLink("編輯密碼", "EditPassword", new { memberId = Model.MemberId })
