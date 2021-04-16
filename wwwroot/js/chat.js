@@ -144,7 +144,6 @@ function getdetail(oid, gt, hid) {
             hostid: hid,
         },
         success: function (data) {
-            console.log(hid)
             var s = JSON.parse(data);
             var txt = "";
             txt += "<input type='hidden' id='OrderId' value='" + oid + "'/>"
@@ -652,7 +651,6 @@ function saveedit(s) {
         },
         type: "GET",
         success: function (data) {
-            console.log($("#hid").val())
             getdetail($("#oid").val(), $("#gt").val(), $("#hid").val())
         }
     })

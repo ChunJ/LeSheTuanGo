@@ -47,7 +47,6 @@ function getNotification(senderid) {
             var s = JSON.parse(data[0]);
             var txt = "";
             for (let i = 0; i < s.length; i++) {
-                console.log((new Date(s[i].SentTime)).toLocaleTimeString());
                 let grouptype = s[i].SourceType == 1 ? "購物團" : "垃圾團";
 
                 txt += `<a class="dropdown-item border-top py-2" href="/ChatMessageRecords/Index?grouptype=${s[i].SourceType}&groupid=${s[i].SourceId}">
