@@ -30,7 +30,6 @@ $(function () {
                 type: "get",
                 success: function (data) {
                     $(".LayoutNotificationNumber").text("0");
-                    //A
                 }
             })
         })
