@@ -659,7 +659,8 @@
                 if (js0[i]["GarbageTruckSpotId"] == event.target.parentNode.parentNode.id) {
                     js0.splice(i, 1);
                     console.log(js0);
-                    initMap(js0,'l');
+                    js = js0;
+                    initMap(js,'l');
                 }
             }
 
