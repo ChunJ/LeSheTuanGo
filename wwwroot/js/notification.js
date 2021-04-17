@@ -16,7 +16,6 @@ $(function () {
         if (connection.connectionState != "Connected") {
             connection.start().then(function () {
                 connection.invoke("AddToGroup", group);
-                console.log(group);
             })
         }
         //撈通知
@@ -30,7 +29,6 @@ $(function () {
                 type: "get",
                 success: function (data) {
                     $(".LayoutNotificationNumber").text("0");
-                    //A
                 }
             })
         })
@@ -48,7 +46,6 @@ function getNotification(senderid) {
             var s = JSON.parse(data[0]);
             var txt = "";
             for (let i = 0; i < s.length; i++) {
-                console.log((new Date(s[i].SentTime)).toLocaleTimeString());
                 let grouptype = s[i].SourceType == 1 ? "購物團" : "垃圾團";
 
                 txt += `<a class="dropdown-item border-top py-2" href="/ChatMessageRecords/Index?grouptype=${s[i].SourceType}&groupid=${s[i].SourceId}">
@@ -74,7 +71,6 @@ function createNotification(groupType, orderId, senderId, notifyContent) {
         success: function (data) {
             var memberList = JSON.parse(data);
             for (let i = 0; i < memberList.length; i++) {
-                console.log(memberList[i]["Item1"]);
                 var group = "memberid_" + memberList[i]["Item1"];
 
                 connection.invoke("SendNotificationToGroup", group, groupType, orderId, notifyContent, memberList[i]["Item2"].toString())

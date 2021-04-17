@@ -40,12 +40,12 @@
     <div class="bg-go-light h-100 px-2 pt-2 d-flex flex-column" style="width:40%;">
         <h3 id="chatheader" class="text-center">聊天室</h3>
         <div class="d-flex " id="chatMemberIcon">
-            @for (int i = 0; i < 5; i++)
+            @*@for (int i = 0; i < 5; i++)
             {
                 <div class="p-1">
                     <img class="profile-big" src="~/images/ProfileImages/guestProfile.jpg" />
                 </div>
-            }
+            }*@
         </div>
         <div class="w-100 flex-grow-1 column-main" id="chat">
             @*@for (int i = 0; i < 5; i++)
@@ -66,7 +66,6 @@
                     <div class="m-1 msg-time">下午 4：30</div>
                 </div>
             }*@
-
         </div>
         <input type="hidden" id="roomid" value="0" />
         <div class="d-flex py-1">
@@ -87,90 +86,6 @@
     <input type="hidden" id="self" />
     <div class="row p-3 h-100 column-main" style="align-content:flex-start">
         <div class="px-2 pt-2" id="detail"></div>
-        @*order edit form*@
-        <div class="px-2 pt-2 d-none" id="orderEditForm">
-            <div class="border-bottom-dark mb-2">
-                <h4>編輯</h4>
-            </div>
-            <div class="row">
-                <div class="col-6">
-                    <div class="form-group">
-                        <label>商品類別</label>
-                        <select id="CategoryId" class="form-control" asp-items="ViewBag.Category"></select>
-                    </div>
-                    <div class="form-group">
-                        <label for="ProductId">商品名稱</label>
-                        <select name="ProductId" id="ProductId" class="form-control" onchange="showProdImage()"></select>
-                    </div>
-                    <div class="form-group">
-                        <label>目標購買數量</label>
-                        <input name="MaxCount" id="MaxCount" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <label>每單位價格</label>
-                        <input name="UnitPrice" id="UnitPrice" class="form-control" />
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="d-flex flex-column h-100">
-                        <div>
-                            <label>商品示意圖</label>
-                        </div>
-                        <div class="flex-grow-1">
-                            <image id="prodImage" class="product-image" src="@ViewData["ProductImage"]"></image>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row pb-5">
-                <div class="col-6">
-                    <div class="form-group">
-                        <label>縣市</label>
-                        <select id="CityId" class="form-control" onchange="getDistrict('#DistrictId')" asp-items="ViewBag.City"></select>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                        <label for="DistrictId">鄉鎮市區</label>
-                        <select name="DistrictId" id="DistrictId" class="form-control"></select>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <div class="form-group">
-                        <label>街道地址</label>
-                        <input name="Address" id="Address" value=@ViewData["Address"] class="form-control" />
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                        <label>截止時間</label>
-                        <input name="EndTime" id="EndTime" class="form-control" />
-                    </div>
-                    <div class="form-group form-check">
-                        <label class="form-check-label">
-                            <input class="form-check-input" name="CanGo" id="CanGo" />
-                            是否提供外送服務?
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label>外送距離限制</label>
-                        <select name="GoRangeId" id="GoRangeId" class="form-control">
-                        </select>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <div class="form-group">
-                        <label>團購說明</label>
-                        <textarea id="OrderDescription" name="OrderDescription" rows="7" class="form-control" value=""></textarea>
-                    </div>
-                </div>
-                <div class="col-12" style="height:1.5rem"></div>
-            </div>
-            <div class="sink py-1">
-                <input type="submit" value="新增" class="btn btn-primary" />
-                <a class="btn btn-primary" href="/ChatMessageRecords/Index">查看紀錄</a>
-            </div>
-        </div>
         @*service edit form*@
         <div class="px-2 pt-2 d-none" id="serviceEditForm">
             <div class="border-bottom-dark mb-2">
@@ -180,7 +95,7 @@
                 <div class="col-6">
                     <div class="form-group">
                         <label class="control-label">縣市</label>
-                        <select class="form-control" id="cityId" name="cityId"  data-val="true" data-val-required="The CityId field is required.">
+                        <select class="form-control" id="cityId" name="cityId" data-val="true" data-val-required="The CityId field is required.">
                             @*${citytxt}*@
                         </select>
                     </div>
@@ -283,7 +198,7 @@
                 }*@
             </div>
             <div class="column-btn py-1">
-                <button class="btn btn-primary" onclick="saveedit()">儲存</button>
+                <button class="btn btn-primary" onclick="saveedit('serviceEditForm')">儲存</button>
                 <button class="btn btn-primary">取消</button>
             </div>
             <input type="hidden" id="GarbageServiceId" name="GarbageServiceId" />
@@ -292,10 +207,93 @@
             <input type="hidden" id="ServiceTypeId" name="ServiceTypeId" />
             <input type="hidden" id="HostMemberId" name="HostMemberId" />
         </div>
+
+        @*order edit form*@
+        <div class="px-2 pt-2 d-none" id="orderEditForm">
+            <div class="border-bottom-dark mb-2">
+                <h4>編輯</h4>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>商品類別</label>
+                        <select id="CategoryId" class="form-control" asp-items="ViewBag.Category"></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="ProductId">商品名稱</label>
+                        <select name="ProductId" id="ProductId" class="form-control" onchange="showProdImage()"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>目標購買數量</label>
+                        <input name="MaxCount" id="MaxCount" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>每單位價格</label>
+                        <input name="UnitPrice" id="UnitPrice" class="form-control" />
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="d-flex flex-column h-100">
+                        <div>
+                            <label>商品示意圖</label>
+                        </div>
+                        <div class="flex-grow-1">
+                            <image id="prodImage" class="product-image" src="@ViewData["ProductImage"]"></image>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row pb-5">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>縣市</label>
+                        <select id="CityId" class="form-control" onchange="getDistrict('#DistrictId')" asp-items="ViewBag.City"></select>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label for="DistrictId">鄉鎮市區</label>
+                        <select name="DistrictId" id="DistrictId" class="form-control"></select>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-group">
+                        <label>街道地址</label>
+                        <input name="Address" id="Address" value=@ViewData["Address"] class="form-control" />
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>截止時間</label>
+                        <input name="EndTime" id="EndTime" class="form-control" />
+                    </div>
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" name="CanGo" id="CanGo" />
+                            是否提供外送服務?
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>外送距離限制</label>
+                        <select name="GoRangeId" id="GoRangeId" class="form-control">
+                        </select>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-group">
+                        <label>團購說明</label>
+                        <textarea id="OrderDescription" name="OrderDescription" rows="7" class="form-control" value=""></textarea>
+                    </div>
+                </div>
+                <div class="col-12" style="height:1.5rem"></div>
+            </div>
+            <div class="sink py-1">
+                <input type="submit" value="新增" class="btn btn-primary" />
+                <a class="btn btn-primary" href="/ChatMessageRecords/Index">查看紀錄</a>
+            </div>
+        </div>
+
     </div>
-    
-    
-    
 </div>
 </div>
 

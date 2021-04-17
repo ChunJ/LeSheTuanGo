@@ -26,10 +26,16 @@ namespace LeSheTuanGo.Controllers
         {
             if (HttpContext.Session.GetInt32(cUtility.Current_User_Id) == null) return RedirectToAction("Login", "Member", new { from = "ServiceOffer/Index" });
             int userId = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
-            ViewData["DistrictId"] = new SelectList(_context.DistrictRefs, "DistrictId", "DistrictName");
+            //get user's district
+            var user = _context.Members.Where(m => m.MemberId == userId).Include(m => m.District).First();
+            ViewData["Address"] = user.Address;
+            ViewData["DistrictId"] = user.DistrictId;
+            ViewData["CityId"] = user.District.CityId;
+
+            ViewData["District"] = new SelectList(_context.DistrictRefs, "DistrictId", "DistrictName");
             ViewData["GoRangeId"] = new SelectList(_context.RangeRefs, "RangeId", "RangeInMeters");
-            ViewData["CityId"] = new SelectList(_context.CityRefs, "CityId", "CityName");
-            ViewData["ServiceTypeId"] = new SelectList(_context.ServiceTypeRefs, "ServiceTypeId", "ServiceName");
+            ViewData["City"] = new SelectList(_context.CityRefs, "CityId", "CityName");
+            //ViewData["ServiceTypeId"] = new SelectList(_context.ServiceTypeRefs, "ServiceTypeId", "ServiceName");
             return View();
         }
 
@@ -141,19 +147,37 @@ namespace LeSheTuanGo.Controllers
         //Real Edit
         public void EditGarbageOffer(int garbageServiceID, GarbageServiceOffer garbageServiceOffer)
         {
-            var g = _context.GarbageServiceOffers.Where(n => n.GarbageServiceId == garbageServiceID).FirstOrDefault();
+
+
+            var g = _context.GarbageServiceOffers.Where(n => n.GarbageServiceId == garbageServiceID).Select(n => new
+            {
+                n.L3available,
+                n.L3maxCount,
+                n.L5available,
+                n.L5maxCount,
+                n.L14available,
+                n.L14maxCount,
+                n.L25available,
+                n.L25maxCount,
+                n.L33available,
+                n.L33maxCount,
+                n.L75available,
+                n.L75maxCount,
+                n.L120available,
+                n.L120maxCount,
+            }).ToList();
             if (garbageServiceID == garbageServiceOffer.GarbageServiceId)
             {
                 decimal[] s = cUtility.addressToLatlong(garbageServiceOffer.Address);
                 garbageServiceOffer.Latitude = s[0];
                 garbageServiceOffer.Longitude = s[1];
-                garbageServiceOffer.L3available = (byte)(g.L3available + (garbageServiceOffer.L3maxCount - g.L3maxCount));
-                garbageServiceOffer.L5available = (byte)(g.L5available + (garbageServiceOffer.L5maxCount - g.L5maxCount));
-                garbageServiceOffer.L14available = (byte)(g.L14available + (garbageServiceOffer.L14maxCount - g.L14maxCount));
-                garbageServiceOffer.L25available = (byte)(g.L25available + (garbageServiceOffer.L25maxCount - g.L25maxCount));
-                garbageServiceOffer.L33available = (byte)(g.L33available + (garbageServiceOffer.L33maxCount - g.L33maxCount));
-                garbageServiceOffer.L75available = (byte)(g.L75available + (garbageServiceOffer.L75maxCount - g.L75maxCount));
-                garbageServiceOffer.L120available = (byte)(g.L120available + (garbageServiceOffer.L120maxCount - g.L120maxCount));
+                garbageServiceOffer.L3available = (byte)(g[0].L3available + (garbageServiceOffer.L3maxCount - g[0].L3maxCount));
+                garbageServiceOffer.L5available = (byte)(g[0].L5available + (garbageServiceOffer.L5maxCount - g[0].L5maxCount));
+                garbageServiceOffer.L14available = (byte)(g[0].L14available + (garbageServiceOffer.L14maxCount - g[0].L14maxCount));
+                garbageServiceOffer.L25available = (byte)(g[0].L25available + (garbageServiceOffer.L25maxCount - g[0].L25maxCount));
+                garbageServiceOffer.L33available = (byte)(g[0].L33available + (garbageServiceOffer.L33maxCount - g[0].L33maxCount));
+                garbageServiceOffer.L75available = (byte)(g[0].L75available + (garbageServiceOffer.L75maxCount - g[0].L75maxCount));
+                garbageServiceOffer.L120available = (byte)(g[0].L120available + (garbageServiceOffer.L120maxCount - g[0].L120maxCount));
                 _context.Update(garbageServiceOffer);
                 _context.SaveChanges();
             }

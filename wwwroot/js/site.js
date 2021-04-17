@@ -23,8 +23,8 @@ function fillDistrict(cityId, distTagId, callBack) {
         }
     )
 }
-function getProduct(prodTagId) {
-    fillProduct(event.target.value, prodTagId);
+function getProduct(prodTagId, callBack) {
+    fillProduct(event.target.value, prodTagId, callBack);
 }
 function fillProduct(cateId, prodTagId, callBack) {
     $.get(

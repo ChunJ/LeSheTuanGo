@@ -21,8 +21,10 @@ $(function () {
     });
     $('#message').keypress(function (e) {
         if (e.which == 13) {
-            $('#btnSend').click();
-            return false;
+            //if ($('#btnSend').attr('disabled') !="'disabled'") {
+                $('#btnSend').click();
+                return false;
+            //}
         }
 
     });
@@ -60,7 +62,8 @@ $(function () {
     //預先選團
 
     if (gt != 0) {
-        $(`input[type=radio][name="grouptype"][value="${gt}"]`).click()
+        $(`input[type=radio][name="grouptype"][value="${gt}"]`).click();
+
     }
 })
 
@@ -212,7 +215,7 @@ function getdetail(oid, gt, hid) {
                     $("#self").val(s[i].self);
                 }
             }
-
+            $("#detail").removeClass("d-none").siblings().addClass("d-none")
             $("#detail").html(txt);
         },
     })
@@ -259,14 +262,12 @@ function getchat(oid, gt,rn) {
 }
 //取得參加者清單
 function getjointmember(oid, gt) {
-    console.log(oid)
     $.ajax({
         url: "/ChatMessageRecords/getJointMember",
         type: "GET",
         data: { orderId: oid, grouptype: gt },
         success: function (data) {
             var s = JSON.parse(data);
-            console.log(s);
             var txt = "";
             for (let i = 0; i < s.length; i++) {
                 txt += `
@@ -280,7 +281,7 @@ function getjointmember(oid, gt) {
                     trigger: 'hover',
                     content: function () {
                         //<div style="border-radius:50%;width:80px;height:80px;background-image:url('${$(this).data('img')}');background-size:cover"></div>
-                        return `<img  src='${$(this).data('img')}' style="border-radius:50%;"/><div>${$(this).data('username')}</div>`;
+                        return `<img  src='${$(this).data('img')}' width=80/><div>${$(this).data('username')}</div>`;
                     }
                 });
             });
@@ -626,27 +627,27 @@ function editorder() {
 }
 
 //儲存編輯(ServiceOffer)
-function saveedit() {
+function saveedit(s) {
     $.ajax({
         url: "/ServiceOffer/EditGarbageOffer",
         data: {
-            DistrictId: $("#DistrictId").val(),
-            Address: $("#Address").val(),
-            EndTime: $("#EndTime").val(),
-            GoRangeId: $("#GoRangeId").val(),
-            CanGo: $("#CanGo").prop('checked'),
-            L3maxCount: $("#L3maxCount").val(),
-            L5maxCount: $("#L5maxCount").val(),
-            L14maxCount: $("#L14maxCount").val(),
-            L25maxCount: $("#L25maxCount").val(),
-            L33maxCount: $("#L33maxCount").val(),
-            L75maxCount: $("#L75maxCount").val(),
-            L120maxCount: $("#L120maxCount").val(),
-            GarbageServiceId: $("#GarbageServiceId").val(),
-            IsActive: $("#IsActive").val(),
-            StartTime: $("#StartTime").val(),
-            ServiceTypeId: $("#ServiceTypeId").val(),
-            HostMemberId: $("#HostMemberId").val(),
+            DistrictId: $(`#${s} #DistrictId`).val(),
+            Address: $(`#${s} #Address`).val(),
+            EndTime: $(`#${s} #EndTime`).val(),
+            GoRangeId: $(`#${s} #GoRangeId`).val(),
+            CanGo: $(`#${s} #CanGo`).prop('checked'),
+            L3maxCount: $(`#${s} #L3maxCount`).val(),
+            L5maxCount: $(`#${s} #L5maxCount`).val(),
+            L14maxCount: $(`#${s} #L14maxCount`).val(),
+            L25maxCount: $(`#${s} #L25maxCount`).val(),
+            L33maxCount: $(`#${s} #L33maxCount`).val(),
+            L75maxCount: $(`#${s} #L75maxCount`).val(),
+            L120maxCount: $(`#${s} #L120maxCount`).val(),
+            GarbageServiceId: $(`#${s} #GarbageServiceId`).val(),
+            IsActive: $(`#${s} #IsActive`).val(),
+            StartTime: $(`#${s} #StartTime`).val(),
+            ServiceTypeId: $(`#${s} #ServiceTypeId`).val(),
+            HostMemberId: $(`#${s} #HostMemberId`).val(),
         },
         type: "GET",
         success: function (data) {

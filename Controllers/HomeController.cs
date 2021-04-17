@@ -16,18 +16,12 @@ namespace LeSheTuanGo.Controllers {
         //{
         //    _logger = logger;
         //}
-        private readonly MidtermContext db;
-        public HomeController(MidtermContext context)
-        {
-            db = context;
-        }
+        //private readonly MidtermContext db;
+        //public HomeController(MidtermContext context)
+        //{
+        //    db = context;
+        //}
         public IActionResult Index() {
-            return View();
-        }
-        public IActionResult OrderNavi() {
-            return View();
-        }
-        public IActionResult ServiceNavi() {
             return View();
         }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
