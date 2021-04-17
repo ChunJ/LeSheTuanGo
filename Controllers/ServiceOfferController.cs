@@ -83,6 +83,47 @@ namespace LeSheTuanGo.Controllers
             return s;
         }
         #endregion
+
+        
+        //編輯開團內容
+        public void EditGarbageOffer(int garbageServiceID, GarbageServiceOffer garbageServiceOffer)
+        {
+            var g = _context.GarbageServiceOffers.Where(n => n.GarbageServiceId == garbageServiceID).Select(n => new
+            {
+                n.L3available,
+                n.L3maxCount,
+                n.L5available,
+                n.L5maxCount,
+                n.L14available,
+                n.L14maxCount,
+                n.L25available,
+                n.L25maxCount,
+                n.L33available,
+                n.L33maxCount,
+                n.L75available,
+                n.L75maxCount,
+                n.L120available,
+                n.L120maxCount,
+            }).ToList();
+
+            if (garbageServiceID == garbageServiceOffer.GarbageServiceId)
+            {
+                decimal[] s = cUtility.addressToLatlong(garbageServiceOffer.Address);
+                garbageServiceOffer.Latitude = s[0];
+                garbageServiceOffer.Longitude = s[1];
+                garbageServiceOffer.L3available = (byte)(g[0].L3available + (garbageServiceOffer.L3maxCount - g[0].L3maxCount));
+                garbageServiceOffer.L5available = (byte)(g[0].L5available + (garbageServiceOffer.L5maxCount - g[0].L5maxCount));
+                garbageServiceOffer.L14available = (byte)(g[0].L14available + (garbageServiceOffer.L14maxCount - g[0].L14maxCount));
+                garbageServiceOffer.L25available = (byte)(g[0].L25available + (garbageServiceOffer.L25maxCount - g[0].L25maxCount));
+                garbageServiceOffer.L33available = (byte)(g[0].L33available + (garbageServiceOffer.L33maxCount - g[0].L33maxCount));
+                garbageServiceOffer.L75available = (byte)(g[0].L75available + (garbageServiceOffer.L75maxCount - g[0].L75maxCount));
+                garbageServiceOffer.L120available = (byte)(g[0].L120available + (garbageServiceOffer.L120maxCount - g[0].L120maxCount));
+                _context.Update(garbageServiceOffer);
+                _context.SaveChanges();
+            }
+        }
+
+        #region 無用程式碼
         // GET: GarbageServiceOffers/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -103,8 +144,6 @@ namespace LeSheTuanGo.Controllers
             GarbageServiceOffersViewModel gsovm = new GarbageServiceOffersViewModel(garbageServiceOffer);
             return View(gsovm);
         }
-
-
 
         // POST: GarbageServiceOffers/Edit/5
         [HttpPost]
@@ -144,46 +183,6 @@ namespace LeSheTuanGo.Controllers
             return View(gsovm);
         }
 
-        //Real Edit
-        public void EditGarbageOffer(int garbageServiceID, GarbageServiceOffer garbageServiceOffer)
-        {
-
-
-            var g = _context.GarbageServiceOffers.Where(n => n.GarbageServiceId == garbageServiceID).Select(n => new
-            {
-                n.L3available,
-                n.L3maxCount,
-                n.L5available,
-                n.L5maxCount,
-                n.L14available,
-                n.L14maxCount,
-                n.L25available,
-                n.L25maxCount,
-                n.L33available,
-                n.L33maxCount,
-                n.L75available,
-                n.L75maxCount,
-                n.L120available,
-                n.L120maxCount,
-            }).ToList();
-            if (garbageServiceID == garbageServiceOffer.GarbageServiceId)
-            {
-                decimal[] s = cUtility.addressToLatlong(garbageServiceOffer.Address);
-                garbageServiceOffer.Latitude = s[0];
-                garbageServiceOffer.Longitude = s[1];
-                garbageServiceOffer.L3available = (byte)(g[0].L3available + (garbageServiceOffer.L3maxCount - g[0].L3maxCount));
-                garbageServiceOffer.L5available = (byte)(g[0].L5available + (garbageServiceOffer.L5maxCount - g[0].L5maxCount));
-                garbageServiceOffer.L14available = (byte)(g[0].L14available + (garbageServiceOffer.L14maxCount - g[0].L14maxCount));
-                garbageServiceOffer.L25available = (byte)(g[0].L25available + (garbageServiceOffer.L25maxCount - g[0].L25maxCount));
-                garbageServiceOffer.L33available = (byte)(g[0].L33available + (garbageServiceOffer.L33maxCount - g[0].L33maxCount));
-                garbageServiceOffer.L75available = (byte)(g[0].L75available + (garbageServiceOffer.L75maxCount - g[0].L75maxCount));
-                garbageServiceOffer.L120available = (byte)(g[0].L120available + (garbageServiceOffer.L120maxCount - g[0].L120maxCount));
-                _context.Update(garbageServiceOffer);
-                _context.SaveChanges();
-            }
-        }
-
-
 
         // GET: GarbageServiceOffers/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -212,7 +211,7 @@ namespace LeSheTuanGo.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
+        #endregion
         private bool GarbageServiceOfferExists(int id)
         {
             return _context.GarbageServiceOffers.Any(e => e.GarbageServiceId == id);

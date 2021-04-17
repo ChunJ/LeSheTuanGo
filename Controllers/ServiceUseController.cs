@@ -102,6 +102,44 @@ namespace LeSheTuanGo.Controllers{
             return RedirectToAction("Index", "ChatMessageRecords", new { grouptype = 2, groupid = r.GarbageServiceOfferId });
         }
 
+        //編輯加團內容
+        public void EditServiceUse(int garbageServiceID, GarbageServiceUseRecord garbageServiceUseRecord)
+        {
+            var g = db.GarbageServiceOffers.Where(n => n.GarbageServiceId == garbageServiceID).Select(n => new
+            {
+                n.L3available,
+                n.L3maxCount,
+                n.L5available,
+                n.L5maxCount,
+                n.L14available,
+                n.L14maxCount,
+                n.L25available,
+                n.L25maxCount,
+                n.L33available,
+                n.L33maxCount,
+                n.L75available,
+                n.L75maxCount,
+                n.L120available,
+                n.L120maxCount,
+            }).ToList();
+
+            //if (garbageServiceID == garbageServiceUseRecord.GarbageServiceId)
+            //{
+            //    decimal[] s = cUtility.addressToLatlong(garbageServiceUseRecord.Address);
+            //    garbageServiceUseRecord.Latitude = s[0];
+            //    garbageServiceUseRecord.Longitude = s[1];
+            //    garbageServiceUseRecord.L3available = (byte)(g[0].L3available + (garbageServiceUseRecord.L3maxCount - g[0].L3maxCount));
+            //    garbageServiceUseRecord.L5available = (byte)(g[0].L5available + (garbageServiceUseRecord.L5maxCount - g[0].L5maxCount));
+            //    garbageServiceUseRecord.L14available = (byte)(g[0].L14available + (garbageServiceUseRecord.L14maxCount - g[0].L14maxCount));
+            //    garbageServiceUseRecord.L25available = (byte)(g[0].L25available + (garbageServiceUseRecord.L25maxCount - g[0].L25maxCount));
+            //    garbageServiceUseRecord.L33available = (byte)(g[0].L33available + (garbageServiceUseRecord.L33maxCount - g[0].L33maxCount));
+            //    garbageServiceUseRecord.L75available = (byte)(g[0].L75available + (garbageServiceUseRecord.L75maxCount - g[0].L75maxCount));
+            //    garbageServiceUseRecord.L120available = (byte)(g[0].L120available + (garbageServiceUseRecord.L120maxCount - g[0].L120maxCount));
+            //    db.Update(garbageServiceUseRecord);
+            //    db.SaveChanges();
+            //}
+        }
+
         public IActionResult Delete(int id, int id2) {
             var q = db.GarbageServiceUseRecords.Where(m => m.GarbageServiceOfferId == id).FirstOrDefault();
             db.GarbageServiceUseRecords.Remove(q);

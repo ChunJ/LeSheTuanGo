@@ -305,7 +305,27 @@ namespace LeSheTuanGo.Controllers
             {
                 if (self)
                 {
-                    var order = await _context.Orders.Where(n => n.OrderId == orderid && n.HostMemberId == memberid).ToListAsync();
+                    var order = await _context.Orders.Where(n => n.OrderId == orderid && n.HostMemberId == memberid).Select(n => new {
+                        n.OrderId,
+                        n.Product.CategoryId,
+                        n.Product.Category.CategoryName,
+                        n.Product.ProductName,
+                        n.ProductId,
+                        n.Product.ProductImagePath,
+                        n.HostMemberId,
+                        n.District.CityId,
+                        n.DistrictId,
+                        n.Address,
+                        n.MaxCount,
+                        n.AvailableCount,
+                        n.StartTime,
+                        n.EndTime,
+                        n.IsActive,
+                        n.OrderDescription,
+                        n.UnitPrice,
+                        n.CanGo,
+                        n.GoRangeId,
+                    }).ToListAsync();
                     var ss = JsonConvert.SerializeObject(order);
                     ls[0] = ss;
                     return ls;

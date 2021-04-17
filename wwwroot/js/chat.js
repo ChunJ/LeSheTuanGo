@@ -29,8 +29,9 @@ $(function () {
 
     });
     //各編輯表格縣市連動
-    $("#serviceEditForm #cityId").on("change", function () { getDistrictc('#serviceEditForm #DistrictId') });
-    $("#orderEditForm #cityId").on("change", function () { getDistrictc('#orderEditForm #DistrictId') })
+    $("#serviceEditForm #cityId").on("change", function () { getDistrictc('#serviceEditForm') });
+    $("#orderEditForm #cityId").on("change", function () { getDistrictc('#orderEditForm') });
+
     //發送按鈕
     $('#btnSend').click(function () {
         var message = $("#message").val();
@@ -166,6 +167,8 @@ function getdetail(oid, gt, hid) {
                     txt += `<button id="edit" onclick="editorder()">編輯</button>`
                     $("#self").val(s[i].self);
                 }
+                $("#detail").removeClass("d-none").siblings().addClass("d-none")
+                $("#detail").html(txt);
             }
             else if (gt == 2) {
                 for (let i = 0; i < s.length; i++) {
@@ -326,17 +329,69 @@ function getOrderList(gt, so, of) {
 function editorder() {
     let orderid = $("#OrderId").val();
     let grouptype = $("#rec_grouptype").val();
+
     $.ajax({
         url: "/ChatMessageRecords/editOrder",
         data: { grouptype: grouptype, orderid: orderid, memberid: gmemberid, self: $("#self").val() },
         type: "GET",
         success: function (data) {
-
+            console.log(data);
             let detail = JSON.parse(data[0]);
             let range = JSON.parse(data[1]);
             let city = JSON.parse(data[2]);
 
-            if (grouptype == 2) {
+            //購物團
+            if (grouptype == 1) {
+                //自開團(ServiceUse)
+                if ($("#self").val() == "true") {
+                    //city
+                    let citytxt = "";
+                    for (let i = 0; i < city.length; i++) {
+                        citytxt += `<option value=${city[i].CityId}>${city[i].CityName}</option>`
+                    }
+                    $("#orderEditForm #cityId").html(citytxt);
+
+                    //range
+                    let rangetxt = "";
+                    for (let i = 0; i < range.length; i++) {
+                        rangetxt += `<option value=${range[i].RangeId}>${range[i].RangeInMeters}</option>`
+                    }
+                    $("#orderEditForm #GoRangeId").html(rangetxt);
+
+                    //帶入編輯資料(ServiceOffer)
+                    for (let i = 0; i < detail.length; i++) {
+                        $("#orderEditForm #cityId").val(detail[i].CityId).change();
+                        var checkExist = setInterval(function () {
+                            if ($('#orderEditForm #DistrictId').length) {
+                                $(`#orderEditForm #DistrictId option[value="${detail[i].DistrictId}"]`).attr('selected', 'selected')
+                                clearInterval(checkExist);
+                            }
+                        }, 100);
+                        $("#orderEditForm #ProductId").append(`<option value=${detail[i].ProductId}>${detail[i].ProductName}</option>`);
+                        $("#orderEditForm #CategoryId").append(`<option value=${detail[i].CategoryId}>${detail[i].CategoryName}</option>`); 
+                        $("#orderEditForm #prodImage").attr('src', `${detail[i].ProductImagePath}`);
+                        $("#orderEditForm #Address").val(detail[i].Address);
+                        $("#orderEditForm #EndTime").val(detail[i].EndTime);
+                        $("#orderEditForm #UnitPrice").val(detail[i].UnitPrice);
+                        $("#orderEditForm #MaxCount").val(detail[i].MaxCount);
+                        $("#orderEditForm #OrderDescription").val(detail[i].OrderDescription);
+                        $("#orderEditForm #CanGo").prop('checked', detail[i].CanGo);
+                        $("#orderEditForm #GoRangeId").val(detail[i].GoRangeId);
+                        $("#orderEditForm #OrderId").val(detail[i].GarbageServiceId);
+                        $("#orderEditForm #IsActive").val(detail[i].IsActive);
+                        $("#orderEditForm #StartTime").val(detail[i].StartTime);
+                        $("#orderEditForm #HostMemberId").val(detail[i].HostMemberId);
+
+                    }
+                    $("#detail").addClass("d-none");
+                    $("#orderEditForm").removeClass("d-none")
+                }
+            }
+           
+            //垃圾團
+            else if (grouptype == 2) {
+
+                //自開團(ServiceOffer)
                 if ($("#self").val() == "true") {
                     //city
                     let citytxt = "";
@@ -353,240 +408,8 @@ function editorder() {
                     $("#serviceEditForm #GoRangeId").html(rangetxt);
 
                     //很長的框架
-                    let txt1 = `
-                        <div class="border-bottom-dark mb-2">
-                            <h4>編輯</h4>
-                        </div>
-                        <div class="row w-50">
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label class="control-label">縣市</label>
-                                    <select class="form-control" id="cityId" name="cityId" onchange="getDistrictc('#DistrictId')" data-val="true" data-val-required="The CityId field is required.">
-                                        ${citytxt}
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label class="control-label" for="DistrictId">鄉鎮市區</label>
-                                    <select class="form-control" id="DistrictId" name="DistrictId" data-val="true" data-val-required="The 鄉鎮市區 field is required.">
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label class="control-label" for="Address">地址</label>
-                                    <input class="form-control" id="Address" name="Address" type="text" value="">
-                                        <span class="text-danger field-validation-valid" data-valmsg-for="Address" data-valmsg-replace="true"></span>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                    <div class="form-group">
-                                        <label class="control-label" for="EndTime">結束時間</label>
-                                        <input class="form-control" id="EndTime" name="EndTime" type="datetime-local" data-val="true" data-val-required="The 結束時間 field is required." value="">
-                                            <span class="text-danger field-validation-valid" data-valmsg-for="EndTime" data-valmsg-replace="true"></span>
-                                    </div>
-                                    <div class="form-group form-check">
-                                            <label class="form-check-label">
-                                                <input class="form-check-input" type="checkbox" data-val="true" data-val-required="The 是否可到府服務 field is required." id="CanGo" name="CanGo" value="true"> 是否可到府服務
-                                        </label>
-                                    </div>
-                                            <div class="form-group">
-                                                <label class="control-label" for="GoRangeId">可服務距離</label>
-                                                <select class="form-control" data-val="true" data-val-required="The 可服務距離 field is required." id="GoRangeId" name="GoRangeId">
-                                                    ${rangetxt}
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-12">
-
-                                        </div>
-                                    </div>
-
-                                    <div class="row w-50 pb-5">
-                                        <div class="col-12">
-                                            <div class="border-bottom-dark mb-2">
-                                                <h5>垃圾袋尺寸</h5>
-                                            </div>
-                                        </div>
-                                        <div class="col-3">
-                                            <div class="form-group">
-                                                <label class="control-label" for="L3maxCount">3公升</label>
-                                                <input class="form-control" id="L3maxCount" name="L3maxCount" value="0" type="number" data-val="true" data-val-required="The 3公升 field is required.">
-                                                    <span class="text-danger field-validation-valid" data-valmsg-for="L3maxCount" data-valmsg-replace="true"></span>
-            </div>
-                                            </div>
-                                            <div class="col-3">
-                                                <div class="form-group">
-                                                    <label class="control-label" for="L5maxCount">5公升</label>
-                                                    <input class="form-control" id="L5maxCount" name="L5maxCount" value="0" type="number" data-val="true" data-val-required="The 5公升 field is required.">
-                                                        <span class="text-danger field-validation-valid" data-valmsg-for="L5maxCount" data-valmsg-replace="true"></span>
-            </div>
-                                                </div>
-                                                <div class="col-3">
-                                                    <div class="form-group">
-                                                        <label class="control-label" for="L14maxCount">14公升</label>
-                                                        <input class="form-control" id="L14maxCount" name="L14maxCount" value="0" type="number" data-val="true" data-val-required="The 14公升 field is required.">
-                                                            <span class="text-danger field-validation-valid" data-valmsg-for="L14maxCount" data-valmsg-replace="true"></span>
-            </div>
-                                                    </div>
-                                                    <div class="col-3">
-                                                        <div class="form-group">
-                                                            <label class="control-label" for="L25maxCount">25公升</label>
-                                                            <input class="form-control" id="L25maxCount" name="L25maxCount" value="0" type="number" data-val="true" data-val-required="The 25公升 field is required.">
-                                                                <span class="text-danger field-validation-valid" data-valmsg-for="L25maxCount" data-valmsg-replace="true"></span>
-            </div>
-                                                        </div>
-                                                        <div class="col-3">
-                                                            <div class="form-group">
-                                                                <label class="control-label" for="L33maxCount">33公升</label>
-                                                                <input class="form-control" id="L33maxCount" name="L33maxCount" value="0" type="number" data-val="true" data-val-required="The 33公升 field is required.">
-                                                                    <span class="text-danger field-validation-valid" data-valmsg-for="L33maxCount" data-valmsg-replace="true"></span>
-            </div>
-                                                            </div>
-                                                            <div class="col-3">
-                                                                <div class="form-group">
-                                                                    <label class="control-label" for="L75maxCount">75公升</label>
-                                                                    <input class="form-control" id="L75maxCount" name="L75maxCount" value="0" type="number" data-val="true" data-val-required="The 75公升 field is required.">
-                                                                        <span class="text-danger field-validation-valid" data-valmsg-for="L75maxCount" data-valmsg-replace="true"></span>
-            </div>
-                                                                </div>
-                                                                <div class="col-3">
-                                                                    <div class="form-group">
-                                                                        <label class="control-label" for="L120maxCount">120公升</label>
-                                                                        <input class="form-control" id="L120maxCount" name="L120maxCount" value="0" type="number" data-val="true" data-val-required="The 120公升 field is required.">
-                                                                            <span class="text-danger field-validation-valid" data-valmsg-for="L120maxCount" data-valmsg-replace="true"></span>
-            </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="column-btn py-1">
-                                                                    <input type="button" value="儲存" onclick=saveedit() class="btn btn-primary">
-                                                                    <button type="button">取消</button>
-    </div>
-<input type="hidden" id="GarbageServiceId" name="GarbageServiceId"/>
-<input type="hidden" id="IsActive" name="IsActive" style="display:none" />
-<input type="hidden" id="StartTime" name="StartTime"/>
-<input type="hidden" id="ServiceTypeId" name="ServiceTypeId"/>
-<input type="hidden" id="HostMemberId" name="HostMemberId"/>
-
-                                                                        `;
-
-                    let txt = `        
-    <div class="px-2 pt-2" id="serviceEditForm">
-            <div class="border-bottom-dark mb-2">
-                <h4>編輯</h4>
-            </div>
-            <div class="row">
-                <div class="col-6">
-                    <div class="form-group">
-                        <label class="control-label">縣市</label>
-                        <select class="form-control" id="cityId" name="cityId" onchange="getDistrictc('#DistrictId')" data-val="true" data-val-required="The CityId field is required.">
-                            ${citytxt}
-                        </select>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                        <label class="control-label" for="DistrictId">鄉鎮市區</label>
-                        <select class="form-control" id="DistrictId" name="DistrictId" data-val="true" data-val-required="The 鄉鎮市區 field is required.">
-                        </select>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <div class="form-group">
-                        <label class="control-label" for="Address">地址</label>
-                        <input class="form-control" id="Address" name="Address" type="text" value="">
-                        <span class="text-danger field-validation-valid" data-valmsg-for="Address" data-valmsg-replace="true"></span>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                        <label class="control-label" for="EndTime">結束時間</label>
-                        <input class="form-control" id="EndTime" name="EndTime" type="datetime-local" data-val="true" data-val-required="The 結束時間 field is required." value="">
-                        <span class="text-danger field-validation-valid" data-valmsg-for="EndTime" data-valmsg-replace="true"></span>
-                    </div>
-                    <div class="form-group form-check">
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="checkbox" data-val="true" data-val-required="The 是否可到府服務 field is required." id="CanGo" name="CanGo" value="true"> 是否可到府服務
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="GoRangeId">可服務距離</label>
-                        <select class="form-control" data-val="true" data-val-required="The 可服務距離 field is required." id="GoRangeId" name="GoRangeId">
-                            ${rangetxt}
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="row pb-5">
-                <div class="col-12">
-                    <div class="border-bottom-dark mb-2">
-                        <h5>垃圾袋尺寸</h5>
-                    </div>
-                </div>
-                <div class="col-3">
-                <div class="form-group">
-                    <label class="control-label" for="L3maxCount">3公升</label>
-                    <input class="form-control" id="L3maxCount" name="L3maxCount" value="0" type="number" data-val="true" data-val-required="The 3公升 field is required.">
-                    <span class="text-danger field-validation-valid" data-valmsg-for="L3maxCount" data-valmsg-replace="true"></span>
-                </div>
-            </div>
-            <div class="col-3">
-                <div class="form-group">
-                    <label class="control-label" for="L5maxCount">5公升</label>
-                    <input class="form-control" id="L5maxCount" name="L5maxCount" value="0" type="number" data-val="true" data-val-required="The 5公升 field is required.">
-                    <span class="text-danger field-validation-valid" data-valmsg-for="L5maxCount" data-valmsg-replace="true"></span>
-                </div>
-            </div>
-            <div class="col-3">
-                <div class="form-group">
-                    <label class="control-label" for="L14maxCount">14公升</label>
-                    <input class="form-control" id="L14maxCount" name="L14maxCount" value="0" type="number" data-val="true" data-val-required="The 14公升 field is required.">
-                    <span class="text-danger field-validation-valid" data-valmsg-for="L14maxCount" data-valmsg-replace="true"></span>
-                </div>
-            </div>
-            <div class="col-3">
-                <div class="form-group">
-                    <label class="control-label" for="L25maxCount">25公升</label>
-                    <input class="form-control" id="L25maxCount" name="L25maxCount" value="0" type="number" data-val="true" data-val-required="The 25公升 field is required.">
-                    <span class="text-danger field-validation-valid" data-valmsg-for="L25maxCount" data-valmsg-replace="true"></span>
-                </div>
-            </div>
-            <div class="col-3">
-                <div class="form-group">
-                    <label class="control-label" for="L33maxCount">33公升</label>
-                    <input class="form-control" id="L33maxCount" name="L33maxCount" value="0" type="number" data-val="true" data-val-required="The 33公升 field is required.">
-                    <span class="text-danger field-validation-valid" data-valmsg-for="L33maxCount" data-valmsg-replace="true"></span>
-                </div>
-            </div>
-            <div class="col-3">
-                <div class="form-group">
-                    <label class="control-label" for="L75maxCount">75公升</label>
-                    <input class="form-control" id="L75maxCount" name="L75maxCount" value="0" type="number" data-val="true" data-val-required="The 75公升 field is required.">
-                    <span class="text-danger field-validation-valid" data-valmsg-for="L75maxCount" data-valmsg-replace="true"></span>
-                </div>
-            </div>
-            <div class="col-3">
-                <div class="form-group">
-                    <label class="control-label" for="L120maxCount">120公升</label>
-                    <input class="form-control" id="L120maxCount" name="L120maxCount" value="0" type="number" data-val="true" data-val-required="The 120公升 field is required.">
-                    <span class="text-danger field-validation-valid" data-valmsg-for="L120maxCount" data-valmsg-replace="true"></span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="column-btn py-1">
-        <button class="btn btn-primary" onclick="saveedit()">儲存</button>
-        <button class="btn btn-primary">取消</button>
-    </div>
-    <input type="hidden" id="GarbageServiceId" name="GarbageServiceId" />
-    <input type="hidden" id="IsActive" name="IsActive" style="display:none" />
-    <input type="hidden" id="StartTime" name="StartTime" />
-    <input type="hidden" id="ServiceTypeId" name="ServiceTypeId" />
-    <input type="hidden" id="HostMemberId" name="HostMemberId" />`;
 
                     //帶入編輯資料(ServiceOffer)
-                    //$("#detail").html(txt1).promise().done(function () {
                     for (let i = 0; i < detail.length; i++) {
                         $("#serviceEditForm #cityId").val(detail[i].CityId).change();
                         var checkExist = setInterval(function () {
@@ -614,10 +437,11 @@ function editorder() {
                     }
                     $("#detail").addClass("d-none");
                     $("#serviceEditForm").removeClass("d-none")
-                    //})
                 }
+
+                //加團(ServiceUseRecord)
                 else {
-                    //A
+
                 }
             }
 
@@ -625,6 +449,7 @@ function editorder() {
         },
     })
 }
+
 
 //儲存編輯(ServiceOffer)
 function saveedit(s) {

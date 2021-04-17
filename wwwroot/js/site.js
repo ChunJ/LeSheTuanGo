@@ -59,8 +59,11 @@ function formatDatetime(inputString) {
 
 //小夜版市區連動，測試
 function getDistrictc(disid) {
-    var e = document.getElementById("cityId")
-    var s = e.options[e.selectedIndex].value
+    var e = document.getElementById(`cityId`)
+    var f = $(`${disid} #cityId`);
+    //var s = f.options[f.selectedIndex].value
+    var s = $(`${disid} #cityId`).val();
+
     var url = "/ServiceOffer/getDistrict?cityId=" + s;
     $.ajax({
         url: url,
@@ -71,7 +74,7 @@ function getDistrictc(disid) {
             for (let i = 0; i < s.length; i++) {
                 txt += "<option value='" + s[i].DistrictId + "'>" + s[i].DistrictName + "</option>"
             }
-            $(disid).html(txt);
+            $(`${disid} #DistrictId`).html(txt);
         },
     })
 }
