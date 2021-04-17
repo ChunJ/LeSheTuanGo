@@ -105,22 +105,9 @@ namespace LeSheTuanGo.Controllers{
         //編輯加團內容
         public void EditServiceUse(int garbageServiceID, GarbageServiceUseRecord garbageServiceUseRecord)
         {
-            var g = db.GarbageServiceOffers.Where(n => n.GarbageServiceId == garbageServiceID).Select(n => new
+            var g = db.GarbageServiceUseRecords.Where(n => n.GarbageServiceOfferId == garbageServiceID).Select(n => new
             {
-                n.L3available,
-                n.L3maxCount,
-                n.L5available,
-                n.L5maxCount,
-                n.L14available,
-                n.L14maxCount,
-                n.L25available,
-                n.L25maxCount,
-                n.L33available,
-                n.L33maxCount,
-                n.L75available,
-                n.L75maxCount,
-                n.L120available,
-                n.L120maxCount,
+                
             }).ToList();
 
             //if (garbageServiceID == garbageServiceUseRecord.GarbageServiceId)
