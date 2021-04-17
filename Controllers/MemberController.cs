@@ -32,6 +32,17 @@ namespace LeSheTuanGo.Controllers
         public IActionResult Login(string from = "Home/Index")
         {
             ViewData["from"] = from;
+            string strHostName = Dns.GetHostName();
+            IPHostEntry iphostentry = Dns.GetHostEntry(strHostName);
+            //string ipaddress = iphostentry.AddressList[1].ToString() ;
+            foreach (IPAddress ipaddress in iphostentry.AddressList)
+            {
+                // 只取得IP V4的Address
+                if (ipaddress.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                {
+                    HttpContext.Session.SetString(cUtility.Current_Ip, ipaddress.ToString());
+                }
+            }
             return View();
         }
         [HttpPost]
@@ -370,12 +381,22 @@ namespace LeSheTuanGo.Controllers
         }
         public void sendEmail(string inputEmail , int inputId , string controllerName)
         {
-            string ipaddress = iphostentry.AddressList[1].ToString() ;
+            string strHostName = Dns.GetHostName();
+            IPHostEntry iphostentry = Dns.GetHostEntry(strHostName);
+            //string ipaddress = iphostentry.AddressList[1].ToString() ;
+            foreach (IPAddress ipaddress in iphostentry.AddressList)
+            {
+                // 只取得IP V4的Address
+                if (ipaddress.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                {
+                    Console.WriteLine("Local IP: " + ipaddress.ToString());
+                }
+            }
             string bodyEmail = "";
             if (controllerName == "openMember")
-                bodyEmail = $"https://{ipaddress}:8080/Member/openMember?memberId=" + inputId;
+                bodyEmail = $"{ HttpContext.Session.GetString(cUtility.Current_Ip)}:8080/Member/openMember?memberId=" + inputId;
             else if (controllerName == "resetPassword")
-                bodyEmail = $"https://{ipaddress}:8080/Member/resetPassword?memberId=" + inputId;
+                bodyEmail = $"https://{HttpContext.Session.GetString(cUtility.Current_Ip)}:8080/Member/resetPassword?memberId=" + inputId;
             SmtpClient MySmtp = new SmtpClient("smtp.gmail.com", 587);
             MySmtp.Credentials = new System.Net.NetworkCredential("msit129GarbageCar@gmail.com", "@msit129GarbageCar@");
 
@@ -402,6 +423,8 @@ namespace LeSheTuanGo.Controllers
             payment.ItemName = HttpContext.Session.GetString(cUtility.ItemName);
             payment.CheckMacValue = HttpContext.Session.GetString(cUtility.CheckMacValue);
             db.Payments.Add(payment);
+            var changeMem = db.Members.First(n => n.MemberId == HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value);
+            changeMem.Balance += HttpContext.Session.GetInt32(cUtility.balance).Value;
             db.SaveChanges();
             return RedirectToAction("Charge");
         }

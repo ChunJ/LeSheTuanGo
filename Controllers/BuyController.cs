@@ -64,12 +64,13 @@ namespace LeSheTuanGo.Controllers {
                                 o.AvailableCount,
                                 o.Latitude,
                                 o.Longitude,
+                                o.HostMemberId,
                                 //put user location in every data, not worth putting it elsewhere when the data count is small.
                                 userLat = latlong[0],
                                 userLong = latlong[1],
                                 Distance = userLocation.GetDistanceTo(new GeoCoordinate((double)o.Latitude, (double)o.Longitude)),
                             };
-            var offerList = newObject.AsEnumerable().Where(o => o.Distance <= distanceMax).ToList();
+            var offerList = newObject.AsEnumerable().Where(o => o.Distance <= distanceMax&o.HostMemberId != HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value).ToList();
             return JsonConvert.SerializeObject(offerList);
         }
         [HttpPost]

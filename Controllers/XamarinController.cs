@@ -62,7 +62,7 @@ namespace LeSheTuanGo.Controllers
             string result = Convert.ToBase64String(crypto);//把加密後的字串從Byte[]轉為字串
             return result;//輸出結果
         }
-        public string getLength(string address , int length,int type)    //type 0 for spot ,type 1 for orderGroup
+        public string getLength(string address , int length,int type)    //type 0 for spot ,type 1 for orderGroup,type 2 for garbageRecord
         {
             var addressLoc = cUtility.addressToLatlong(address);
             decimal addressLat = addressLoc[0];
@@ -85,6 +85,14 @@ namespace LeSheTuanGo.Controllers
                 var result = db.Orders.ToList();
                 var q = from i in result select new { i.Address, i.EndTime, i.Latitude, i.Longitude, distance = cUtility.distanceBetweenTwoSpots(addressLat, addressLng, i.Latitude, i.Longitude), addLat = addressLat, addLng = addressLng, i.OrderDescription,i.UnitPrice };
                 var qList = q.Where(q => q.distance <= Convert.ToInt32(length) && q.distance >= 0).OrderBy(q => q.distance).ToList();
+
+                listJsonString = JsonConvert.SerializeObject(qList);
+            }
+            else if (type == 2)
+            {
+                var result = db.GarbageServiceOffers.ToList();
+                var q = from i in result select new { i.Address, i.EndTime, i.Latitude, i.Longitude, distance = cUtility.distanceBetweenTwoSpots(addressLat, addressLng, i.Latitude, i.Longitude), addLat = addressLat, addLng = addressLng, i.IsActive };
+                var qList = q.Where(q => q.distance <= Convert.ToInt32(length) && q.distance >= 0&&q.IsActive==true).OrderBy(q => q.distance).ToList();
 
                 listJsonString = JsonConvert.SerializeObject(qList);
             }

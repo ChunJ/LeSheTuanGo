@@ -17,6 +17,7 @@ namespace LeSheTuanGo.Controllers {
         public static readonly string Current_User_Profile_Image = "Current_User_Profile_Image";
         public static readonly string MerchantTradeNo = "MerchantTradeNo";
         public static readonly string MerchantTradeDate = "MerchantTradeDate";
+        public static readonly string balance="balance";
         public static readonly string TradeDesc = "TradeDesc";
         public static readonly string ItemName = "ItemName";
         public static readonly string CheckMacValue = "CheckMacValue";

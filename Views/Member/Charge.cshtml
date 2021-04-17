@@ -12,21 +12,21 @@
             <div class="form-group">
                 <label asp-for="Balance" class="control-label"></label>
                 <div class="row">
-                    <div class="col-md-9">
+                    <div class="col-md-7">
                         <input type="radio" asp-for="Balance" class="form-control" value="50" onclick="changeProduct(50)" />
-                        <label>50</label>
+                        <span>50</span>
                     </div>
-                    <div class="col-md-9">
+                    <div class="col-md-7">
                         <input type="radio" asp-for="Balance" class="form-control" value="150" onclick="changeProduct(150)" />
-                        <label>150</label>
+                        <span>150</span>
                     </div>
-                    <div class="col-md-9">
+                    <div class="col-md-7">
                         <input type="radio" asp-for="Balance" class="form-control" value="500" onclick="changeProduct(500)" />
-                        <label>500</label>
+                        <span>500</span>
                     </div>
-                    <div class="col-md-9">
+                    <div class="col-md-7">
                         <input type="radio" asp-for="Balance" class="form-control" value="1000" onclick="changeProduct(1000)" />
-                        <label>1000</label>
+                        <span>1000</span>
                     </div>
                 </div>
                 <span asp-validation-for="Balance" class="text-danger"></span>
