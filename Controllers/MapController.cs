@@ -50,11 +50,6 @@ namespace LeSheTuanGo.Controllers
             }
         }
 
-        public string ifSpotExist(int mem, int spot)
-        {
-            return "判斷spotId是否已在memberId收藏中";
-        }
-        
         public string spotCollectedNum(int mem)
         {
             var spotCollected = iv_context.GarbageSpotLikes.Where(s => s.MemberId == mem).OrderBy(s => s.GarbageTruckSpotId).Select(s => s.GarbageTruckSpotId ).ToList();
@@ -119,10 +114,6 @@ namespace LeSheTuanGo.Controllers
             return View();
         }
 
-        public IActionResult favorite()
-        {
-            return View();
-        }
         public IActionResult Index() {
             ViewData["CityId"] = new SelectList(iv_context.CityRefs, "CityId", "CityName");
             return View();
