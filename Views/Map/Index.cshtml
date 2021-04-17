@@ -1,14 +1,19 @@
 ﻿@using Microsoft.AspNetCore.Http;
 @using LeSheTuanGo.Controllers;
+
 @{
     Layout = "_layoutWide";
     ViewData["Title"] = "搜個集點 - ";
-    if (Context.Session.GetInt32(cUtility.Current_User_Id) != null) {
+    if (Context.Session.GetInt32(cUtility.Current_User_Id) != null)
+    {
         ViewData["currentUserId"] = Context.Session.GetInt32(cUtility.Current_User_Id);
-    } else {
+    }
+    else
+    {
         ViewData["currentUserId"] = 0;
     }
 }
+
 <div class="d-flex h-100">
     <div class="w-50 h-100 bg-go-light">
         <div class="h-100 w-100">
@@ -66,7 +71,8 @@
                         <div style="width:15%" class="px-1">
                             <select class="form-control" id="selectTimeStart" onchange="">
                                 <option hidden>請選擇</option>
-                                @for (int i = 0; i < 24; i++) {
+                                @for (int i = 0; i < 24; i++)
+                                {
                                     <option>@i</option>
                                 }
                             </select>
@@ -77,7 +83,8 @@
                         <div style="width:15%" class="px-1">
                             <select class="form-control" id="selectTimeEnd" onchange="">
                                 <option hidden>請選擇</option>
-                                @for (int i = 0; i < 24; i++) {
+                                @for (int i = 0; i < 24; i++)
+                                {
                                     <option>@i</option>
                                 }
                             </select>
@@ -95,12 +102,9 @@
                 <div class="p-1">
                     <button class="btn btn-primary" onclick="(() => {
         if (currentUser == 0) {
-            console.log(this);
-            console.log(event);
             alert('請先登入！');
         } else {
             initFav();
-            console.log('initFav');
             document.getElementById('lblSource').innerText = '您的收藏清單，';
         }
         })()">
@@ -108,7 +112,8 @@
                     </button>
                 </div>
                 <div class="p-1">查詢位置：</div>
-                <div class="p-1" id="lblSource"></div><b id="bCount"></b>
+                <div class="p-1" id="lblSource"></div>
+                <b id="bCount"></b>
             </div>
             <div id="leftSearch" class="column-main w-100" style="height:82vh">
                 <button onclick="topFunction()" class="map-btn" id="myBtn" title="Go to top">Top</button>
@@ -132,9 +137,6 @@
     </div>
 </div>
 
-
-
-
 @section Scripts {
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBircB99P_RvzxWdQT-hk40-h3Ofzlb_vQ&callback=initMap&libraries=&v=weekly" async></script>
     <script>
@@ -154,11 +156,9 @@
         window.onload = (() => {
             if (currentUser == 0) {
                 geoFindMe();
-                console.log('geoFindMe()');
             } else {
                 getSpotNum(currentUser);
                 init300M('', 'mem');
-                console.log('init300M(, mem)');
                 document.getElementById('lblSource').innerText = '您的註冊地址，';
             }
         })();
@@ -172,10 +172,8 @@
             type: "GET",
             async: false,
             success: function (spotJsonString) {
-                console.log(this.url);
                 userFav = JSON.parse(spotJsonString);
                 //userFav = userFav0;
-                console.log(userFav);
             }
         })
     }
@@ -208,8 +206,6 @@
             });
 
             marker.addListener("click", () => {
-                console.log(marker.title);
-                console.log(marker.label.text);
                 document.getElementById(marker.label.text).scrollIntoView({ behavior: "smooth", block: "center" });
                 $(`#${marker.label.text}`).css("background-color", "gray").css("transition-duration", "2s");
                 setTimeout(() => { $(`#${marker.label.text}`).css("background-color", "transparent").css("transition-duration", "2s"); }, 2000);
@@ -243,8 +239,6 @@
                 });
                 markers.push(marker);
                 markers[i].addListener("click", () => {
-                    console.log(markers[i].title);
-                    console.log(markers[i].label.text);
                     document.getElementById(markers[i].label.text).scrollIntoView({ behavior: "smooth", block: "center" });
                     $(`#${markers[i].label.text}`).css("background-color", "gray").css("transition-duration", "2s");
                     setTimeout(() => { $(`#${markers[i].label.text}`).css("background-color", "transparent").css("transition-duration", "2s"); }, 2000);
@@ -257,7 +251,6 @@
                 url: "/map/spotlessthan300m2?address=" + address + "&lat=" + latNow + "&lng=" + lngNow + "&memId=" + currentUser + "&type=" + source,
                 type: "GET",
                 success: function (listJsonString) {
-                    console.log(this.url);
                     js0 = JSON.parse(listJsonString);
                     js = js0;
                     let tbodycont = document.getElementById("content");
@@ -290,7 +283,6 @@
                         if (userFav.length) {
                             for (let i = 0; i < userFav.length; i++) {
                                 if (document.getElementById(`tdFav${userFav[i]}`)) {
-                                    console.log(376);
                                     document.getElementById(`tdFav${userFav[i]}`).innerHTML = '';
                                 }
                             }
@@ -309,7 +301,6 @@
                 url: "/map/spotCollected?mem=" + currentUser,
                 type: "GET",
                 success: function (listJsonString) {
-                    console.log(this.url);
                     js0 = JSON.parse(listJsonString);
                     js = js0;
                     let tbodycont = document.getElementById("content");
@@ -355,7 +346,6 @@
 
         function clearContent() {
             document.getElementById("content").remove();
-            console.log(js);
             //todo: test if global-var content still available after refresh/F5
         }
 
@@ -377,7 +367,6 @@
                         + '</tr>';
                 }
                 table100m.appendChild(ele);
-
             }
             else {
                 getSpotNum(currentUser);
@@ -410,7 +399,6 @@
                     }
                 }
             }
-
 
             if (timeOrder == -1) {
                 document.getElementById("thOrderTime").innerText = "到達時間▲";
@@ -473,7 +461,6 @@
                 }
             }
 
-
             if (distanceOrder == -1) {
                 document.getElementById("thOrderDistance").innerText = "距離（公尺）▲";
             }
@@ -486,14 +473,6 @@
         }
 
         function captureSelect() {
-            console.log($('#selectCity :selected').text());
-            console.log($('#selectDistric :selected').text());
-            console.log($('#txtAddress').val());
-
-            console.log(typeof $('#selectCity :selected').text());
-            console.log(typeof $('#selectDistric :selected').text());
-            console.log(typeof $('#txtAddress').val());
-
             if ($('#selectCity :selected').index() != 0) {
                 init300M($('#selectCity :selected').text() + $('#selectDistric :selected').text() + $('#txtAddress').val(), 'add');
                 document.getElementById('lblSource').innerText = '您輸入的新地址，';
@@ -518,7 +497,6 @@
             var ele = document.createElement("tbody");
             ele.id = "content";
             initMap(js, "l");
-            console.log('filterinit');
             if (currentUser == 0) {
                 $('#thFav0').remove();
                 for (let i = 0; i < js.length; i++) {
@@ -561,22 +539,9 @@
                     }
                 }
             }
-
             document.getElementById("thOrderTime").innerText = "到達時間☰";
             document.getElementById("thOrderDistance").innerText = "距離（公尺）☰";
             setTimeout(() => { document.getElementById('bCount').innerText = `共 ${js.length} 個收集點`; }, 500);
-
-
-
-            console.log(timeStart);
-            console.log(timeEnd);
-            console.log(typeof timeEnd);
-            console.log(distance);
-            console.log(typeof distance);
-            console.log(js);
-            console.log(js0);
-            console.log(js[0]["ArrivalTime"]);
-            console.log(typeof js[0]["ArrivalTime"]);
         }
 
         function consoleLog(event) {
@@ -617,7 +582,6 @@
                 status.textContent = '定位中...';
                 navigator.geolocation.getCurrentPosition(success, error);
             }
-
         }
 
         //document.querySelector('#find-me').addEventListener('click', geoFindMe);
@@ -642,8 +606,6 @@
         }
 
         function removeFav() {
-            console.log('removed');
-            console.log(event.target.parentNode.parentNode.id);
             var target = event.target.parentNode.parentNode.id;
             $.ajax({
                 url: "/map/AdjFavorite?mem=" + currentUser + '&spot=' + event.target.parentNode.parentNode.id + '&type=1',
@@ -658,7 +620,6 @@
             for (var i = 0; i < js0.length; i++) {
                 if (js0[i]["GarbageTruckSpotId"] == event.target.parentNode.parentNode.id) {
                     js0.splice(i, 1);
-                    console.log(js0);
                     js = js0;
                     initMap(js,'l');
                 }
@@ -672,12 +633,9 @@
             getSpotNum(currentUser);
             document.getElementById(target).innerHTML = '';
             setTimeout(() => { document.getElementById('bCount').innerText = `共 ${js.length} 個收集點`; }, 500);
-
         }
 
         function addFav() {
-            console.log('added');
-            console.log(event.target.parentNode.parentNode.id);
             var target = event.target.parentNode.parentNode.id;
             $.ajax({
                 url: "/map/AdjFavorite?mem=" + currentUser + '&spot=' + event.target.parentNode.parentNode.id + '&type=0',
