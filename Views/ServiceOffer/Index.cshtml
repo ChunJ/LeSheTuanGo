@@ -4,26 +4,26 @@
 }
 <form asp-action="Index">
     <div class="border-bottom-dark mb-2">
-        <h2>新增倒垃圾服務</h2>
+        <h2 onclick="CreateDemo()">新增倒垃圾服務</h2>
     </div>
     <div class="row w-50">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="col-6">
             <div class="form-group">
                 <label class="control-label">縣市</label>
-                <select asp-for="District.City.CityId" class="form-control" asp-items="ViewBag.CityId" id="cityId" name="cityId" onchange="getDistrict('#DistrictId')"></select>
+                <select asp-for="District.City.CityId" class="form-control" asp-items="ViewBag.City" id="cityId" name="cityId" onchange="getDistrict('#DistrictId')"></select>
             </div>
         </div>
         <div class="col-6">
             <div class="form-group">
                 <label asp-for="DistrictId" class="control-label"></label>
-                <select asp-for="DistrictId" class="form-control" asp-items="ViewBag.DistrictId" id="DistrictId" name="DistrictId"></select>
+                <select asp-for="DistrictId" class="form-control" asp-items="ViewBag.District" id="DistrictId" name="DistrictId"></select>
             </div>
         </div>
         <div class="col-12">
             <div class="form-group">
                 <label asp-for="Address" class="control-label"></label>
-                <input asp-for="Address" class="form-control" id="Address" name="Address" />
+                <input id="Address" name="Address" value=@ViewData["Address"] class="form-control"/>
                 <span asp-validation-for="Address" class="text-danger"></span>
             </div>
         </div>
@@ -44,7 +44,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="row w-50 pb-5">
         <div class="col-12">
             <div class="border-bottom-dark mb-2">
@@ -104,10 +104,21 @@
     <div class="column-btn py-1">
         <input type="submit" value="新增" class="btn btn-primary" />
         <a class="btn btn-primary" href="/ChatMessageRecords/Index">查看紀錄</a>
-        <input type="button" value="Demo" class="btn btn-primary" onclick="CreateDemo()" />
     </div>
 </form>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
+        let cityS = document.querySelector("#cityId");
+        let distS = document.querySelector("#DistrictId");
+        window.onload = function () {
+            cityS.value = @ViewData["CityId"];
+            fillDistrict(@ViewData["CityId"], "#DistrictId", function () {
+                distS.value = @ViewData["DistrictId"];
+            });
+        }
         function CreateDemo() {
             $("#Address").val('demo');
             var t = new Date();
@@ -126,10 +137,5 @@
             $("#L75maxCount").val(0);
             $("#L120maxCount").val(0);
         }
-
-
     </script>
-
-    @section Scripts {
-        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    }
+}

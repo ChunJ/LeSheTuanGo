@@ -54,7 +54,7 @@
         <div class="col-12">
             <div class="form-group">
                 <label asp-for="Address">街道地址</label>
-                <input asp-for="Address" value=@ViewData["Address"] class="form-control" />
+                <input id="Address" name="Address" value=@ViewData["Address"] class="form-control" />
                 <span asp-validation-for="Address" class="text-danger"></span>
             </div>
         </div>

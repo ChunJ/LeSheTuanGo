@@ -26,10 +26,16 @@ namespace LeSheTuanGo.Controllers
         {
             if (HttpContext.Session.GetInt32(cUtility.Current_User_Id) == null) return RedirectToAction("Login", "Member", new { from = "ServiceOffer/Index" });
             int userId = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
-            ViewData["DistrictId"] = new SelectList(_context.DistrictRefs, "DistrictId", "DistrictName");
+            //get user's district
+            var user = _context.Members.Where(m => m.MemberId == userId).Include(m => m.District).First();
+            ViewData["Address"] = user.Address;
+            ViewData["DistrictId"] = user.DistrictId;
+            ViewData["CityId"] = user.District.CityId;
+
+            ViewData["District"] = new SelectList(_context.DistrictRefs, "DistrictId", "DistrictName");
             ViewData["GoRangeId"] = new SelectList(_context.RangeRefs, "RangeId", "RangeInMeters");
-            ViewData["CityId"] = new SelectList(_context.CityRefs, "CityId", "CityName");
-            ViewData["ServiceTypeId"] = new SelectList(_context.ServiceTypeRefs, "ServiceTypeId", "ServiceName");
+            ViewData["City"] = new SelectList(_context.CityRefs, "CityId", "CityName");
+            //ViewData["ServiceTypeId"] = new SelectList(_context.ServiceTypeRefs, "ServiceTypeId", "ServiceName");
             return View();
         }
 

@@ -45,7 +45,11 @@ namespace LeSheTuanGo.Controllers{
             GeoCoordinate userLocation = new GeoCoordinate((double)latlong[0], (double)latlong[1]);
             //var tempUser = db.Members.First();
             //GeoCoordinate userLocation = new GeoCoordinate((double)tempUser.Latitude, (double)tempUser.Longitude);
-            var bagTypeSearch = from o in db.GarbageServiceOffers
+            IQueryable<GarbageServiceOffer> firstPass = db.GarbageServiceOffers;
+            if (HttpContext.Session.GetInt32(cUtility.Current_User_Id) != null) {
+                firstPass = db.GarbageServiceOffers.Where(o => o.HostMemberId!= HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value);
+            }
+            var bagTypeSearch = from o in firstPass
                                 where o.IsActive == true && 
                                 !(o.L3available == 0
                                 && o.L5available == 0 && o.L14available == 0
