@@ -16,7 +16,6 @@ $(function () {
         if (connection.connectionState != "Connected") {
             connection.start().then(function () {
                 connection.invoke("AddToGroup", group);
-                console.log(group);
             })
         }
         //撈通知
@@ -72,7 +71,6 @@ function createNotification(groupType, orderId, senderId, notifyContent) {
         success: function (data) {
             var memberList = JSON.parse(data);
             for (let i = 0; i < memberList.length; i++) {
-                console.log(memberList[i]["Item1"]);
                 var group = "memberid_" + memberList[i]["Item1"];
 
                 connection.invoke("SendNotificationToGroup", group, groupType, orderId, notifyContent, memberList[i]["Item2"].toString())
