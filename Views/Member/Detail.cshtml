@@ -7,7 +7,7 @@
         <h1 style="text-align: center">帳號資訊</h1>
         <hr />
         <div class="form-group">
-            <label>@Html.DisplayNameFor(model => model.ProfileImagePath)</label>
+            <label class="h5">@Html.DisplayNameFor(model => model.ProfileImagePath)</label>
             @Html.ActionLink("編輯", "EditImage", new { memberId = Model.MemberId })
             <div>
                 <img src="@Model.ProfileImagePath" class="detail-profile" />
@@ -15,13 +15,13 @@
         </div>
 
         <div class="form-group">
-            <label>姓名</label>
+            <label class="h5">姓名</label>
             <div>
                 @(Model.FirstName +  " " + Model.LastName)
             </div>
         </div>
         <div class="form-group">
-            <label>@Html.DisplayNameFor(model => model.DateOfBirth)</label>
+            <label class="h5">@Html.DisplayNameFor(model => model.DateOfBirth)</label>
             <div>
                 @Html.DisplayFor(model => model.DateOfBirth.Year) 年
                 @Html.DisplayFor(model => model.DateOfBirth.Month) 月
@@ -29,13 +29,13 @@
             </div>
         </div>
         <div class="form-group">
-            <label>@Html.DisplayNameFor(model => model.Email)</label>
+            <label class="h5">@Html.DisplayNameFor(model => model.Email)</label>
             <div>
                 @Html.DisplayFor(model => model.Email)
             </div>
         </div>
         <div class="form-group">
-            <label>@Html.DisplayNameFor(model => model.Validate)</label>
+            <label class="h5">@Html.DisplayNameFor(model => model.Validate)</label>
             <div>
                 @Html.DisplayFor(model => model.Validate)
                 @Html.ActionLink("編輯密碼", "EditPassword", new { memberId = Model.MemberId })
@@ -43,14 +43,14 @@
             </div>
         </div>
         <div class="form-group">
-            <label> @Html.DisplayNameFor(model => model.Address)</label>
+            <label class="h5"> @Html.DisplayNameFor(model => model.Address)</label>
             @Html.ActionLink("編輯", "EditAddress", new { memberId = Model.MemberId })
             <div>
                 @Html.DisplayFor(model => model.Address)
             </div>
         </div>
         <div class="form-group">
-            <label>@Html.DisplayNameFor(model => model.Balance)</label>
+            <label class="h5">@Html.DisplayNameFor(model => model.Balance)</label>
             @Html.ActionLink("提升", "Charge", new { memberId = Model.MemberId })
             <div>
                 @Html.DisplayFor(model => model.Balance)

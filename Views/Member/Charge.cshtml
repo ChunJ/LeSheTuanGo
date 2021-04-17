@@ -2,90 +2,85 @@
 @{
     ViewData["Title"] = "我要支持！ - ";
 }
-<h4>貢獻社會，捐款支持本公益網站永續經營！</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Charge">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="MemberId" />
-            <div class="form-group">
-                <label asp-for="Balance" class="control-label"></label>
-                <div class="row">
-                    <div class="col-md-7">
-                        <input type="radio" asp-for="Balance" class="form-control" value="50" onclick="changeProduct(50)" />
-                        <span>50</span>
-                    </div>
-                    <div class="col-md-7">
-                        <input type="radio" asp-for="Balance" class="form-control" value="150" onclick="changeProduct(150)" />
-                        <span>150</span>
-                    </div>
-                    <div class="col-md-7">
-                        <input type="radio" asp-for="Balance" class="form-control" value="500" onclick="changeProduct(500)" />
-                        <span>500</span>
-                    </div>
-                    <div class="col-md-7">
-                        <input type="radio" asp-for="Balance" class="form-control" value="1000" onclick="changeProduct(1000)" />
-                        <span>1000</span>
-                    </div>
+<div class="d-flex justify-content-center align-items-center h-75 p-2">
+    <div class="w-23 m-2">
+        <div class="rounded-panel bg-white">
+            <div class="header-block-green">
+                <h5 class="m-0">捐款支持本網站永續經營！</h5>
+            </div>
+            <div class="p-2">
+                <label>貢獻值</label>
+                <div class="form-check">
+                    <input type="radio" asp-for="Balance" class="form-check-input" value="50" onclick="changeProduct(50)" />
+                    <span>50</span>
                 </div>
-                <span asp-validation-for="Balance" class="text-danger"></span>
+                <div class="form-check">
+                    <input type="radio" asp-for="Balance" class="form-check-input" value="150" onclick="changeProduct(150)" />
+                    <span>150</span>
+                </div>
+                <div class="form-check">
+                    <input type="radio" asp-for="Balance" class="form-check-input" value="500" onclick="changeProduct(500)" />
+                    <span>500</span>
+                </div>
+                <div class="form-check">
+                    <input type="radio" asp-for="Balance" class="form-check-input" value="1000" onclick="changeProduct(1000)" />
+                    <span>1000</span>
+                </div>
             </div>
-            <div class="form-group">
-                @*<input type="submit" value="Save" class="btn btn-primary" />*@
+            <div class="px-2 pb-2">
+                <form id="formCreditCard" name="formCreditCard" method="post" accept-charset="UTF-8"
+                      action="https://payment-stage.opay.tw/Cashier/AioCheckOut/V5">
+                    @*MerchantID 商店代號:*@
+                    <input type="text" name="MerchantID" value="2000132" hidden />
+                    @*MerchantTradeNo 商店交易編號:*@
+                    <input type="text" name="MerchantTradeNo" value="DX202104082122162283" hidden />
+                    @*MerchantTradeDate 商店交易時間:*@
+                    <input type="text" name="MerchantTradeDate" value="2021/04/08 21:22:16" hidden />
+                    @*PaymentType 交易類型:*@
+                    <input type="text" name="PaymentType" value="aio" hidden />
+                    @*TotalAmount 交易金額:*@
+                    <input type="text" name="TotalAmount" value="5" hidden />
+                    @*TradeDesc 交易描述:*@
+                    <input type="text" name="TradeDesc" value="建立信用卡測試訂單" hidden />
+                    @*ItemName 商品名稱:*@
+                    <input type="text" name="ItemName" value="MacBook 30元X2#iPhone6s 40元X1" hidden />
+                    @*ReturnURL 付款完成通知回傳網址:*@
+                    <input type="text" name="ReturnURL" value="https://developers.opay.tw/AioMock/MerchantReturnUrl" hidden />
+                    @*ChoosePayment 預設付款方式:*@
+                    <input type="text" name="ChoosePayment" value="Credit" hidden />
+                    @*會員商店代碼:*@
+                    <input type="text" name="StoreID" value="" hidden />
+                    @*ClientBackURL Client端返回廠商網址:*@
+                    <input type="text" name="ClientBackURL" value="https://developers.opay.tw/AioMock/MerchantClientBackUrl" hidden />
+                    @*CreditInstallment 刷卡分期期數:*@
+                    <input type="text" name="CreditInstallment" value="" hidden />
+                    @*InstallmentAmount 使用刷卡分期的付款金額:*@
+                    <input type="text" name="InstallmentAmount" value="" hidden />
+                    @*Redeem 信用卡是否使用紅利折抵:*@
+                    <input type="text" name="Redeem" value="" hidden />
+                    @*CheckMacValue 簽章類型:*@
+                    <input type="text" name="EncryptType" value="1" hidden />
+                    @*CheckMacValue 檢查碼:*@
+                    <input type="text" name="CheckMacValue" value="E5A45921756D2BCCF2517475DA71AC5804F5D1C2817FD0A3FC2E41C85F85389B" hidden />
+                    <input type="submit" class="btn btn-primary w-100" value="捐款支持" />
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        window.onload = function () {
+            payment();
+        };
+        function changeProduct(item) {
+            const formElement = document.getElementById("formCreditCard")
+            formElement[6].value = item + "點";
+            formElement[4].value = item;
+            payment();
+        }
+    </script>
 }
-<form id="formCreditCard" name="formCreditCard" method="post" accept-charset="UTF-8"
-      action="https://payment-stage.opay.tw/Cashier/AioCheckOut/V5">
-
-    @*MerchantID 商店代號:*@
-    <input type="text" name="MerchantID" value="2000132" hidden /><br />
-    @*MerchantTradeNo 商店交易編號:*@
-    <input type="text" name="MerchantTradeNo" value="DX202104082122162283" hidden /><br />
-    @*MerchantTradeDate 商店交易時間:*@
-    <input type="text" name="MerchantTradeDate" value="2021/04/08 21:22:16" hidden /><br />
-    @*PaymentType 交易類型:*@
-    <input type="text" name="PaymentType" value="aio" hidden /><br />
-    @*TotalAmount 交易金額:*@
-    <input type="text" name="TotalAmount" value="5" hidden /><br />
-    @*TradeDesc 交易描述:*@
-    <input type="text" name="TradeDesc" value="建立信用卡測試訂單" hidden /><br />
-    @*ItemName 商品名稱:*@
-    <input type="text" name="ItemName" value="MacBook 30元X2#iPhone6s 40元X1" hidden /><br />
-    @*ReturnURL 付款完成通知回傳網址:*@
-    <input type="text" name="ReturnURL" value="https://developers.opay.tw/AioMock/MerchantReturnUrl" hidden /><br />
-    @*ChoosePayment 預設付款方式:*@
-    <input type="text" name="ChoosePayment" value="Credit" hidden /><br />
-    @*會員商店代碼:*@
-    <input type="text" name="StoreID" value="" hidden /><br />
-    @*ClientBackURL Client端返回廠商網址:*@
-    <input type="text" name="ClientBackURL" value="https://developers.opay.tw/AioMock/MerchantClientBackUrl" hidden /><br />
-    @*CreditInstallment 刷卡分期期數:*@
-    <input type="text" name="CreditInstallment" value="" hidden /><br />
-    @*InstallmentAmount 使用刷卡分期的付款金額:*@
-    <input type="text" name="InstallmentAmount" value="" hidden /><br />
-    @*Redeem 信用卡是否使用紅利折抵:*@
-    <input type="text" name="Redeem" value="" hidden /><br />
-    @*CheckMacValue 簽章類型:*@
-    <input type="text" name="EncryptType" value="1" hidden /><br />
-    @*CheckMacValue 檢查碼:*@
-    <input type="text" name="CheckMacValue" value="E5A45921756D2BCCF2517475DA71AC5804F5D1C2817FD0A3FC2E41C85F85389B" hidden /><br />
-    <input type="submit" value="捐款支持" />
-</form>
-<script>
-    window.onload = function () {
-        payment();
-    };
-    function changeProduct(item) {
-        const formElement = document.getElementById("formCreditCard")
-        formElement[6].value = item + "點";
-        formElement[4].value = item;
-        payment();
-    }
-</script>
+    
+    

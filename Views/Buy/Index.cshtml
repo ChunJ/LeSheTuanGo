@@ -4,11 +4,11 @@
 }
 <div class="d-flex h-100">
     @*search column*@
-    <div class="col-4 p-2 h-100">
-        <div class="rounded-panel bg-go-light h-100">
-            <div class="header-block">
-                <h4 class="m-0" onclick="fillDemo()">搜尋團購</h4>
-            </div>
+    <div class="d-flex flex-column border-right-grey h-100" style="width:30%">
+        <div class="header-block">
+            <h4 class="m-0" onclick="fillDemo()">搜尋團購</h4>
+        </div>
+        <div class="flex-grow-1 w-100" style="position:relative">
             <div class="row p-3 h-100 column-main" style="align-content:flex-start">
                 <div class="col-6">
                     <div class="form-group">
@@ -58,7 +58,7 @@
                 </div>
                 <div class="col-12" style="height:5rem"></div>
             </div>
-            <div class="py-2 sink">
+            <div class="py-2 sink w-100">
                 <div class="d-flex">
                     <div class="w-50 pl-2 pr-1">
                         <button class="btn btn-primary w-100" onclick="searchStart()">搜尋</button>
@@ -71,12 +71,12 @@
         </div> 
     </div>
     @*result column*@
-    <div class="result-col-2 py-2 h-100">
-        <div class="rounded-panel bg-go-light h-100">
+    <div class="h-100 border-right-grey" style="width:20%">
+        <div class="d-flex flex-column h-100">
             <div class="header-block">
                 <h4 class="m-0" onclick="test()">搜尋結果</h4>
             </div>
-            <div class="column-main" id="searchResult">
+            <div class="column-main flex-grow-1" id="searchResult" style="background-color:#e0e0e0">
                 @*@for (int i = 0; i < 5; i++) {
                 <div class="accordion-go" onclick="accorClick(this)">
                     <p>台北市大安區信義路四段2號</p>
@@ -107,7 +107,7 @@
         </div> 
     </div>
     @*map column*@
-    <div class="col-6 p-2">
+    <div class="p-2 w-50">
         <div id="map" class="rounded-panel" style="height: 100%;width: 100%;"></div>
     </div>
 </div>

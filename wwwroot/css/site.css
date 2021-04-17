@@ -92,13 +92,13 @@ html {
     font-weight: 600;
 }
 
-/*not used by service and order*/ 
+/*used by chat only*/ 
 .search-item{
     background-color:#fff;
     cursor:pointer;
 }
 .search-item:hover{
-    background-color:#dbf2ff
+    background-color:#f1f1f1
 }
 .wide-bar {
     width: 100%;
@@ -132,7 +132,7 @@ html {
     display: inline-block;
 }
 .column-main {
-    overflow-y: auto;
+    overflow-y:auto;
     overflow-x:hidden;
 }
 .column-btn {
@@ -151,7 +151,7 @@ html {
     position:relative;
 }
 ::-webkit-scrollbar {
-    width: 8px;
+    width: 7px;
 }
 
 ::-webkit-scrollbar-track {
@@ -169,32 +169,32 @@ html {
     width: 100%;
     height: 18.5rem;
     object-fit: contain;
+    background-color:#ffffff;
+    border-radius:10px;
 }
-.srch-product-image {
+/*.srch-product-image {
     width: 100%;
     height: 14rem;
     object-fit: contain;
-}
+    
+}*/
 .header-block{
-    background-color:#4cabb1;
-    color:#FFFFFF;
+    background-color:#e8e8e8;
+    /*color:#FFFFFF;*/
     padding:0.5rem;
 }
-.result-col-2 {
-    position: relative;
-    width: 100%;
-    -ms-flex: 0 0 16.666667%;
-    flex: 0 0 16.666667%;
-    max-width: 16.666667%;
+.header-block-green {
+    background-color: #4cabb1;
+    color:#FFFFFF;
+    padding: 0.5rem;
 }
 .bg-go-light {
-    background-color: #f1f1f1
+    background-color: #fafafa
 }
 .sink {
     position: absolute;
     bottom: 0;
-    background-color: #f1f1f1;
-    width: 100%;
+    background-color: #fafafa;
 }
 .h-form-con {
     height: calc(1.5em + 0.75rem + 2px);
@@ -219,4 +219,7 @@ html {
     height: 300px;
     border-radius:50%;
     object-fit: cover;
+}
+.border-right-grey {
+    border-right: 1px solid #e8e8e8 !important;
 }
