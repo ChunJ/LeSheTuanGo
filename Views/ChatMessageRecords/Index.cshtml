@@ -198,8 +198,8 @@
                 }*@
             </div>
             <div class="column-btn py-1">
-                <button class="btn btn-primary" onclick="saveedit('serviceEditForm')">儲存</button>
-                <button class="btn btn-primary">取消</button>
+                <button class="btn btn-primary" onclick="saveeditServiceOffer('serviceEditForm')">儲存</button>
+                <button class="btn btn-primary" onclick="editcancel()">取消</button>
             </div>
             <input type="hidden" id="GarbageServiceId" name="GarbageServiceId" />
             <input type="hidden" id="IsActive" name="IsActive" style="display:none" />
@@ -225,11 +225,11 @@
                 </div>
                 <div class="form-group">
                     <label>目標購買數量</label>
-                    <input name="MaxCount" id="MaxCount" class="form-control" />
+                    <input type="number" name="MaxCount" id="MaxCount" class="form-control" />
                 </div>
                 <div class="form-group">
                     <label>每單位價格</label>
-                    <input name="UnitPrice" id="UnitPrice" class="form-control" disabled />
+                    <input type="number" name="UnitPrice" id="UnitPrice" class="form-control" disabled />
                 </div>
             </div>
             <div class="col-6">
@@ -295,8 +295,8 @@
             <div class="col-12" style="height:1.5rem"></div>
         </div>
         <div class="column-btn py-1">
-            <button class="btn btn-primary" onclick="saveedit('orderEditForm')">儲存</button>
-            <button class="btn btn-primary">取消</button>
+            <button class="btn btn-primary" onclick="saveeditOrder()">儲存</button>
+            <button class="btn btn-primary" onclick="editcancel()">取消</button>
         </div>
         <input type="hidden" id="OrderId" name="OrderId" />
         <input type="hidden" id="IsActive" name="IsActive" style="display:none" />
@@ -304,7 +304,6 @@
         @*<input type="hidden" id="ServiceTypeId" name="ServiceTypeId" />*@
         <input type="hidden" id="HostMemberId" name="HostMemberId" />
     </div>
-
     </div>
 </div>
 </div>

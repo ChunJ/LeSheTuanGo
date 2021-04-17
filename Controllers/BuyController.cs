@@ -37,6 +37,20 @@ namespace LeSheTuanGo.Controllers {
             ViewData["Category"] = new SelectList(db.CategoryRefs, "CategoryId", "CategoryName");
             return View();
         }
+
+        public void editOrderOffer(int OrderId,Order order)
+        {
+            var o = db.Orders.Where(n => n.OrderId == OrderId).Select(n=>new { n.AvailableCount,n.MaxCount }).First();
+            decimal[] s = cUtility.addressToLatlong(order.Address);
+            order.Latitude = s[0];
+            order.Longitude = s[1];
+            order.AvailableCount = (byte)(o.AvailableCount + (order.MaxCount - o.MaxCount));
+
+            db.Update(order);
+            db.SaveChanges();
+            Console.WriteLine("A");
+        }
+
         public string Search(int DistrictInput, string addressInput) {
             //search by endtime & price ?
             //add gorange in sent data

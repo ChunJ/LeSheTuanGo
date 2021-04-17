@@ -164,7 +164,9 @@ function getdetail(oid, gt, hid) {
                     if (s[i].Count != undefined) {
                         txt += `<div>您的購買數量： ${s[i].Count} </div><br />`;
                     }
-                    txt += `<button id="edit" onclick="editorder()">編輯</button>`
+                    if (s[i].IsActive) {
+                        txt += `<button id="edit" onclick="editorder()">編輯</button>`
+                    }
                     $("#self").val(s[i].self);
                 }
                 $("#detail").removeClass("d-none").siblings().addClass("d-none")
@@ -214,7 +216,9 @@ function getdetail(oid, gt, hid) {
                     else if (s[i].NeedCome == false) {
                         txt += `<div>是否到府服務： 否 </div><br />`;
                     }
-                    txt += `<button id="edit" onclick="editorder()">編輯</button>`
+                    if (s[i].IsActive) {
+                        txt += `<button id="edit" onclick="editorder()">編輯</button>`
+                    }
                     $("#self").val(s[i].self);
                 }
             }
@@ -377,7 +381,7 @@ function editorder() {
                         $("#orderEditForm #OrderDescription").val(detail[i].OrderDescription);
                         $("#orderEditForm #CanGo").prop('checked', detail[i].CanGo);
                         $("#orderEditForm #GoRangeId").val(detail[i].GoRangeId);
-                        $("#orderEditForm #OrderId").val(detail[i].GarbageServiceId);
+                        $("#orderEditForm #OrderId").val(detail[i].OrderId);
                         $("#orderEditForm #IsActive").val(detail[i].IsActive);
                         $("#orderEditForm #StartTime").val(detail[i].StartTime);
                         $("#orderEditForm #HostMemberId").val(detail[i].HostMemberId);
@@ -452,7 +456,7 @@ function editorder() {
 
 
 //儲存編輯(ServiceOffer)
-function saveedit(s) {
+function saveeditServiceOffer(s) {
     $.ajax({
         url: "/ServiceOffer/EditGarbageOffer",
         data: {
@@ -479,6 +483,37 @@ function saveedit(s) {
             getdetail($("#oid").val(), $("#gt").val(), $("#hid").val())
         }
     })
+}
+
+function saveeditOrder() {
+    $.ajax({
+        url: "/Buy/editOrderOffer",
+        data: {
+            DistrictId: $("#orderEditForm #DistrictId").val(),
+            ProductId:$("#orderEditForm #ProductId").val(),
+            CategoryId:$("#orderEditForm #CategoryId").val(),
+            ProductImagePath:$("#orderEditForm #prodImage").attr('src'),
+            Address:$("#orderEditForm #Address").val(),
+            EndTime:$("#orderEditForm #EndTime").val(),
+            UnitPrice:$("#orderEditForm #UnitPrice").val(),
+            MaxCount:$("#orderEditForm #MaxCount").val(),
+            OrderDescription:$("#orderEditForm #OrderDescription").val(),
+            CanGo:$("#orderEditForm #CanGo").prop('checked'),
+            GoRangeId:$("#orderEditForm #GoRangeId").val(),
+            OrderId:$("#orderEditForm #OrderId").val(),
+            IsActive:$("#orderEditForm #IsActive").val(),
+            StartTime:$("#orderEditForm #StartTime").val(),
+            HostMemberId:$("#orderEditForm #HostMemberId").val(),
+        },
+        type: "GET",
+        success: function (data) {
+            getdetail($("#oid").val(), $("#gt").val(), $("#hid").val())
+        }
+    })
+}
+
+function editcancel() {
+    $("#detail").removeClass("d-none").siblings().addClass("d-none");
 }
 
 
