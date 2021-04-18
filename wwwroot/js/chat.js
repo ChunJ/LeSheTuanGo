@@ -21,10 +21,8 @@ $(function () {
     });
     $('#message').keypress(function (e) {
         if (e.which == 13) {
-            //if ($('#btnSend').attr('disabled') !="'disabled'") {
                 $('#btnSend').click();
                 return false;
-            //}
         }
 
     });
@@ -55,7 +53,8 @@ $(function () {
                         return console.error(err.toString());
                     });
                 let txt = grouptype == 1 ? "(團購團)" : "(垃圾團)";
-                createNotification(grouptype, orderid, gmemberid, $("#chatheader").text() + "有新的訊息")
+                let str = $("#chatheader").text().replace(" 的聊天室", "").replace("(編號", "@編號").split('@')[0];
+                createNotification(grouptype, orderid, gmemberid, str + "的聊天室有新訊息!")
             }
         });
     })
@@ -411,8 +410,6 @@ function editorder() {
                     }
                     $("#serviceEditForm #GoRangeId").html(rangetxt);
 
-                    //很長的框架
-
                     //帶入編輯資料(ServiceOffer)
                     for (let i = 0; i < detail.length; i++) {
                         $("#serviceEditForm #cityId").val(detail[i].CityId).change();
@@ -481,6 +478,8 @@ function saveeditServiceOffer(s) {
         type: "GET",
         success: function (data) {
             getdetail($("#oid").val(), $("#gt").val(), $("#hid").val())
+            let s = $("#chatheader").text().replace(" 的聊天室", "").replace("(編號", "@編號").split('@')[0];
+            createNotification($("#gt").val(), $("#oid").val(), gmemberid, s + "的資訊更新了!")
         }
     })
 }
@@ -508,6 +507,8 @@ function saveeditOrder() {
         type: "GET",
         success: function (data) {
             getdetail($("#oid").val(), $("#gt").val(), $("#hid").val())
+            let s = $("#chatheader").text().replace(" 的聊天室", "").replace("(編號", "@編號").split('@')[0];
+            createNotification($("#gt").val(), $("#oid").val(), gmemberid, s + "的資訊更新了!")
         }
     })
 }
