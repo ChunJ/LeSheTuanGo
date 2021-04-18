@@ -73,6 +73,7 @@
             <div class="form-group">
                 <label id="rangeIdLabel" style="color:#808080" for="GoRangeId">外送距離限制</label>
                 <select asp-for="GoRangeId" class="form-control" asp-items="ViewBag.GoRange" disabled></select>
+                <input hidden name="GoRangeId" id="rangeIdBackUp" value="1"/>
             </div>
         </div>
         <div class="col-12">
@@ -103,6 +104,7 @@
 
         let rangeLabel = document.querySelector("#rangeIdLabel");
         let rangeS = document.querySelector("#GoRangeId");
+        let rangeBackUp = document.querySelector("#rangeIdBackUp");
 
         let addressIn = document.querySelector("#Address");
         let orderDes = document.querySelector("#OrderDescription");
@@ -127,9 +129,11 @@
         function checkCanGo() {
             if (event.target.checked) {
                 rangeS.disabled = false;
+                rangeBackUp.disabled = true;
                 rangeLabel.style.color = "#000000";
             } else {
                 rangeS.disabled = true;
+                rangeBackUp.disabled = false;
                 rangeLabel.style.color = "#808080";
             }
         }
