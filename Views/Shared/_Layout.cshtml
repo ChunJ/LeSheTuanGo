@@ -120,7 +120,7 @@
                                     if(Array.IndexOf(cUtility.Moderator_Member_Id, Context.Session.GetInt32(cUtility.Current_User_Id).Value) > -1) {
                                         <a class="dropdown-item" asp-controller="Background" asp-action="Index">後臺管理</a>
                                     }
-                                    <a class="dropdown-item" asp-action="Logout" asp-controller="Member">登出</a>
+                                    <a class="dropdown-item" asp-action="Logout" asp-controller="Member" onclick="(function() { alert('您已成功登出');return false;})()">登出</a>
                                 }
                             </div>
                         </div>
