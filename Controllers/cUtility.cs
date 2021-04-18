@@ -21,6 +21,7 @@ namespace LeSheTuanGo.Controllers {
         public static readonly string TradeDesc = "TradeDesc";
         public static readonly string ItemName = "ItemName";
         public static readonly string CheckMacValue = "CheckMacValue";
+        public static readonly int[] Moderator_Member_Id = new int[] { 1001 };
         //input address and output coordinate[lat, lng] 
         public static decimal[] addressToLatlong(string address) {
             //google api key=AIzaSyBircB99P_RvzxWdQT-hk40-h3Ofzlb_vQ

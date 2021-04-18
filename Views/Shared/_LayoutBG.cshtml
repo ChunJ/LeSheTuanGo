@@ -76,7 +76,7 @@
                                     <span class="LayoutNotificationNumber">3</span><span>則新通知</span>
                                 </div>
                                 <div class="list-group" style="width:18rem" id="LayoutNotificationList">
-                                    @for (int i = 0; i < 3; i++) {
+                                    @*@for (int i = 0; i < 3; i++) {
                                         <a class="dropdown-item border-top py-2" href="#">
                                             <div class="d-flex align-items-center">
                                                 <div class="notify-title">購物團 No.2546</div>
@@ -84,7 +84,7 @@
                                             </div>
                                             <div class="notify-content">購物團有新訊息則新通知則</div>
                                         </a>
-                                    }
+                                    }*@
                                 </div>
                             </div>
                         </div>
@@ -94,16 +94,15 @@
                                 <span class="text-white">@ViewData["userNameToDisplay"]</span>
                             </button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                                @if (Context.Session.GetInt32(cUtility.Current_User_Id) == null)
-                                {
+                                @if (Context.Session.GetInt32(cUtility.Current_User_Id) == null) {
                                     <a class="dropdown-item" asp-controller="Member" asp-action="Login">登入</a>
                                     <a class="dropdown-item" asp-controller="Member" asp-action="Create">註冊</a>
-                                }
-                                else
-                                {
+                                } else {
                                     <a class="dropdown-item" asp-controller="Member" asp-action="Detail">我的帳戶</a>
                                     <a class="dropdown-item" href="/ChatMessageRecords">歷史紀錄</a>
-                                    <a class="dropdown-item" asp-controller="Background" asp-action="Index">後臺管理</a>
+                                    if (Array.IndexOf(cUtility.Moderator_Member_Id, Context.Session.GetInt32(cUtility.Current_User_Id).Value) > -1) {
+                                        <a class="dropdown-item" asp-controller="Background" asp-action="Index">後臺管理</a>
+                                    }
                                     <a class="dropdown-item" asp-action="Logout" asp-controller="Member">登出</a>
                                 }
                             </div>
