@@ -56,7 +56,7 @@ namespace LeSheTuanGo.Controllers{
                                 && o.L25available == 0 && o.L33available == 0
                                 && o.L75available == 0 && o.L120available == 0)
                                 select o;
-            var newObject = from o in bagTypeSearch.Include(o=>o.District).Include(o=>o.District.City)
+            var newObject = from o in bagTypeSearch.Include(o=>o.District).Include(o=>o.District.City).Include(o=>o.GoRange)
                             select new {
                                 o.GarbageServiceId,
                                 o.DistrictId,
@@ -65,6 +65,7 @@ namespace LeSheTuanGo.Controllers{
                                 o.Address,
                                 o.EndTime,
                                 o.CanGo,
+                                o.GoRange.RangeInMeters,
                                 o.L3available,
                                 o.L5available,
                                 o.L14available,

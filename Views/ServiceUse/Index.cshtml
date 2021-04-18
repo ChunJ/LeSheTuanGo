@@ -36,6 +36,14 @@
                         <select class="form-control" asp-items="ViewBag.GoRange" id="distance"></select>
                     </div>
                 </div>
+                <div class="col-6" style="padding-top:2.5rem">
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input type="checkbox" class="form-check-input" id="needCome" onchange="checkNeedCome()" />
+                            是否需要外送服務?
+                        </label>
+                    </div>
+                </div>
                 <div class="col-12">
                     <label>垃圾袋尺寸及袋數</label>
                     <div id="sizeInputGroup1" class="row">
@@ -126,6 +134,7 @@
         let addressIn = document.querySelector("#addressInput");
         let distanceS = document.querySelector("#distance");
         let result = document.querySelector("#searchResult");
+        let needCome = document.querySelector("#needCome");
         //let detailView = document.querySelector("#detailView");
         let mapDiv = document.querySelector("#map");
         let sizeCountG1 = document.querySelectorAll("#sizeInputGroup1 input");
@@ -200,17 +209,34 @@
         function filterResult() {
             ////add cango filter test
             fList = [];
-            for (let r of queryList) {
-                if (r.Distance <= distanceS.options[distanceS.selectedIndex].text
-                    && r.L3available >= sizeCountG1[0].value
-                    && r.L5available >= sizeCountG1[1].value
-                    && r.L14available >= sizeCountG1[2].value
-                    && r.L25available >= sizeCountG1[3].value
-                    && r.L33available >= sizeCountG1[4].value
-                    && r.L75available >= sizeCountG1[5].value
-                    && r.L120available >= sizeCountG1[6].value
-                ) {
-                    fList.push(r);
+            if (needCome.checked) {
+                for (let r of queryList) {
+                    if (r.CanGo && r.Distance <= r.RangeInMeters
+                        && r.Distance <= distanceS.options[distanceS.selectedIndex].text
+                        && r.L3available >= sizeCountG1[0].value
+                        && r.L5available >= sizeCountG1[1].value
+                        && r.L14available >= sizeCountG1[2].value
+                        && r.L25available >= sizeCountG1[3].value
+                        && r.L33available >= sizeCountG1[4].value
+                        && r.L75available >= sizeCountG1[5].value
+                        && r.L120available >= sizeCountG1[6].value
+                    ) {
+                        fList.push(r);
+                    }
+                }
+            } else {
+                for (let r of queryList) {
+                    if (r.Distance <= distanceS.options[distanceS.selectedIndex].text
+                        && r.L3available >= sizeCountG1[0].value
+                        && r.L5available >= sizeCountG1[1].value
+                        && r.L14available >= sizeCountG1[2].value
+                        && r.L25available >= sizeCountG1[3].value
+                        && r.L33available >= sizeCountG1[4].value
+                        && r.L75available >= sizeCountG1[5].value
+                        && r.L120available >= sizeCountG1[6].value
+                    ) {
+                        fList.push(r);
+                    }
                 }
             }
             showResult();
