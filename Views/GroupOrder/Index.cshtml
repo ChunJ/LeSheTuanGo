@@ -4,7 +4,7 @@
 }
 <form asp-action="Index">
     <div class="border-bottom-dark mb-2">
-        <h2 onclick="test()">新增購物團</h2>
+        <h2 onclick="demo()">新增購物團</h2>
     </div>
     <div class="row w-50">
         <div class="col-6">
@@ -104,6 +104,8 @@
         let rangeLabel = document.querySelector("#rangeIdLabel");
         let rangeS = document.querySelector("#GoRangeId");
 
+        let addressIn = document.querySelector("#Address");
+        let orderDes = document.querySelector("#OrderDescription");
         window.onload = function () {
             cateS.value = @ViewData["CategoryId"];
             fillProduct(@ViewData["CategoryId"], "#ProductId", function () {
@@ -114,8 +116,9 @@
                 distS.value = @ViewData["DistrictId"];
             });
         }
-        function test() {
-            prodImage.src = "/images/ProductImages/test3.jpg";
+        function demo() {
+
+            addressIn.value = "信義路三段109-7號";
         }
         function showProdImage() {
             prodImage.src = prodS.options[prodS.selectedIndex].getAttribute("imgPath");
