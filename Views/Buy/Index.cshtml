@@ -9,54 +9,72 @@
             <h4 class="m-0" onclick="fillDemo()">搜尋團購</h4>
         </div>
         <div class="flex-grow-1 w-100" style="position:relative">
-            <div class="row p-3 h-100 column-main" style="align-content:flex-start">
-                <div class="col-6">
-                    <div class="form-group">
-                        <label>商品類型</label>
-                        <select id="CategotyId" class="form-control" onchange="getProduct('#ProductId', showProdImage)" asp-items="ViewBag.Category"></select>
-                    </div>
-                    <div class="form-group">
-                        <label>商品名稱</label>
-                        <select id="ProductId" class="form-control" onchange="showProdImage()"></select>
-                    </div>
-                    <div class="form-group">
-                        <label>購買個數</label>
-                        <input class="form-control" id="count" type="number" value="0" min="0" />
-                    </div>
-                    <div class="form-group">
-                        <label for="distance" class="control-label">搜尋距離</label>
-                        <select class="form-control" asp-items="ViewBag.GoRange" id="distance"></select>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="d-flex flex-column h-100">
-                        <div>
-                            <label>商品示意圖</label>
+            <div class="p-3 h-100 column-main" style="align-content:flex-start">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label>商品類型</label>
+                            <select id="CategotyId" class="form-control" onchange="getProduct('#ProductId', showProdImage)" asp-items="ViewBag.Category"></select>
                         </div>
-                        <div class="flex-grow-1">
-                            <image id="prodImage" class="product-image" src="@ViewData["ProductImage"]"></image>
+                        <div class="form-group">
+                            <label>商品名稱</label>
+                            <select id="ProductId" class="form-control" onchange="showProdImage()"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>購買個數</label>
+                            <input class="form-control" id="count" type="number" value="0" min="0" />
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="d-flex flex-column">
+                            <div>
+                                <label>商品示意圖</label>
+                            </div>
+                            <div class="flex-grow-1">
+                                <image id="prodImage" class="product-image" src="@ViewData["ProductImage"]"></image>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-6">
-                    <div class="form-group">
-                        <label>縣市</label>
-                        <select id="CityId" class="form-control" onchange="getDistrict('#DistrictId')" asp-items="ViewBag.City"></select>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="distance" class="control-label">搜尋距離</label>
+                            <select class="form-control" asp-items="ViewBag.GoRange" id="distance"></select>
+                        </div>
                     </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                        <label>鄉鎮市區</label>
-                        <select name="DistrictId" id="DistrictId" class="form-control"></select>
+                    <div class="col-6" style="padding-top:2.5rem">
+                        <div class="form-group form-check">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" id="needCome" onchange="checkNeedCome()" />
+                                是否需要外送服務?
+                            </label>
+                        </div>
                     </div>
-                </div>
-                <div class="col-12">
-                    <div class="form-group">
-                        <label>地址</label>
-                        <input class="form-control" id="addressInput" type="text" value=@ViewData["Address"] />
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label>縣市</label>
+                                    <select id="CityId" class="form-control" onchange="getDistrict('#DistrictId')" asp-items="ViewBag.City"></select>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label>鄉鎮市區</label>
+                                    <select name="DistrictId" id="DistrictId" class="form-control"></select>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label>地址</label>
+                                    <input class="form-control" id="addressInput" type="text" value=@ViewData["Address"] />
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                    <div class="col-12" style="height:5rem"></div>
                 </div>
-                <div class="col-12" style="height:5rem"></div>
             </div>
             <div class="py-2 sink w-100">
                 <div class="d-flex">
@@ -122,6 +140,7 @@
         let addressIn = document.querySelector("#addressInput");
         let distanceS = document.querySelector("#distance");
         let count = document.querySelector("#count");
+        let needCome = document.querySelector("#needCome");
         //for search result
         let result = document.querySelector("#searchResult");
         //for detail and submit
@@ -204,11 +223,23 @@
             ////add cango filter test
             fList = [];
             for (let r of queryList) {
-                if (r.Distance <= distanceS.options[distanceS.selectedIndex].text
-                    && r.ProductId == prodS.value
-                    && r.AvailableCount >= count.value
-                ) {
-                    fList.push(r);
+                if (needCome.checked) {
+                    //if needCome is checked, 
+                    if (r.CanGo && r.Distance <= r.RangeInMeters
+                        && r.Distance <= distanceS.options[distanceS.selectedIndex].text
+                        && r.ProductId == prodS.value
+                        && r.AvailableCount >= count.value
+                    ) {
+                        fList.push(r);
+                        console.log(r.RangeInMeters);
+                    }
+                } else {
+                    if (r.Distance <= distanceS.options[distanceS.selectedIndex].text
+                        && r.ProductId == prodS.value
+                        && r.AvailableCount >= count.value
+                    ) {
+                        fList.push(r);
+                    }
                 }
             }
             showResult();

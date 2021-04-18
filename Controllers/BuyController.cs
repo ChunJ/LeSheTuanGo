@@ -70,7 +70,7 @@ namespace LeSheTuanGo.Controllers {
             if (HttpContext.Session.GetInt32(cUtility.Current_User_Id) != null) {
                 firstPass = db.Orders.Where(o => o.HostMemberId != HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value);
             }
-            var newObject = from o in firstPass.Include(o => o.District).Include(o => o.District.City)
+            var newObject = from o in firstPass.Include(o => o.District).Include(o => o.District.City).Include(o=>o.GoRange)
                             select new {
                                 o.OrderId,
                                 o.ProductId,
@@ -80,6 +80,7 @@ namespace LeSheTuanGo.Controllers {
                                 o.Address,
                                 o.EndTime,
                                 o.CanGo,
+                                o.GoRange.RangeInMeters,
                                 o.AvailableCount,
                                 o.Latitude,
                                 o.Longitude,
