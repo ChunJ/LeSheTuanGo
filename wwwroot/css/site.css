@@ -138,9 +138,7 @@ html {
 .column-btn {
     position: fixed;
     bottom: 0;
-    background-color: #f1f1f1;
     /*height: 3.5rem;*/
-    width: 100%;
 }
 .border-bottom-dark {
     border-bottom: 1px solid #c0c4c8 !important;

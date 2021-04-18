@@ -17,13 +17,13 @@
                 <select asp-for="ProductId" class="form-control" onchange="showProdImage()"></select>
             </div>
             <div class="form-group">
-                <label asp-for="MaxCount">目標購買數量</label>
-                <input  type="number" name="MaxCount" id="MaxCount" min="0" class="form-control" />
+                <label for="MaxCount">目標購買數量</label>
+                <input type="number" name="MaxCount" id="MaxCount" min="0" class="form-control" />
                 <span asp-validation-for="MaxCount" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="UnitPrice">每單位價格</label>
-                <input type="number" name="UnitPrice" id="UnitPrice"  min="0" class="form-control" />
+                <label for="UnitPrice">每單位價格</label>
+                <input type="number" name="UnitPrice" id="UnitPrice" min="0" class="form-control" />
                 <span asp-validation-for="UnitPrice" class="text-danger"></span>
             </div>
         </div>
@@ -53,26 +53,26 @@
         </div>
         <div class="col-12">
             <div class="form-group">
-                <label asp-for="Address">街道地址</label>
+                <label for="Address">街道地址</label>
                 <input id="Address" name="Address" value=@ViewData["Address"] class="form-control" />
                 <span asp-validation-for="Address" class="text-danger"></span>
             </div>
         </div>
         <div class="col-6">
             <div class="form-group">
-                <label asp-for="EndTime">截止時間</label>
+                <label for="EndTime">截止時間</label>
                 <input asp-for="EndTime" class="form-control" />
                 <span asp-validation-for="EndTime" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="CanGo" />
+                    <input class="form-check-input" asp-for="CanGo" onchange="checkCanGo()"/>
                     是否提供外送服務?
                 </label>
             </div>
             <div class="form-group">
-                <label asp-for="GoRangeId">外送距離限制</label>
-                <select asp-for="GoRangeId" class="form-control" asp-items="ViewBag.GoRange"></select>
+                <label id="rangeIdLabel" style="color:#808080" for="GoRangeId">外送距離限制</label>
+                <select asp-for="GoRangeId" class="form-control" asp-items="ViewBag.GoRange" disabled></select>
             </div>
         </div>
         <div class="col-12">
@@ -83,9 +83,13 @@
             </div>
         </div>
     </div>
-    <div class="column-btn py-1 w-50">
-            <input type="submit" value="新增" class="btn btn-primary" />
-            <a class="btn btn-primary" href="/ChatMessageRecords/Index">查看紀錄</a>
+    <div class="column-btn bg-go-light py-1 row" style="width:28.7vw">
+        <div class="px-1 col-6">
+            <input type="submit" value="新增" class="btn btn-primary w-100" />
+        </div>
+        <div class="px-1 col-6">
+            <a class="btn btn-primary w-100" href="/ChatMessageRecords/Index">查看紀錄</a>
+        </div>
     </div>
 </form>
 
@@ -96,6 +100,10 @@
         let cateS = document.querySelector("#CategoryId");
         let prodS = document.querySelector("#ProductId");
         let prodImage = document.querySelector("#prodImage");
+
+        let rangeLabel = document.querySelector("#rangeIdLabel");
+        let rangeS = document.querySelector("#GoRangeId");
+
         window.onload = function () {
             cateS.value = @ViewData["CategoryId"];
             fillProduct(@ViewData["CategoryId"], "#ProductId", function () {
@@ -111,6 +119,15 @@
         }
         function showProdImage() {
             prodImage.src = prodS.options[prodS.selectedIndex].getAttribute("imgPath");
+        }
+        function checkCanGo() {
+            if (event.target.checked) {
+                rangeS.disabled = false;
+                rangeLabel.style.color = "#000000";
+            } else {
+                rangeS.disabled = true;
+                rangeLabel.style.color = "#808080";
+            }
         }
     </script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

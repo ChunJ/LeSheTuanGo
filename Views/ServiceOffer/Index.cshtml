@@ -23,7 +23,7 @@
         <div class="col-12">
             <div class="form-group">
                 <label asp-for="Address" class="control-label"></label>
-                <input id="Address" name="Address" value=@ViewData["Address"] class="form-control"/>
+                <input id="Address" name="Address" value=@ViewData["Address"] class="form-control" />
                 <span asp-validation-for="Address" class="text-danger"></span>
             </div>
         </div>
@@ -35,12 +35,12 @@
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="CanGo" /> @Html.DisplayNameFor(model => model.CanGo)
+                    <input class="form-check-input" asp-for="CanGo" onchange="checkCanGo()"/> @Html.DisplayNameFor(model => model.CanGo)
                 </label>
             </div>
             <div class="form-group">
-                <label asp-for="GoRangeId" class="control-label"></label>
-                <select asp-for="GoRangeId" class="form-control" asp-items="ViewBag.GoRangeId"></select>
+                <label id="rangeIdLabel" style="color:#808080" asp="GoRangeId" class="control-label"></label>
+                <select asp-for="GoRangeId" class="form-control" asp-items="ViewBag.GoRangeId" disabled></select>
             </div>
         </div>
     </div>
@@ -101,18 +101,25 @@
             </div>
         </div>
     </div>
-    <div class="column-btn py-1">
-        <input type="submit" value="新增" class="btn btn-primary" />
-        <a class="btn btn-primary" href="/ChatMessageRecords/Index">查看紀錄</a>
+    <div class="column-btn bg-go-light py-1 row" style="width:28.7vw">
+        <div class="px-1 col-6">
+            <input type="submit" value="新增" class="btn btn-primary w-100" />
+        </div>
+        <div class="px-1 col-6">
+            <a class="btn btn-primary w-100" href="/ChatMessageRecords/Index">查看紀錄</a>
+        </div>
     </div>
 </form>
-
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
         let cityS = document.querySelector("#cityId");
         let distS = document.querySelector("#DistrictId");
+
+        let rangeLabel = document.querySelector("#rangeIdLabel");
+        let rangeS = document.querySelector("#GoRangeId");
+
         window.onload = function () {
             cityS.value = @ViewData["CityId"];
             fillDistrict(@ViewData["CityId"], "#DistrictId", function () {
@@ -136,6 +143,15 @@
             $("#L33maxCount").val(0);
             $("#L75maxCount").val(0);
             $("#L120maxCount").val(0);
+        }
+        function checkCanGo() {
+            if (event.target.checked) {
+                rangeS.disabled = false;
+                rangeLabel.style.color = "#000000";
+            } else {
+                rangeS.disabled = true;
+                rangeLabel.style.color = "#808080";
+            }
         }
     </script>
 }
