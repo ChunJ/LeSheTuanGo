@@ -426,7 +426,7 @@ namespace LeSheTuanGo.Controllers
             var changeMem = db.Members.First(n => n.MemberId == HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value);
             changeMem.Balance += HttpContext.Session.GetInt32(cUtility.balance).Value;
             db.SaveChanges();
-            return RedirectToAction("Charge");
+            return RedirectToAction("Detail");
         }
     }
 }
