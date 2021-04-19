@@ -176,8 +176,16 @@
             prodImage.src = prodS.options[prodS.selectedIndex].getAttribute("imgPath");
         }
         function accorClick(accor) {
+            //doing 1 extra if, not pretty!
+            if (!accor.classList.contains("accordion-active")) {
+                map.setCenter(markers[accor.getAttribute("index")].getPosition());
+                map.setZoom(18);
+            }
+            accorExpand(accor);
+        }
+        function accorExpand(accor) {
             let panel = accor.nextElementSibling;
-            console.log(accor);
+            //console.log(accor.getAttribute("index"));
             if (accor.classList.contains("accordion-active")) {
                 accor.classList.remove("accordion-active");
                 panel.style.maxHeight = null;
@@ -192,7 +200,7 @@
                     lastAccord.classList.remove("accordion-active");
                     lastAccord.nextElementSibling.style.maxHeight = null;
                 }
-                lastAccord = accor
+                lastAccord = accor;
             }
         }
         function searchStart() {
@@ -252,7 +260,7 @@
                 let htmlString = "";
                 for (let i = 0; i < fList.length; i++) {
                     //use the index in filterList as id, so we can just get offer info from filterList later.
-                    htmlString += `<div class="accordion-go" onclick="accorClick(this)">`;
+                    htmlString += `<div class="accordion-go" index = "${i}" onclick="accorClick(this)">`;
                     htmlString += `${fList[i].CityName}${fList[i].DistrictName}${fList[i].Address}`;
                     htmlString += `</div>`;
                     //htmlString += `<div class="w-100"><div class="rem-4">宅配服務</div><span class="px-1">:</span>${fList[i].CanGo?"有":"不"}提供</div></div>`;
@@ -323,7 +331,7 @@
             map = new google.maps.Map(mapDiv,
                 {
                     center: mapCenter,
-                    zoom: 17,
+                    zoom: 14,
                     //mapTypeId: "terrain",
                 });
             new google.maps.Marker({
@@ -341,10 +349,11 @@
                     label: { text: i + "", color: "transparent" },
                 });
                 marker.addListener("click", () => {
-                    console.log(markers[i].title);
+                    //console.log(markers[i].title);
                     //document.getElementById(markers[i].label.text).scrollIntoView();
                     //getDetail(marker.label.text);
-                    accorClick(AccornList[marker.label.text]);
+                    AccornList[marker.label.text].scrollIntoView({ behavior: "smooth" });
+                    accorExpand(AccornList[marker.label.text]);
                 });
                 markers.push(marker);
             }
