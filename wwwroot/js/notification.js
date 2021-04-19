@@ -16,6 +16,14 @@ $(function () {
         if (connection.connectionState != "Connected") {
             connection.start().then(function () {
                 connection.invoke("AddToGroup", group);
+                connection.onclose(function () {
+                    var checkconn = setInterval(function () {
+                        connection.start();
+                        if (connection.connectionState != "Disconnected") {
+                            clearInterval(checkconn);
+                        }
+                    }, 100);
+                })
             })
         }
         //撈通知
