@@ -30,8 +30,8 @@ namespace LeSheTuanGo.Controllers
             pay.MerchantTradeNo = "DX" + DateTime.Now.ToString("yyyyMMddhhmmss") + "bc73";
             pay.MerchantTradeDate = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss");
             //pay.TradeDesc = "";
-            pay.SuccessUrl = $"https://{HttpContext.Session.GetString(cUtility.Current_Ip)}:81/Member/Charge";
-            pay.ReturnURL = $"https://{HttpContext.Session.GetString(cUtility.Current_Ip)}:81/Member/InsertRecord";
+            pay.SuccessUrl = $"https://{HttpContext.Session.GetString(cUtility.Current_Ip)}:8080/Member/Charge";
+            pay.ReturnURL = $"https://{HttpContext.Session.GetString(cUtility.Current_Ip)}:8080/Member/InsertRecord";
             //pay.SuccessUrl = "https://localhost:5001/Member/Charge";
             //pay.ReturnURL = "https://localhost:5001/Member/InsertRecord";
             pay.HashKey = "5294y06JbISpM5x9";
