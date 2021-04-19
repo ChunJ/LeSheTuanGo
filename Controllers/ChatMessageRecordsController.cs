@@ -123,6 +123,7 @@ namespace LeSheTuanGo.Controllers
                         n.MaxCount,
                         n.AvailableCount,
                         n.IsActive,
+                        n.EndTime,
                         self = true,
                     });
                     var i = order.ToList();
@@ -145,6 +146,7 @@ namespace LeSheTuanGo.Controllers
                         n.Order.AvailableCount,
                         n.Count,
                         n.Order.IsActive,
+                        n.Order.EndTime,
                         self = false,
                     });
                     var i = order.ToList();
@@ -178,6 +180,7 @@ namespace LeSheTuanGo.Controllers
                         n.L120maxCount,
                         n.L120available,
                         n.IsActive,
+                        n.EndTime,
                         self = true,
                     });
                     var i = garbage.ToList();
@@ -220,6 +223,7 @@ namespace LeSheTuanGo.Controllers
                         ComeCityName = n.ComeDistrict.City.CityName,
                         n.ComeAddress,
                         n.GarbageServiceOffer.IsActive,
+                        n.GarbageServiceOffer.EndTime,
                         self = false,
                     });
                     var i = garbage.ToList();

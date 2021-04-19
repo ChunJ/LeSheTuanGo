@@ -155,6 +155,7 @@ function getdetail(oid, gt, hid) {
                     }
                     txt += `<div>目標購買數量： ${s[i].MaxCount} </div><br />`;
                     txt += `<div>剩餘數量： ${s[i].AvailableCount} </div><br />`;
+                    txt += `<div>截止時間： ${new Date(s[i].EndTime).toLocaleString()} </div><br />`;
                     if (s[i].Count != undefined) {
                         txt += `<div>您的購買數量： ${s[i].Count} </div><br />`;
                     }
@@ -174,6 +175,13 @@ function getdetail(oid, gt, hid) {
                     txt += `<div>是否到府服務： ${cango} </div><br />`;
                     if (cango == "是") {
                         txt += `<div>可服務距離： ${s[i].RangeInMeters} </div><br />`;
+                    }
+                    if (s[i].NeedCome == true) {
+                        txt += `<div>是否到府服務： 是 </div><br />`;
+                        txt += `<div>到府服務地址： ${s[i].ComeCityName}${s[i].ComeDistrictName}${s[i].ComeAddress} </div><br />`;
+                    }
+                    else if (s[i].NeedCome == false) {
+                        txt += `<div>是否到府服務： 否 </div><br />`;
                     }
                     if (s[i].L3maxCount != 0) {
                         let str = s[i].L3count == 0 || s[i].L3count == undefined ? "" : `, 您已委託 ${s[i].L3count}個`;
@@ -203,13 +211,7 @@ function getdetail(oid, gt, hid) {
                         let str = s[i].L120count == 0 || s[i].L120count == undefined ? "" : `, 您已委託 ${s[i].L120count}個`;
                         txt += `<div>L120：可收 ${s[i].L120maxCount}個 , 尚可收 ${s[i].L120available}個 ${str}</div><br />`;
                     }
-                    if (s[i].NeedCome == true) {
-                        txt += `<div>是否到府服務： 是 </div><br />`;
-                        txt += `<div>到府服務地址： ${s[i].ComeCityName}${s[i].ComeDistrictName}${s[i].ComeAddress} </div><br />`;
-                    }
-                    else if (s[i].NeedCome == false) {
-                        txt += `<div>是否到府服務： 否 </div><br />`;
-                    }
+                    txt += `<div>截止時間： ${new Date(s[i].EndTime).toLocaleString()} </div><br />`;
                     if (s[i].IsActive) {
                         txt += `<button id="edit" onclick="editorder()">編輯</button>`
                     }
@@ -281,7 +283,6 @@ function getjointmember(oid, gt) {
                     html: true,
                     trigger: 'hover',
                     content: function () {
-                        //<div style="border-radius:50%;width:80px;height:80px;background-image:url('${$(this).data('img')}');background-size:cover"></div>
                         return `<img  src='${$(this).data('img')}' class="profile-XL"/><div>${$(this).data('username')}</div>`;
                     }
                 });
@@ -379,7 +380,6 @@ function editorder() {
                         $("#orderEditForm #IsActive").val(detail[i].IsActive);
                         $("#orderEditForm #StartTime").val(detail[i].StartTime);
                         $("#orderEditForm #HostMemberId").val(detail[i].HostMemberId);
-
                     }
                     $("#detail").addClass("d-none");
                     $("#orderEditForm").removeClass("d-none")
