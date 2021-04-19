@@ -43,7 +43,7 @@
         <div class="header-block">
             <h3 id="chatheader" class="text-center m-0">聊天室</h3>
         </div>
-        <div class="d-flex px-2 border-bottom" id="chatMemberIcon">
+        <div class="d-flex px-2 border-bottom h-profile-big-row" id="chatMemberIcon">
             @*@for (int i = 0; i < 5; i++)
             {
                 <div class="p-1">
@@ -53,23 +53,23 @@
         </div>
         <div class="w-100 flex-grow-1 column-main py-1 px-2" id="chat">
             @*@for (int i = 0; i < 5; i++)
-            {
-                <div class="d-flex">
-                    <img class="profile m-1 align-self-start" src="~/images/ProfileImages/guestProfile.jpg" />
-                    <div class="msg-box m-1 msg-in">
-                        強烈建議認真學習其內容，而且學完之後村長會給玩家多枚經驗加成徽章，請盡早入手幫助升級。
-                        其中畢業篇甚至包含了對新手幫助很大的30%經驗加成徽章，但難度對於新手較高，可等大約60級左右再回頭挑戰，詳情請見討論串：【攻略】村長特訓(畢業篇) 村長行動&低配攻略徵求
-                    </div>
-                    <div class="m-1 msg-time">下午 4：30</div>
+        {
+            <div class="d-flex">
+                <img class="profile m-1 align-self-start" src="~/images/ProfileImages/guestProfile.jpg" />
+                <div class="msg-box m-1 msg-in">
+                    強烈建議認真學習其內容，而且學完之後村長會給玩家多枚經驗加成徽章，請盡早入手幫助升級。
+                    其中畢業篇甚至包含了對新手幫助很大的30%經驗加成徽章，但難度對於新手較高，可等大約60級左右再回頭挑戰，詳情請見討論串：【攻略】村長特訓(畢業篇) 村長行動&低配攻略徵求
                 </div>
-                <div class="d-flex flex-row-reverse">
-                    <div class="msg-box m-1 msg-out">
-                        強烈建議認真學習其內容，而且學完之後村長會給玩家多枚經驗加成徽章，請盡早入手幫助升級。
-                        詳情請見討論串：【攻略】村長特訓(畢業篇) 村長行動&低配攻略徵求
-                    </div>
-                    <div class="m-1 msg-time">下午 4：30</div>
+                <div class="m-1 msg-time">下午 4：30</div>
+            </div>
+            <div class="d-flex flex-row-reverse">
+                <div class="msg-box m-1 msg-out">
+                    強烈建議認真學習其內容，而且學完之後村長會給玩家多枚經驗加成徽章，請盡早入手幫助升級。
+                    詳情請見討論串：【攻略】村長特訓(畢業篇) 村長行動&低配攻略徵求
                 </div>
-            }*@
+                <div class="m-1 msg-time">下午 4：30</div>
+            </div>
+        }*@
         </div>
         <input type="hidden" id="roomid" value="0" />
         <div class="border-top d-flex py-1 px-2">
