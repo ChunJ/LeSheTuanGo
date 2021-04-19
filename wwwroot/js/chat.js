@@ -21,8 +21,8 @@ $(function () {
     });
     $('#message').keypress(function (e) {
         if (e.which == 13) {
-                $('#btnSend').click();
-                return false;
+            $('#btnSend').click();
+            return false;
         }
 
     });
@@ -69,7 +69,7 @@ $(function () {
 
 
 //建立SignalR連線，接收訊息用事件
-connection.on("ReceiveGroupMessage", function (groupName, memberid, username, message, sendtime,photopath) {
+connection.on("ReceiveGroupMessage", function (groupName, memberid, username, message, sendtime, photopath) {
     let shortsendtime = (new Date(sendtime)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     let other = `
                 <div class="d-flex">
@@ -93,15 +93,20 @@ connection.on("ReceiveGroupMessage", function (groupName, memberid, username, me
 
 //選團(點產出的案件按鈕)
 function chatGetOrder(oid, gt, rn, hid) {
-    
+
     $("#oid").val(oid);
     $("#gt").val(gt);
     $("#hid").val(hid);
     $("#detail").removeClass('d-none').siblings().addClass('d-none');
     //加入SignalR聊天室
     var group = gt.toString() + '_' + oid.toString();
-    if (connection.connectionState != "Connected") {
-        connection.start().then(function () {
+    //if (connection.connectionState != "Connected") {
+    if (connection.connectionState == "Disconnected") {
+        connection.start()
+    }
+    var checkConnection = setInterval(function () {
+        console.log("連線中")
+        if (connection.connectionState == "Connected") {
             if ($("#roomid").val() != 0) {
                 connection.invoke("RemoveFromGroup", $("#roomid").val()).catch(function (err) {
                     return console.error(err.toString());
@@ -110,25 +115,15 @@ function chatGetOrder(oid, gt, rn, hid) {
             connection.invoke("AddToGroup", group).then(function () { $("#roomid").val(group) }).catch(function (err) {
                 return console.error(err.toString());
             });
-        }).catch(function (err) {
-            return console.error(err.toString());
-        })
-    }
-    else {
-        if ($("#roomid").val() != 0) {
-            connection.invoke("RemoveFromGroup", $("#roomid").val()).catch(function (err) {
-                return console.error(err.toString());
-            });
+            clearInterval(checkConnection);
         }
-        connection.invoke("AddToGroup", group).then(function () { $("#roomid").val(group) }).catch(function (err) {
-            return console.error(err.toString());
-        });
-    };
+    }, 100);
+    ;
 
     //取得團明細
     getdetail(oid, gt, hid);
     //取得聊天紀錄   
-    getchat(oid, gt,rn);
+    getchat(oid, gt, rn);
     //取得參加者清單
     getjointmember(oid, gt);
 }
@@ -227,7 +222,7 @@ function getdetail(oid, gt, hid) {
     })
 }
 //取得聊天紀錄
-function getchat(oid, gt,rn) {
+function getchat(oid, gt, rn) {
     $.ajax({
         url: "/ChatMessageRecords/chatGetChat",
         type: "GET",
@@ -300,7 +295,7 @@ function getjointmember(oid, gt) {
 function getOrderList(gt, so, of) {
     $.ajax({
         url: "/ChatMessageRecords/getOrderList",
-        data: { groupType:gt, selfother:so, onoff:of},
+        data: { groupType: gt, selfother: so, onoff: of },
         type: "GET",
         success: function (data) {
             var s = JSON.parse(data);
@@ -371,7 +366,7 @@ function editorder() {
                             }
                         }, 100);
                         $("#orderEditForm #ProductId").append(`<option value=${detail[i].ProductId}>${detail[i].ProductName}</option>`);
-                        $("#orderEditForm #CategoryId").append(`<option value=${detail[i].CategoryId}>${detail[i].CategoryName}</option>`); 
+                        $("#orderEditForm #CategoryId").append(`<option value=${detail[i].CategoryId}>${detail[i].CategoryName}</option>`);
                         $("#orderEditForm #prodImage").attr('src', `${detail[i].ProductImagePath}`);
                         $("#orderEditForm #Address").val(detail[i].Address);
                         $("#orderEditForm #EndTime").val(detail[i].EndTime);
@@ -390,7 +385,7 @@ function editorder() {
                     $("#orderEditForm").removeClass("d-none")
                 }
             }
-           
+
             //垃圾團
             else if (grouptype == 2) {
 
@@ -489,20 +484,20 @@ function saveeditOrder() {
         url: "/Buy/editOrderOffer",
         data: {
             DistrictId: $("#orderEditForm #DistrictId").val(),
-            ProductId:$("#orderEditForm #ProductId").val(),
-            CategoryId:$("#orderEditForm #CategoryId").val(),
-            ProductImagePath:$("#orderEditForm #prodImage").attr('src'),
-            Address:$("#orderEditForm #Address").val(),
-            EndTime:$("#orderEditForm #EndTime").val(),
-            UnitPrice:$("#orderEditForm #UnitPrice").val(),
-            MaxCount:$("#orderEditForm #MaxCount").val(),
-            OrderDescription:$("#orderEditForm #OrderDescription").val(),
-            CanGo:$("#orderEditForm #CanGo").prop('checked'),
-            GoRangeId:$("#orderEditForm #GoRangeId").val(),
-            OrderId:$("#orderEditForm #OrderId").val(),
-            IsActive:$("#orderEditForm #IsActive").val(),
-            StartTime:$("#orderEditForm #StartTime").val(),
-            HostMemberId:$("#orderEditForm #HostMemberId").val(),
+            ProductId: $("#orderEditForm #ProductId").val(),
+            CategoryId: $("#orderEditForm #CategoryId").val(),
+            ProductImagePath: $("#orderEditForm #prodImage").attr('src'),
+            Address: $("#orderEditForm #Address").val(),
+            EndTime: $("#orderEditForm #EndTime").val(),
+            UnitPrice: $("#orderEditForm #UnitPrice").val(),
+            MaxCount: $("#orderEditForm #MaxCount").val(),
+            OrderDescription: $("#orderEditForm #OrderDescription").val(),
+            CanGo: $("#orderEditForm #CanGo").prop('checked'),
+            GoRangeId: $("#orderEditForm #GoRangeId").val(),
+            OrderId: $("#orderEditForm #OrderId").val(),
+            IsActive: $("#orderEditForm #IsActive").val(),
+            StartTime: $("#orderEditForm #StartTime").val(),
+            HostMemberId: $("#orderEditForm #HostMemberId").val(),
         },
         type: "GET",
         success: function (data) {
