@@ -282,7 +282,7 @@ function getjointmember(oid, gt) {
                     trigger: 'hover',
                     content: function () {
                         //<div style="border-radius:50%;width:80px;height:80px;background-image:url('${$(this).data('img')}');background-size:cover"></div>
-                        return `<img  src='${$(this).data('img')}' width=80/><div>${$(this).data('username')}</div>`;
+                        return `<img  src='${$(this).data('img')}' class="profile-XL"/><div>${$(this).data('username')}</div>`;
                     }
                 });
             });
