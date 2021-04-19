@@ -4,18 +4,18 @@
 }
 <div class="row align-items-center h-75">
     <div class="col-4 offset-4 rounded-panel pt-2">
-        <h1 style="text-align: center" onclick="demo()">登入</h1>
+        <h1 style="text-align: center">登入</h1>
         <hr />
         <form asp-action="Login" id="form">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input hidden name="from" value="@ViewData["from"]" />
             <div class="form-group">
-                <label asp-for="Email" class="control-label" id="labelEmail"></label>
+                <label asp-for="Email" class="control-label" id="labelEmail"  onclick="demo1()"></label>
                 <input asp-for="Email" class="form-control" id="txtEmail" />
                 <span asp-validation-for="Email" class="text-danger" id="spanEmail"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Password" class="control-label" id="labelPassword"></label>
+                <label asp-for="Password" class="control-label" id="labelPassword"  onclick="demo2()"></label>
                 <input asp-for="Password" class="form-control" id="txtPassword" type="password"/>
                 <span asp-validation-for="Password" class="text-danger" id="spanPassword"></span>
                 <a class="text-decoration-none text-black-50" asp-action="forgetPassword">忘記密碼?</a>
@@ -114,8 +114,12 @@
             })
         }//ok
         //demo
-        function demo() {
+        function demo1() {
             txtEmail.value = "flame32916610@gmail.com";
+            txtPassword.value = "Password123";
+        }
+        function demo2() {
+            txtEmail.value = "YuChen789@gmail.com";
             txtPassword.value = "Password123";
         }
                                         //$captcha = $_POST['g-recaptcha-response'];
