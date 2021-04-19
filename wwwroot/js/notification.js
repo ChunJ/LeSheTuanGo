@@ -16,6 +16,8 @@ $(function () {
         if (connection.connectionState != "Connected") {
             connection.start().then(function () {
                 connection.invoke("AddToGroup", group);
+
+                //斷線重連
                 connection.onclose(function () {
                     var checkconn = setInterval(function () {
                         connection.start();
@@ -24,6 +26,7 @@ $(function () {
                         }
                     }, 100);
                 })
+
             })
         }
         //撈通知
