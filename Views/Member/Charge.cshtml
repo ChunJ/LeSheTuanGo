@@ -11,7 +11,7 @@
             <div class="p-2">
                 <label>貢獻值</label>
                 <div class="form-check">
-                    <input type="radio" asp-for="Balance" class="form-check-input" value="50" onclick="changeProduct(50)" />
+                    <input type="radio" asp-for="Balance" checked class="form-check-input" value="50" onclick="changeProduct(50)" />
                     <span>50</span>
                 </div>
                 <div class="form-check">
@@ -72,7 +72,7 @@
 @section Scripts {
     <script>
         window.onload = function () {
-            payment();
+            changeProduct(50);
         };
         function changeProduct(item) {
             const formElement = document.getElementById("formCreditCard")
