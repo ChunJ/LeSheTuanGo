@@ -2,8 +2,6 @@
 
 //ready事件，radioBTN及send鍵掛事件，預先指定group
 $(function () {
-    //隱藏連線中視窗
-    $("#chat_connecting").hide();
     //掛事件
     $('input[type=radio][name="grouptype"]').change(function () {
         $("#rec_grouptype").val($(this).val());
@@ -104,8 +102,9 @@ function chatGetOrder(oid, gt, rn, hid) {
     if (connection.connectionState == "Disconnected") {
         connection.start()
     }
+    $("#chat_connecting").prop('hidden',false);
     var checkConnection = setInterval(function () {
-        $("#chat_connecting").show();
+        
         console.log("連線中")
         if (connection.connectionState == "Connected") {
             if ($("#roomid").val() != 0) {
@@ -115,7 +114,7 @@ function chatGetOrder(oid, gt, rn, hid) {
             }
             connection.invoke("AddToGroup", group).then(function () {
                 $("#roomid").val(group)
-                $("#chat_connecting").hide();
+                $("#chat_connecting").prop('hidden', true);
             }).catch(function (err) {
                 return console.error(err.toString());
             });
