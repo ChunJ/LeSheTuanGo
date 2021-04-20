@@ -1,7 +1,4 @@
-﻿var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub", {
-    skipNegotiation: true,
-    transport: signalR.HttpTransportType.WebSockets
-}).build();
+﻿var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 $(function () {
     //接收事件
     connection.on("ReceiveNotification", function (groupName, groupType, orderId, message, newOrUpdate) {
