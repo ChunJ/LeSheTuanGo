@@ -390,6 +390,7 @@ namespace LeSheTuanGo.Controllers
                 if (ipaddress.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
                 {
                     Console.WriteLine("Local IP: " + ipaddress.ToString());
+                    HttpContext.Session.SetString(cUtility.Current_Ip, ipaddress.ToString());
                 }
             }
             string bodyEmail = "";

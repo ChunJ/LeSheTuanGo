@@ -55,7 +55,7 @@
                 <label asp-for="Address" class="control-label col-12" id="labelAddress"></label>
                 <div class="col-6">
                     <div class="form-group">
-                        <select id="selectCity" class="form-control" onchange="getDistrict('#selectDistric')" asp-items="ViewBag.City">
+                        <select id="selectCity" class="form-control" onchange="getDistrictcc('#selectDistric')" asp-items="ViewBag.City">
                             <option hidden id="optionCity">縣市</option>
                         </select>
                     </div>
@@ -354,6 +354,14 @@
             document.getElementById("txtPassword").value = "Password123";
             document.getElementById("txtPasswordCheck").value = "Password123";
             document.getElementById("txtAddress").value = "復興南路資策會#";
+            $("#selectCity").val(1).change();
+            var checkdis = setInterval(function () {
+                if (document.getElementById("selectDistric").length >1) {
+                    document.getElementById("selectDistric").selectedIndex = 4;
+                    clearInterval(checkdis)
+                }
+            }, 100);
+
         }
     </script>
 }
