@@ -266,7 +266,7 @@
                     //htmlString += `<div class="w-100"><div class="rem-4">宅配服務</div><span class="px-1">:</span>${fList[i].CanGo?"有":"不"}提供</div></div>`;
                     htmlString += `<div class="accordion-panel"><form method="post" action="/Buy/Join">`;
                     htmlString += `<div class="py-2"><div class="w-100"><div class="rem-4">截止時間</div><span class="px-1">:</span>${formatDatetime(fList[i].EndTime)}</div>`;
-                    htmlString += `<div class="w-100"><div class="rem-4">距離</div><span class="px-1">:</span>${parseInt(fList[i].Distance, 10)} 公尺</div></div>`;
+                    htmlString += `<div class="w-100"><div class="rem-4">距離</div><span class="px-1">:</span><span class="text-primary">${parseInt(fList[i].Distance, 10)}</span> 公尺</div></div>`;
                     htmlString += `<input hidden name="OrderId" value="${fList[i].OrderId}" />`;
                     htmlString += `<input hidden name="ComeDistrictId" value="${distS.value}" />`;
                     htmlString += `<input hidden name="ComeAddress" value="${addressIn.value}" />`;
