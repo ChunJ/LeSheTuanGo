@@ -165,6 +165,7 @@
 
         var timeOrder = -1;
         var distanceOrder = -1;
+        var cirRadius = 300;
 
         function getSpotNum(currentUser) {
         $.ajax({
@@ -224,6 +225,17 @@
                 map,
                 title: "YOU",
                 icon: "https://crd-rubbish.epd.ntpc.gov.tw/maps/images/icon/Icon_LegendD.png",
+            });
+
+            new google.maps.Circle({
+                strokeColor: "#FF0000",
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: "#FF0000",
+                fillOpacity: 0.35,
+                map,
+                center: mbr,
+                radius: cirRadius
             });
 
             var markers = [];
@@ -297,6 +309,7 @@
         }
 
         function initFav() {
+            cirRadius = 300;
             $.ajax({
                 url: "/map/spotCollected?mem=" + currentUser,
                 type: "GET",
@@ -473,6 +486,7 @@
         }
 
         function captureSelect() {
+            cirRadius = 300;
             if ($('#selectCity :selected').index() != 0) {
                 init300M($('#selectCity :selected').text() + $('#selectDistric :selected').text() + $('#txtAddress').val(), 'add');
                 document.getElementById('lblSource').innerText = '您輸入的新地址，';
@@ -486,6 +500,7 @@
             var timeStart = $('#selectTimeStart :selected').text();
             var timeEnd = $('#selectTimeEnd :selected').text();
             var distance = $('#rangeLevel :selected').text();
+            cirRadius = parseInt(distance);
 
             if (timeStart == '請選擇'||timeEnd=='請選擇'||distance=='請選擇') {
                 alert('請指定完整條件');
@@ -563,6 +578,7 @@
 
                 latNow = latitude;
                 lngNow = longitude;
+                cirRadius = 300;
 
                 status.textContent = '定位完成';
                 mapLink.href = `https://www.openstreetmap.org/#map=18/${latitude}/${longitude}`;
