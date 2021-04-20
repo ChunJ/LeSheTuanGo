@@ -16,11 +16,17 @@ $(function () {
         if (connection.connectionState != "Connected") {
             connection.start().then(function () {
                 connection.invoke("AddToGroup", group);
-
+                $("#user_group").val(group);
                 //斷線重連
                 connection.onclose(function () {
                     var checkconn = setInterval(function () {
-                        connection.start();
+                        connection.start().then(function () {
+                            connection.invoke("AddToGroup", group);
+                            $("#user_group").val(group);
+                            if ($("#roomid").val() != 0) {
+                                connection.invoke("AddToGroup", $("#roomid").val())
+                            }
+                        });
                         if (connection.connectionState != "Disconnected") {
                             clearInterval(checkconn);
                         }
