@@ -337,7 +337,6 @@ function editorder() {
         data: { grouptype: grouptype, orderid: orderid, memberid: gmemberid, self: $("#self").val() },
         type: "GET",
         success: function (data) {
-            console.log(data);
             let detail = JSON.parse(data[0]);
             let range = JSON.parse(data[1]);
             let city = JSON.parse(data[2]);
