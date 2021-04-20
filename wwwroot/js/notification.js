@@ -23,7 +23,7 @@ $(function () {
                         connection.start().then(function () {
                             connection.invoke("AddToGroup", group);
                             $("#user_group").val(group);
-                            if ($("#roomid").val() != 0) {
+                            if ($("#roomid").val() != 0 && $("#roomid").val() != undefined) {
                                 connection.invoke("AddToGroup", $("#roomid").val())
                             }
                         });
