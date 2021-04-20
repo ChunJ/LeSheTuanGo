@@ -2,7 +2,8 @@
 
 //ready事件，radioBTN及send鍵掛事件，預先指定group
 $(function () {
-
+    //隱藏連線中視窗
+    $("#chat_connecting").hide();
     //掛事件
     $('input[type=radio][name="grouptype"]').change(function () {
         $("#rec_grouptype").val($(this).val());
@@ -100,11 +101,11 @@ function chatGetOrder(oid, gt, rn, hid) {
     $("#detail").removeClass('d-none').siblings().addClass('d-none');
     //加入SignalR聊天室
     var group = gt.toString() + '_' + oid.toString();
-    //if (connection.connectionState != "Connected") {
     if (connection.connectionState == "Disconnected") {
         connection.start()
     }
     var checkConnection = setInterval(function () {
+        $("#chat_connecting").show();
         console.log("連線中")
         if (connection.connectionState == "Connected") {
             if ($("#roomid").val() != 0) {
@@ -112,7 +113,10 @@ function chatGetOrder(oid, gt, rn, hid) {
                     return console.error(err.toString());
                 });
             }
-            connection.invoke("AddToGroup", group).then(function () { $("#roomid").val(group) }).catch(function (err) {
+            connection.invoke("AddToGroup", group).then(function () {
+                $("#roomid").val(group)
+                $("#chat_connecting").hide();
+            }).catch(function (err) {
                 return console.error(err.toString());
             });
             clearInterval(checkConnection);
