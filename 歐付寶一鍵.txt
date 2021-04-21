@@ -1,0 +1,5 @@
+歐付寶卡號
+javascript:(function() {document.getElementById("CCpart1").value = "4311";document.getElementById("CCpart2").value = "9522";document.getElementById("CCpart3").value = "2222";document.getElementById("CCpart4").value = "2222";document.getElementById("CreditMM").value = "12";document.getElementById("CreditYY").value = "22";document.getElementById("CreditAuth").value = "222";document.getElementById("CreditAuth").value = "222";})()
+
+歐付寶會員
+javascript:(function() {document.getElementById("m_account").value = "stageuser001";document.getElementById("m_IDN").value = "A123123123";document.getElementById("m_pw").value = "test1234";})()
