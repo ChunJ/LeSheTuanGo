@@ -1,9 +1,7 @@
-﻿
-@{
+﻿@{
     Layout = "_LayoutBG";
     ViewData["Title"] = "上架商品 - ";
 }
-
 <div class="d-flex justify-content-center h-75 p-2">
     <div class="w-25 m-2">
         <div class="rounded-panel bg-go-light">
@@ -22,7 +20,7 @@
     <div class="w-25 m-2">
         <div class="rounded-panel bg-go-light">
             <div class="header-block-green">
-                <h4 class="m-0">新增商品</h4>
+                <h4 class="m-0" onclick="demo()">新增商品</h4>
             </div>
             <div class="p-2">
                 <div class="form-group">
@@ -47,12 +45,19 @@
                 <button onclick="insertProduct()" class="btn btn-primary w-100">新增商品</button>
             </div>
         </div>
-        
     </div>
 </div>
-
-
+@section Scripts {
     <script>
+        function demo() {
+            let cateS = document.querySelector("#CategoryID");
+            let prodName = document.querySelector("#ProductName");
+            let prodDesc = document.querySelector("#ProductDescription");
+
+            cateS.value = 3;
+            prodName.value = "垃圾桶";
+            prodDesc.value = "不鏽鋼、腳踏式垃圾桶"
+        }
         function insertCategory() {
             $.get("/Background/InsertCategory", { s: CategoryName.value }).done(function (result) {
                 console.log(result);
@@ -101,3 +106,5 @@
             console.log(reader);
         }//ok
     </script>
+}
+
