@@ -28,8 +28,10 @@
                 </div>
             </div>
             <div class="px-2 pb-2">
+                @*<form id="formCreditCard" name="formCreditCard" method="post" accept-charset="UTF-8"
+                      action="https://payment-stage.opay.tw/Cashier/AioCheckOut/V5">*@
                 <form id="formCreditCard" name="formCreditCard" method="post" accept-charset="UTF-8"
-                      action="https://payment-stage.opay.tw/Cashier/AioCheckOut/V5">
+                      action="https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5">
                     @*MerchantID 商店代號:*@
                     <input type="text" name="MerchantID" value="2000132" hidden />
                     @*MerchantTradeNo 商店交易編號:*@
@@ -47,6 +49,7 @@
                     @*ReturnURL 付款完成通知回傳網址:*@
                     <input type="text" name="ReturnURL" value="https://developers.opay.tw/AioMock/MerchantReturnUrl" hidden />
                     @*ChoosePayment 預設付款方式:*@
+                    @*<input type="text" name="ChoosePayment" value="Credit" hidden />*@
                     <input type="text" name="ChoosePayment" value="Credit" hidden />
                     @*會員商店代碼:*@
                     <input type="text" name="StoreID" value="" hidden />
@@ -64,7 +67,7 @@
                     <input type="text" name="CheckMacValue" value="E5A45921756D2BCCF2517475DA71AC5804F5D1C2817FD0A3FC2E41C85F85389B" hidden />
                     <input type="submit" class="btn btn-primary w-100" value="捐款支持" />
                 </form>
-            </div>
+</div>
         </div>
     </div>
 </div>
