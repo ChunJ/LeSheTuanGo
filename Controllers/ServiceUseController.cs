@@ -49,10 +49,12 @@ namespace LeSheTuanGo.Controllers{
             //disable query and use the first user's location for testing
             //var tempUser = db.Members.First();
             //GeoCoordinate userLocation = new GeoCoordinate((double)tempUser.Latitude, (double)tempUser.Longitude);
+            //若使用者有登入，則先過濾掉使用者自己新增的服務
             IQueryable<GarbageServiceOffer> firstPass = db.GarbageServiceOffers;
             if (HttpContext.Session.GetInt32(cUtility.Current_User_Id) != null) {
                 firstPass = db.GarbageServiceOffers.Where(o => o.HostMemberId!= HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value);
             }
+            //過濾到期、已額滿或在搜尋範圍外的服務，並轉成json
             var bagTypeSearch = from o in firstPass
                                 where o.IsActive == true && 
                                 !(o.L3available == 0
@@ -79,6 +81,7 @@ namespace LeSheTuanGo.Controllers{
                                 o.L120available,
                                 o.Latitude,
                                 o.Longitude,
+                                //目前先將查詢位置的經緯度存入每筆資料中
                                 //put user location in every data, not worth putting it elsewhere when the data count is small.
                                 userLat = latlong[0],
                                 userLong = latlong[1],
@@ -89,12 +92,16 @@ namespace LeSheTuanGo.Controllers{
         }
         [HttpPost]
         public IActionResult Join(GarbageServiceUseRecord r) {
+            ////未登入只能搜尋服務，不能使用(加入)，若按下加入會跳轉登入頁
             if (HttpContext.Session.GetInt32(cUtility.Current_User_Id) == null) {
                 return RedirectToAction("Login", "Member", new { from = "ServiceUse/Index" });
             }
+            //填入使用者id到使用紀錄
             r.MemberId = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
+            //取得被使用服務
             var offer = db.GarbageServiceOffers.Where(o => o.GarbageServiceId == r.GarbageServiceOfferId).First();
             //some testing here need to be done
+            //將被使用服務的可用袋數減去被使用袋數
             offer.L3available -= r.L3count;
             offer.L5available -= r.L5count;
             offer.L14available -= r.L14count;
@@ -102,8 +109,10 @@ namespace LeSheTuanGo.Controllers{
             offer.L33available -= r.L33count;
             offer.L75available -= r.L75count;
             offer.L120available -= r.L120count;
+            //加入使用紀錄，將修改寫入資料庫
             db.Add(r);
             db.SaveChanges();
+            //傳到新加入服務團的聊天室頁面
             return RedirectToAction("Index", "ChatMessageRecords", new { grouptype = 2, groupid = r.GarbageServiceOfferId });
         }
 
@@ -131,8 +140,9 @@ namespace LeSheTuanGo.Controllers{
             //    db.SaveChanges();
             //}
         }
-
+        
         public IActionResult Delete(int id, int id2) {
+            //目前沒用到
             var q = db.GarbageServiceUseRecords.Where(m => m.GarbageServiceOfferId == id).FirstOrDefault();
             db.GarbageServiceUseRecords.Remove(q);
             var q2 = db.GarbageServiceOffers.Where(m => m.GarbageServiceId == id2).FirstOrDefault();

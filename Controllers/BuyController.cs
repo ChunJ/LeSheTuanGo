@@ -41,17 +41,19 @@ namespace LeSheTuanGo.Controllers {
             return View();
         }
 
-        public void editOrderOffer(int OrderId,Order order)
-        {
+        public void editOrderOffer(int OrderId,Order order) {   
+            //取得被修改資料"修改前"的可購買數和購買上限
             var o = db.Orders.Where(n => n.OrderId == OrderId).Select(n=>new { n.AvailableCount,n.MaxCount }).First();
+            //計算團購修改後新的可購買數
+            order.AvailableCount = (byte)(o.AvailableCount + (order.MaxCount - o.MaxCount));
+            //取得新地址的經緯度
             decimal[] s = cUtility.addressToLatlong(order.Address);
             order.Latitude = s[0];
             order.Longitude = s[1];
-            order.AvailableCount = (byte)(o.AvailableCount + (order.MaxCount - o.MaxCount));
-
+            //寫入資料庫
             db.Update(order);
             db.SaveChanges();
-            Console.WriteLine("A");
+            //Console.WriteLine("A");
         }
 
         public string Search(int DistrictInput, string addressInput) {
@@ -60,7 +62,7 @@ namespace LeSheTuanGo.Controllers {
             //設定搜尋範圍
             //var distantMax = db.RangeRefs.Last().RangeInMeters;
             int distanceMax = 3000;
-            //取得地址全名，並轉成經緯度
+            //從參數求出完整地址，並轉成經緯度
             DistrictRef dist = db.DistrictRefs.Where(d => d.DistrictId == DistrictInput)
                 .Include(d => d.City).First();
             string address = dist.City.CityName + dist.DistrictName + addressInput;
@@ -91,6 +93,7 @@ namespace LeSheTuanGo.Controllers {
                                 o.Latitude,
                                 o.Longitude,
                                 o.HostMemberId,
+                                //目前先將查詢位置的經緯度存入每筆資料中
                                 //put user location in every data, not worth putting it elsewhere when the data count is small.
                                 userLat = latlong[0],
                                 userLong = latlong[1],
@@ -101,18 +104,23 @@ namespace LeSheTuanGo.Controllers {
         }
         [HttpPost]
         public IActionResult Join(OrderBuyRecord r) {
+            //未登入只能搜尋團購，不能使用(加入)，若按下加入後會跳轉登入頁
             if (HttpContext.Session.GetInt32(cUtility.Current_User_Id) == null) {
                 return RedirectToAction("Login", "Member", new { from = "Buy/Index" });
             }
+            //若外送地址未填寫(null)，則填入空字串
             r.MemberId = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
             if (r.ComeAddress == null) r.ComeAddress = "";
-            //need server side validation
+            //todo need server side validation
+            //取得被加入的團購物件，可購買數量 - 被購買數量
+            //加入購買紀錄物件，將修改寫入資料庫
             var order = db.Orders.Where(o => o.OrderId == r.OrderId).First();
             order.AvailableCount -= r.Count;
             db.Add(r);
             db.SaveChanges();
             //if server side validation is not passed, return view with user's filter option
             //if successed, redirect to history
+            //傳到新加入團購的聊天室頁面
             return RedirectToAction("Index", "ChatMessageRecords", new { grouptype = 1, groupid = r.OrderId });
         }
     }
