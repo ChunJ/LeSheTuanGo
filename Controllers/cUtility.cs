@@ -8,6 +8,14 @@ using System.Net;
 using System.Threading.Tasks;
 
 namespace LeSheTuanGo.Controllers {
+
+    //備援KEY-2
+    //key=AIzaSyCIV2Z75uPGf9zEAnlAzKS_8bJLdxTvS-k
+    //把KEY-1全部取代
+
+    //目前KEY-1
+    //key=AIzaSyBircB99P_RvzxWdQT-hk40-h3Ofzlb_vQ
+
     public static class cUtility {
         //key for session
         public static readonly string Current_Ip = "Current_Ip";
