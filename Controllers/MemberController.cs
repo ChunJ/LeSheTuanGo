@@ -35,14 +35,14 @@ namespace LeSheTuanGo.Controllers
             string strHostName = Dns.GetHostName();
             IPHostEntry iphostentry = Dns.GetHostEntry(strHostName);
             //string ipaddress = iphostentry.AddressList[1].ToString() ;
-            foreach (IPAddress ipaddress in iphostentry.AddressList)
-            {
-                // 只取得IP V4的Address
-                if (ipaddress.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
-                {
-                    HttpContext.Session.SetString(cUtility.Current_Ip, ipaddress.ToString());
-                }
-            }
+            //foreach (IPAddress ipaddress in iphostentry.AddressList)
+            //{
+            //    // 只取得IP V4的Address
+            //    if (ipaddress.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+            //    {
+            //        HttpContext.Session.SetString(cUtility.Current_Ip, ipaddress.ToString());
+            //    }
+            //}
             return View();
         }
         [HttpPost]
@@ -384,20 +384,20 @@ namespace LeSheTuanGo.Controllers
             string strHostName = Dns.GetHostName();
             IPHostEntry iphostentry = Dns.GetHostEntry(strHostName);
             //string ipaddress = iphostentry.AddressList[1].ToString() ;
-            foreach (IPAddress ipaddress in iphostentry.AddressList)
-            {
-                // 只取得IP V4的Address
-                if (ipaddress.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
-                {
-                    Console.WriteLine("Local IP: " + ipaddress.ToString());
-                    HttpContext.Session.SetString(cUtility.Current_Ip, ipaddress.ToString());
-                }
-            }
+            //foreach (IPAddress ipaddress in iphostentry.AddressList)
+            //{
+            //    // 只取得IP V4的Address
+            //    if (ipaddress.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+            //    {
+            //        Console.WriteLine("Local IP: " + ipaddress.ToString());
+            //        HttpContext.Session.SetString(cUtility.Current_Ip, ipaddress.ToString());
+            //    }
+            //}
             string bodyEmail = "";
             if (controllerName == "openMember")
-                bodyEmail = $"https://{ HttpContext.Session.GetString(cUtility.Current_Ip)}:8080/Member/openMember?memberId=" + inputId;
+                bodyEmail = $"https://192.168.24.5:8080/Member/openMember?memberId=" + inputId;
             else if (controllerName == "resetPassword")
-                bodyEmail = $"https://{HttpContext.Session.GetString(cUtility.Current_Ip)}:8080/Member/resetPassword?memberId=" + inputId;
+                bodyEmail = $"https://192.168.24.5:8080/Member/resetPassword?memberId=" + inputId;
             SmtpClient MySmtp = new SmtpClient("smtp.gmail.com", 587);
             MySmtp.Credentials = new System.Net.NetworkCredential("msit129GarbageCar@gmail.com", "@msit129GarbageCar@");
 
