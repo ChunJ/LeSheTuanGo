@@ -17,6 +17,7 @@ namespace LeSheTuanGo.Controllers{
             db = context;
         }
         public IActionResult Index() {
+            //若使用者有登入，載入使用者地址資訊
             if (HttpContext.Session.GetInt32(cUtility.Current_User_Id) != null) {
                 int Memberid = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
                 var user = db.Members.Where(m => m.MemberId == Memberid).Include(m => m.District).First();
@@ -24,10 +25,11 @@ namespace LeSheTuanGo.Controllers{
                 ViewData["DistrictId"] = user.DistrictId;
                 ViewData["CityId"] = user.District.CityId;
             } else {
-                //ViewData["Address"] = "";
+                //否則預設為台北市中正區
                 ViewData["DistrictId"] = 1;
                 ViewData["CityId"] = 1;
             }
+            //載入其他資料
             ViewData["City"] = new SelectList(db.CityRefs, "CityId", "CityName");
             ViewData["GoRange"] = new SelectList(db.RangeRefs, "RangeId", "RangeInMeters");
             return View();
@@ -35,14 +37,16 @@ namespace LeSheTuanGo.Controllers{
         
         public string Search(
             int DistrictInput, string addressInput) {
+            //設定最大搜尋範圍(寫死為3000)
             //var distantMax = db.RangeRefs.Last().RangeInMeters;
             int distanceMax = 3000;
-            //disable query and use the first user's location for testing
+            //從參數求出完整地址，並轉成經緯度
             DistrictRef dist = db.DistrictRefs.Where(d => d.DistrictId == DistrictInput)
                 .Include(d => d.City).First();
             string address = dist.City.CityName + dist.DistrictName + addressInput;
             var latlong = cUtility.addressToLatlong(address);
             GeoCoordinate userLocation = new GeoCoordinate((double)latlong[0], (double)latlong[1]);
+            //disable query and use the first user's location for testing
             //var tempUser = db.Members.First();
             //GeoCoordinate userLocation = new GeoCoordinate((double)tempUser.Latitude, (double)tempUser.Longitude);
             IQueryable<GarbageServiceOffer> firstPass = db.GarbageServiceOffers;

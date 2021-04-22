@@ -352,7 +352,7 @@
                     //console.log(markers[i].title);
                     //document.getElementById(markers[i].label.text).scrollIntoView();
                     //getDetail(marker.label.text);
-                    AccornList[marker.label.text].scrollIntoView({ behavior: "smooth" });
+                    AccornList[marker.label.text].scrollIntoView({ behavior: "smooth", block: "center" });
                     accorExpand(AccornList[marker.label.text]);
                 });
                 markers.push(marker);
