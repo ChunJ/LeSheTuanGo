@@ -18,6 +18,7 @@ namespace LeSheTuanGo.Controllers {
             db = context;
         }
         public IActionResult Index() {
+            //如果使用者有登入，載入使用者地址
             if (HttpContext.Session.GetInt32(cUtility.Current_User_Id) != null) {
                 int Memberid = HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value;
                 var user = db.Members.Where(m => m.MemberId == Memberid).Include(m => m.District).First();
@@ -25,9 +26,11 @@ namespace LeSheTuanGo.Controllers {
                 ViewData["DistrictId"] = user.DistrictId;
                 ViewData["CityId"] = user.District.CityId;
             } else {
+                //否則預設為台北市中正區
                 ViewData["DistrictId"] = 1;
                 ViewData["CityId"] = 1;
             }
+            //載入其他資訊
             Product p = db.Products.First();
             ViewData["CategoryId"] = p.CategoryId;
             ViewData["ProductId"] = p.ProductId;
@@ -52,12 +55,12 @@ namespace LeSheTuanGo.Controllers {
         }
 
         public string Search(int DistrictInput, string addressInput) {
-            //search by endtime & price ?
-            //add gorange in sent data
+            //todo search by endtime & price ?
 
+            //設定搜尋範圍
             //var distantMax = db.RangeRefs.Last().RangeInMeters;
             int distanceMax = 3000;
-            
+            //取得地址全名，並轉成經緯度
             DistrictRef dist = db.DistrictRefs.Where(d => d.DistrictId == DistrictInput)
                 .Include(d => d.City).First();
             string address = dist.City.CityName + dist.DistrictName + addressInput;
@@ -66,10 +69,12 @@ namespace LeSheTuanGo.Controllers {
             //disable query and use the first user's location for testing
             //var tempUser = db.Members.First();
             //GeoCoordinate userLocation = new GeoCoordinate((double)tempUser.Latitude, (double)tempUser.Longitude);
+            //若使用者有登入，則先過濾掉使用者自己新增的團購
             IQueryable<Order> firstPass = db.Orders;
             if (HttpContext.Session.GetInt32(cUtility.Current_User_Id) != null) {
                 firstPass = db.Orders.Where(o => o.HostMemberId != HttpContext.Session.GetInt32(cUtility.Current_User_Id).Value);
             }
+            //過濾掉已結束和搜尋範圍外的結果並回傳json
             var newObject = from o in firstPass.Include(o => o.District).Include(o => o.District.City).Include(o=>o.GoRange)
                             where o.IsActive == true
                             select new {
@@ -109,9 +114,6 @@ namespace LeSheTuanGo.Controllers {
             //if server side validation is not passed, return view with user's filter option
             //if successed, redirect to history
             return RedirectToAction("Index", "ChatMessageRecords", new { grouptype = 1, groupid = r.OrderId });
-        }
-        public IActionResult HistoryList() {
-            return View();
         }
     }
 }
