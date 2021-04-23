@@ -132,6 +132,7 @@
 @section Scripts {
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBircB99P_RvzxWdQT-hk40-h3Ofzlb_vQ&callback=initMap&libraries=&v=weekly" async></script>
     <script>
+        //左側篩選條件的 input
         let cityS = document.querySelector("#CityId");
         let distS = document.querySelector("#DistrictId");
         let cateS = document.querySelector("#CategotyId");
@@ -141,11 +142,11 @@
         let distanceS = document.querySelector("#distance");
         let count = document.querySelector("#count");
         let needCome = document.querySelector("#needCome");
-        //for search result
+        //search result element
         let result = document.querySelector("#searchResult");
-        //for detail and submit
+        //地圖 element
         let mapDiv = document.querySelector("#map");
-        //other variable
+        //其他需要的變數
         let lastAddress = "";
         let lastDistrict = 0;
         let queryList = [];
@@ -156,6 +157,7 @@
         let lastAccord = null;
 
         window.onload = function () {
+            //網頁載入時，填入 controller 傳入的地址和商品
             cityS.value = @ViewData["CityId"];
             fillDistrict(@ViewData["CityId"], "#DistrictId", function () {
                 distS.value = @ViewData["DistrictId"];
@@ -166,6 +168,7 @@
             });
         }
         function fillDemo() {
+            //demo 鍵
             addressIn.value = "復興南路資策會";
             distS.value = 5;
         }
@@ -173,10 +176,13 @@
 
         }
         function showProdImage() {
+            //切換商品圖片
             prodImage.src = prodS.options[prodS.selectedIndex].getAttribute("imgPath");
         }
         function accorClick(accor) {
+            //從中間清單中點選搜尋結果時觸發
             //doing 1 extra if, not pretty!
+            //若被點擊的地點不是目前顯示物件，則地圖定位到該物件的地點
             if (!accor.classList.contains("accordion-active")) {
                 map.setCenter(markers[accor.getAttribute("index")].getPosition());
                 map.setZoom(18);
