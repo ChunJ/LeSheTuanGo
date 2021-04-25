@@ -187,14 +187,18 @@
                 map.setCenter(markers[accor.getAttribute("index")].getPosition());
                 map.setZoom(18);
             }
+            //呼叫 accorExpand
             accorExpand(accor);
         }
         function accorExpand(accor) {
+            //此方法控制搜尋項目點擊後的縮放
             let panel = accor.nextElementSibling;
             //console.log(accor.getAttribute("index"));
+            //判斷被點擊項目是否已經展開
             if (accor.classList.contains("accordion-active")) {
                 accor.classList.remove("accordion-active");
                 panel.style.maxHeight = null;
+                //判斷是否為重複點擊(這次==上次)，並作相對應處理
                 if (lastAccord == accor) {
                     //repeat on active
                     lastAccord = null;
@@ -210,11 +214,14 @@
             }
         }
         function searchStart() {
+            //按下搜尋鍵後會依序呼叫 searchStart(), filterResult(), showResult()
+            //reset 上次點擊項目的紀錄為 null
             lastAccord = null
-            //send new request if address is changed
+            //若搜尋地址和上次相同，直接 filterResult()
             if (distS.value == lastDistrict && addressIn.value == lastAddress) {
                 filterResult();
             } else {
+                //否則重新到後端找資料再 filterResult()
                 lastDistrict = distS.value;
                 lastAddress = addressIn;
                 $.get(
@@ -234,20 +241,22 @@
             }
         }
         function filterResult() {
-            ////add cango filter test
+            //將前端資料 queryList 中符合搜尋條件的項目加到結果清單 fList 中
+            //清空結果清單
             fList = [];
+            //將原始清單內的資料依查詢條件篩選
             for (let r of queryList) {
                 if (needCome.checked) {
-                    //if needCome is checked, 
+                    //需要外送服務時的檢查條件
                     if (r.CanGo && r.Distance <= r.RangeInMeters
                         && r.Distance <= distanceS.options[distanceS.selectedIndex].text
                         && r.ProductId == prodS.value
                         && r.AvailableCount >= count.value
                     ) {
                         fList.push(r);
-                        console.log(r.RangeInMeters);
                     }
                 } else {
+                    //不需要外送服務時的檢查條件
                     if (r.Distance <= distanceS.options[distanceS.selectedIndex].text
                         && r.ProductId == prodS.value
                         && r.AvailableCount >= count.value
@@ -256,16 +265,19 @@
                     }
                 }
             }
+            //呼叫 showResult()
             showResult();
         }
         function showResult() {
-            //implement page count here
+            //顯示篩選完的地點(fList)
             if (fList.length == 0) {
+                //若沒有符合的團購團
                 result.innerHTML = `<h4>沒有符合條件的搜尋結果</h4>`;
             } else {
+                //若有搜尋到團，產生搜尋結果欄位用的html
                 let htmlString = "";
                 for (let i = 0; i < fList.length; i++) {
-                    //use the index in filterList as id, so we can just get offer info from filterList later.
+                    //將此筆資料在 fList 中的位置儲存在 index 屬性，方便點擊事件使用。fList, markers , accornList 三個陣列中資料的順序是一樣的 
                     htmlString += `<div class="accordion-go" index = "${i}" onclick="accorClick(this)">`;
                     htmlString += `${fList[i].CityName}${fList[i].DistrictName}${fList[i].Address}`;
                     htmlString += `</div>`;
@@ -273,10 +285,13 @@
                     htmlString += `<div class="accordion-panel"><form method="post" action="/Buy/Join">`;
                     htmlString += `<div class="py-2"><div class="w-100"><div class="rem-4">截止時間</div><span class="px-1">:</span>${formatDatetime(fList[i].EndTime)}</div>`;
                     htmlString += `<div class="w-100"><div class="rem-4">距離</div><span class="px-1">:</span><span class="text-primary">${parseInt(fList[i].Distance, 10)}</span> 公尺</div></div>`;
+                    //不顯示的表格欄位
                     htmlString += `<input hidden name="OrderId" value="${fList[i].OrderId}" />`;
                     htmlString += `<input hidden name="ComeDistrictId" value="${distS.value}" />`;
                     htmlString += `<input hidden name="ComeAddress" value="${addressIn.value}" />`;
+
                     htmlString += `<div class="form-group"><label>購買量</label><input class="form-control" name="Count" type="number" min="0" value="${count.value}" max="${fList[i].AvailableCount}"/></div>`;
+                    //本團購是否提供外送
                     if (fList[i].CanGo) {
                         htmlString += `<div class="form-group form-check"><label class="form-check-label">`;
                         htmlString += `<input class="form-check-input" type="checkbox" name="NeedCome" value="true" />`;//fill checked
@@ -287,32 +302,50 @@
                     }
                     htmlString += `<div class="form-group"><input type="submit" value="購買" class="btn btn-primary w-100" /></div></form></div>`;
                 }
+                //更新右側地圖 + 更新結果清單 + 重新取得結果清單內的 element (點擊事件連動用)
                 showAllMap();
                 result.innerHTML = htmlString;
                 AccornList = result.querySelectorAll("div.accordion-go");
             }
         }
-        //function getDetail(id) {
-        ////fill view + update map + turn visible
-        //    infoGroup[0].innerText = fList[id].Address;
-        //    infoGroup[1].innerText = parseInt(fList[id].Distance, 10);
-        //    infoGroup[2].innerText = formatDatetime(fList[id].EndTime);
-        //    formInputs[0].value = fList[id].OrderId;
-        //    formInputs[1].value = fList[id].DistrictId;
-        //    formInputs[2].value = fList[id].Address;
-        //    if (fList[id].CanGo) {
-        //        //need to use the filter option
-        //        formInputs[3].checked = false;
-        //        formInputs[3].disabled = false;
-        //    } else {
-        //        formInputs[3].checked = false;
-        //        formInputs[3].disabled = true;
-        //    }
-        //    formInputs[4].value = count.value;
-        //    //showMap(fList[id].Latitude, fList[id].Longitude);
-        //    detailView.classList.remove("invisible");
-        //}
+        function showAllMap() {
+            //將搜尋結果更新在 google map 上
+            //地圖中心點設為查詢用位置
+            let mapCenter = new google.maps.LatLng(fList[0].userLat, fList[0].userLong);
+            map = new google.maps.Map(mapDiv,
+                {
+                    center: mapCenter,
+                    zoom: 14,
+                    //mapTypeId: "terrain",
+                });
+            //加入使用者位置的圖示
+            new google.maps.Marker({
+                position: mapCenter,
+                map,
+                title: "您的位置",
+                icon: "https://crd-rubbish.epd.ntpc.gov.tw/maps/images/icon/Icon_LegendD.png",
+            });
+            //產生搜尋結果的圖示並存入 markers 陣列中
+            markers = [];
+            for (let i = 0; i < fList.length; i++) {
+                let marker = new google.maps.Marker({
+                    position: { lat: fList[i].Latitude, lng: fList[i].Longitude },
+                    map,
+                    title: fList[i].Address,
+                    label: { text: i + "", color: "transparent" },
+                });
+                //設定點擊事件
+                marker.addListener("click", () => {
+                    //console.log(markers[i].title);
+                    //中間清單捲動到被點擊項目並展開或收合
+                    AccornList[marker.label.text].scrollIntoView({ behavior: "smooth", block: "center" });
+                    accorExpand(AccornList[marker.label.text]);
+                });
+                markers.push(marker);
+            }
+        }
         function showMap(lat, lng) {
+            //顯示一個地點的 goolge map，目前沒有使用
             let coor = new google.maps.LatLng(lat, lng);
             let mbr = new google.maps.LatLng(25.0339400, 121.5435000);  //fixed for now
             map = new google.maps.Map(mapDiv,
@@ -332,39 +365,8 @@
                 icon: "https://crd-rubbish.epd.ntpc.gov.tw/maps/images/icon/Icon_LegendD.png",
             });
         }
-        function showAllMap() {
-            let mapCenter = new google.maps.LatLng(fList[0].userLat, fList[0].userLong);
-            map = new google.maps.Map(mapDiv,
-                {
-                    center: mapCenter,
-                    zoom: 14,
-                    //mapTypeId: "terrain",
-                });
-            new google.maps.Marker({
-                position: mapCenter,
-                map,
-                title: "您的位置",
-                icon: "https://crd-rubbish.epd.ntpc.gov.tw/maps/images/icon/Icon_LegendD.png",
-            });
-            markers = [];
-            for (let i = 0; i < fList.length; i++) {
-                let marker = new google.maps.Marker({
-                    position: { lat: fList[i].Latitude, lng: fList[i].Longitude },
-                    map,
-                    title: fList[i].Address,
-                    label: { text: i + "", color: "transparent" },
-                });
-                marker.addListener("click", () => {
-                    //console.log(markers[i].title);
-                    //document.getElementById(markers[i].label.text).scrollIntoView();
-                    //getDetail(marker.label.text);
-                    AccornList[marker.label.text].scrollIntoView({ behavior: "smooth", block: "center" });
-                    accorExpand(AccornList[marker.label.text]);
-                });
-                markers.push(marker);
-            }
-        }
         function initMap() {
+            //一進畫面時顯示的地圖位置
             let mbr = new google.maps.LatLng(25.0339400, 121.5435000);  //fixed for now
             map = new google.maps.Map(mapDiv,
                 {
